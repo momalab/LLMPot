@@ -1,0 +1,4 @@
+pyshark
+pandas
+tqdm
+pymodbus
