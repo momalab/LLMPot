@@ -5,7 +5,6 @@ import socket
 from _thread import *
 import threading
 
-print_lock = threading.Lock()
 
 
 # thread function
