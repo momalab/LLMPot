@@ -47,7 +47,7 @@ try:
             else:
                 print(f"Data written to address {address}: {data_to_write}")
 
-        time.sleep(random.uniform(1, 5))
+        #time.sleep(random.uniform(1, 5))
 
 except KeyboardInterrupt:
     print("Client stopped by user.")
