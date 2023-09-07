@@ -31,7 +31,7 @@ while True:
                 print(sys.stderr, 'sending data back to the client')
 
                 # query model
-                model.load_model("byt5", "outputs/simplet5-epoch-4-train-loss-0.0073-val-loss-0.0061", use_gpu=True)
+                model.load_model("byt5", "ByT5-draft/outputs/model_str_format", use_gpu=True)
 
                 #Test with no context
                 query_received = data#?
