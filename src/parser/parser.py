@@ -28,18 +28,19 @@ def encoding(line: str):
 cap = pyshark.FileCapture(PCAP_PATH,
                           use_json=True,
                           include_raw=True,
-                          decode_as={f'tcp.port=={PORT}': f'{DISPLAY_FILTER}'},
-                          display_filter=DISPLAY_FILTER)
+                          decode_as={f'tcp.port=={PORT}': f'{CAPTURE_LAYER}'},
+                          # display_filter=f'{DISPLAY_FILTER}'
+                          )
 
 dataset_dict = {"source_text": [], "target_text": []}
 discard_queue = []
 packet: Packet
 for packet in tqdm(cap):
 
-    if hasattr(packet.modbus, "request_frame"):
+    if hasattr(packet, "modbus") and hasattr(packet.modbus, "request_frame"):
         request_idx = int(packet.modbus.request_frame)
         try:
-            dataset_dict["source_text"].append(encoding(eval(f"cap[{request_idx}].{CAPTURE_LAYER}_raw.value")))
+            dataset_dict["source_text"].append(encoding(eval(f"cap[{request_idx - 1}].{CAPTURE_LAYER}_raw.value")))
             dataset_dict["target_text"].append(encoding(eval(f"packet.{CAPTURE_LAYER}_raw.value")))
         except KeyError as e:
             discard_queue.append(request_idx)
