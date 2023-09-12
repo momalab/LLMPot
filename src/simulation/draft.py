@@ -28,22 +28,33 @@ while True:
             data = connection.recv(32) # bufsize: Number of bytes to receive
             print(sys.stderr, 'received "%s"' % data)
             if data:
-                print(sys.stderr, 'sending data back to the client')
 
                 # query model
-                model.load_model("byt5", "ByT5-draft/outputs/model_str_format", use_gpu=True)
+                model.load_model("byt5", "/home/dunia/ICSPot/outputs/simplet5-epoch-4-train-loss-1.2354-val-loss-1.2378/", use_gpu=True)
 
-                #Test with no context
-                query_received = data#?
-                print("Query is:",  query_received)
+                print("Received Query is:", data)
 
-                predicted_response = model.predict(query_received)
+                #convert byte string into hex string
+                data_hex_string = ''.join(f'{byte:02x}' for byte in data)
+                print("Query in hex string is:", data_hex_string)
+
+                #Test with no context "inference"
+                predicted_response = model.predict(data_hex_string)
                 print("Predicted response is:", predicted_response)
 
-                predicted_response_hex = bytes.fromhex(predicted_response[0])
-                print("Response in hex:", predicted_response_hex)
+                #predicted_response_hex = bytes.fromhex(predicted_response[0]) #some are wrong "ASCII"
 
-                connection.sendall(predicted_response_hex) #high-level Python-only method that sends the entire buffer you pass
+                hex_string = predicted_response
+
+                # Convert the hexadecimal string to a list of two-character chunks
+                hex_chunks = [hex_string[i:i + 2] for i in range(0, len(hex_string), 2)]
+
+                # Convert each chunk to its corresponding ASCII character
+                payload_string = ''.join([chr(int(chunk, 16)) for chunk in hex_chunks])
+                print("Response in hex is:", payload_string)
+
+                print(sys.stderr, 'sending data back to the client')
+                connection.sendall(bytes(payload_string, 'utf-8')) #high-level Python-only method that sends the entire buffer you pass
 
             else:
                 print(sys.stderr, 'no more data from', client_address)
