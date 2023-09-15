@@ -3,6 +3,7 @@ class Result:
     wireshark_index: int
     request: str
     response: str
+    test_set_response: str
     valid: bool
     traceback: str
 

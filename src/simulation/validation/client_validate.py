@@ -22,6 +22,7 @@ def start_client_loop(client_socket: socket.socket, result_file: TextIO, test_se
                 valid = True
 
             to_save.response = response_bytes
+            to_save.test_set_response = test_set['response'][i]
             to_save.valid = valid
         except Exception:
             to_save.valid = False
