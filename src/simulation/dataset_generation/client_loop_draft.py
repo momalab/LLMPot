@@ -10,7 +10,7 @@ client : ModbusTcpClient = ModbusTcpClient(SERVER_HOST, port=SERVER_PORT)
 # Function to generate a random Modbus request
 def generate_random_request():
 
-    function_code = random.choice([3]) #1, 3, 5, 15, 16 #Note something is wrong with FC 06
+    function_code = random.choice([1, 3, 5, 15, 16]) # #Note something is wrong with FC 06
 
     # random starting address (0 to 99)
     address = random.randint(0, 99)

@@ -42,19 +42,25 @@ while True:
                 predicted_response = model.predict(data_hex_string)
                 print("Predicted response is:", predicted_response)
 
-                #predicted_response_hex = bytes.fromhex(predicted_response[0]) #some are wrong "ASCII"
+                try: 
 
-                hex_string = predicted_response
+                    hex_string = predicted_response
 
-                # Convert the hexadecimal string to a list of two-character chunks
-                hex_chunks = [hex_string[i:i + 2] for i in range(0, len(hex_string), 2)]
+                    # Convert the hexadecimal string to a list of two-character chunks
+                    hex_chunks = [hex_string[i:i + 2] for i in range(0, len(hex_string), 2)]
 
-                # Convert each chunk to its corresponding ASCII character
-                payload_string = ''.join([chr(int(chunk, 16)) for chunk in hex_chunks])
-                print("Response in hex is:", payload_string)
+                    # Convert each chunk to its corresponding ASCII character
+                    payload_string = ''.join([chr(int(chunk, 16)) for chunk in hex_chunks])
+                    print("Response in hex is:", payload_string)
 
-                print(sys.stderr, 'sending data back to the client')
-                connection.sendall(bytes(payload_string, 'utf-8')) #high-level Python-only method that sends the entire buffer you pass
+                    print(sys.stderr, 'sending data back to the client')
+                    connection.sendall(bytes(payload_string, 'utf-8')) #high-level Python-only method that sends the entire buffer you pass
+                except:
+
+                    predicted_response_hex = bytes.fromhex(predicted_response[0])
+
+                    print(sys.stderr, 'sending data back to the client')
+                    connection.sendall(predicted_response_hex) #high-level Python-only method that sends the entire buffer you pass
 
             else:
                 print(sys.stderr, 'no more data from', client_address)

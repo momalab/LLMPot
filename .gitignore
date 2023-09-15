@@ -12,4 +12,5 @@ venv/
 ENV/
 
 .idea/
+outputs/
 .icspot/
