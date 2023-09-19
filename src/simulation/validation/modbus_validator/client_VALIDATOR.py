@@ -94,14 +94,15 @@ def check_payload(query_payload, response_payload):
 
 list = []
 counter_invalid = 0
-
+query_list = [test_set['request'][0], "e4980000000f00100009000408fc1365a30ccdccce", "e49900000006000300090004", "e49a00000006000300090004"]
 try:
-    for i in range(len(test_set)): 
+    for i in range(len(query_list)): #len(test_set)): 
         clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         clientSocket.connect(("127.0.0.1", 5020))
 
         try:
-            query = test_set['request'][i]
+            query = query_list[i]
+            #query = "000000000006000300530003"
             #print('query is:', query)
             clientSocket.sendall(bytes.fromhex(query))
             dataFromServer = clientSocket.recv(1024)
@@ -116,14 +117,14 @@ try:
 
         except Exception as e:
             counter_invalid += 1
-            print(f"Invalid. Exception_counter: {counter_invalid}")
-            list.append([query, dataFromServer, e])
+            print(f"Invalid. Exception_counter: {counter_invalid}. Exception: {e}")
+            #list.append([query, dataFromServer, e])
 
 
         clientSocket.close()
 
-    exception_list = pd.DataFrame(list, columns=['Query', 'ResponseReceived', 'Exception'])
-    exception_list.to_csv('exception_list.csv', index=True)
+    #exception_list = pd.DataFrame(list, columns=['Query', 'ResponseReceived', 'Exception'])
+    #exception_list.to_csv('exception_list.csv', index=True)
 
 except KeyboardInterrupt:
     print("Client stopped by user.")
