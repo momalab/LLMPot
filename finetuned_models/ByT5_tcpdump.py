@@ -22,6 +22,10 @@ full_dataset = df[['source_text', 'target_text']]
 from sklearn.model_selection import train_test_split
 train_df, test_df = train_test_split(full_dataset, test_size=0.1)
 
+#save train and test sets
+test_df.to_csv('test_set.csv', index=True)
+train_df.to_csv('train_set.csv', index=True)
+
 #Train
 model.train(train_df=train_df,
             eval_df=test_df,

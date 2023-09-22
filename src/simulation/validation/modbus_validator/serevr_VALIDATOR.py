@@ -31,7 +31,7 @@ try:
             count +=1
             print(f"Count: {count}")
             
-            if count == 4:
+            if count == 5:
                 from transformers import ByT5Tokenizer
                 tokenizer = ByT5Tokenizer.from_pretrained("google/byt5-small") 
                 print("TEST WITH CONTEXT")
