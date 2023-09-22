@@ -102,6 +102,7 @@ try:
 
         try:
             query = query_list[i]
+            #query = test_set['Query'][i]
             #query = "000000000006000300530003"
             #print('query is:', query)
             clientSocket.sendall(bytes.fromhex(query))

@@ -70,7 +70,8 @@ def write_multiple_data(data_type, address, data_to_write, a):
 client.connect()
 
 try:
-    while True:
+    #while True:
+    for i in range(550000): #define number of samples for finetuning the model (50k extra samples for 'discarded packets' on the parser)
         function_code, address, num_elements, data_to_write, single_data_to_write = generate_random_request()
         
         if function_code == 1: # Read Coils (FC 01)
