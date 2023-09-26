@@ -28,24 +28,28 @@ def write_multiple_data(data_type, address, data_to_write, a):
 client.connect()
 
 context_length = 3
-sessions = 2
+sessions = 20000
+function_code = [3, 16, 3] 
+
 try:
     for i in range(sessions): 
-        function_code = [3, 16, 3] 
-        address = random.randint(0, 65534) #address range 0-65535
+        print(f"i= {i}")
+        address = random.randint(0, 64) #address range 0-65535
         #num_elements_toRead = random.randint(1, 123) # 1 - 125 number of registers 
         #num_elements_toWrite = random.randint(1, 123) # 1 - 123 number of registers
-        num_elements = random.randint(1, 123)
+        num_elements = random.randint(1, 10)
         data_to_write = [random.randint(0, 65535) for _ in range(num_elements)]
          
 
-        for i in range(context_length):
-            function_code = function_code[i]
-        
-            if function_code == 3: 
+        for j in range(context_length):
+            print(f"function_code: {function_code[j]}")
+
+            if function_code[j] == 3: 
+                print("Its FC3")
                 read_data("Holding Registers", address, 3, num_elements)
             
-            elif function_code == 16: 
+            elif function_code[j] == 16: 
+                print("Its FC16")
                 write_multiple_data("Write Multiple Registers", address, data_to_write, 16)
 
 
