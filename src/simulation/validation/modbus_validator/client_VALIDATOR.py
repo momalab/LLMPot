@@ -2,7 +2,7 @@ import socket
 import pandas as pd
 #from packet_validator import Validator
 
-test_set = pd.read_csv("/home/dunia/ICSPot/src/simulation/validation/test_set.csv")
+test_set = pd.read_csv("/home/dam10098/ICSPot/parsed_datasets/wago_context.csv")
 
 def packet_chunks(query, dataFromServer):
     hex_chunks_query = [query[i:i + 2] for i in range(0, len(query), 2)] #print(f"hex_chunks_query is {hex_chunks_query}, len is {len(hex_chunks_query)}")
@@ -94,22 +94,22 @@ def check_payload(query_payload, response_payload):
 
 list = []
 counter_invalid = 0
-query_list = [test_set['request'][0], "e4980000000f00100009000408fc1365a30ccdccce", "e49900000006000300090004", "e49a00000006000300090004"]
+query_list = [test_set['source_text'][0], test_set['source_text'][1], test_set['source_text'][2]]
 try:
-    for i in range(len(query_list)): #len(test_set)): 
+    for i in range(len(query_list)): #len(query_list): 
         clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         clientSocket.connect(("127.0.0.1", 5020))
 
         try:
             query = query_list[i]
-            #query = test_set['Query'][i]
+            #query = test_set['request'][500] #random sample from the test_set
             #query = "000000000006000300530003"
-            #print('query is:', query)
+            print('query is:', query)
             clientSocket.sendall(bytes.fromhex(query))
             dataFromServer = clientSocket.recv(1024)
 
             dataFromServer = dataFromServer.hex()
-            #print(f"dataFromServer is:{dataFromServer}")
+            print(f"dataFromServer is:{dataFromServer}")
 
             query_header, query_payload, response_header, response_payload = packet_chunks(query, dataFromServer)
             check_header_IDs(query_header, response_header, query_payload)

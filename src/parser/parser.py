@@ -6,13 +6,14 @@ from pyshark.packet.packet import Packet
 from tqdm import tqdm
 
 
-PCAP_PATH = "../../pcap_captures/tcpdump_500k_1.pcap"
-DF_OUT_PATH = "../../parsed_datasets/tcpdump_500k_1.csv"
+PCAP_PATH = "../../pcap_captures/wago_context.pcap"
+DF_OUT_PATH = "../../parsed_datasets/wago_context.csv"
 # hex, str
 FORMAT = "str"
 PORT = 502
 # tcp, mbtcp
-CAPTURE_LAYER = "mbtcp"
+#CAPTURE_LAYER = "mbtcp" #uncomment this for full payload
+CAPTURE_LAYER = "modbus"
 
 # Display filter to only keep modbus and tcp traffic in between the PLC and the HMI
 # display_filter = f"(modbus || tcp) && ((ip.src=={CLIENT_IP} && ip.dst=={PLC_IP}) || (ip.src=={PLC_IP} && ip.dst=={CLIENT_IP}))"
@@ -28,7 +29,8 @@ def encoding(line: str):
 cap = pyshark.FileCapture(PCAP_PATH,
                           use_json=True,
                           include_raw=True,
-                          decode_as={f'tcp.port=={PORT}': f'{CAPTURE_LAYER}'},
+                          #decode_as={f'tcp.port=={PORT}': f'{CAPTURE_LAYER}'}, #uncomment this for full payload
+                          decode_as={f'tcp.port=={PORT}': f'{DISPLAY_FILTER}'},
                           # display_filter=f'{DISPLAY_FILTER}'
                           )
 
