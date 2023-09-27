@@ -6,8 +6,8 @@ from pyshark.packet.packet import Packet
 from tqdm import tqdm
 
 
-PCAP_PATH = "../../pcap_captures/wago_context_X.pcap"
-DF_OUT_PATH = "../../parsed_datasets/wago_context.csv"
+PCAP_PATH = "../../pcap_captures/tcpdump_write.pcap"
+DF_OUT_PATH = "../../parsed_datasets/tcpdump_write.csv"
 # hex, str
 FORMAT = "str"
 PORT = 502

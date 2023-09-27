@@ -27,9 +27,9 @@ def write_multiple_data(data_type, address, data_to_write, a):
 
 client.connect()
 
-context_length = 3
+context_length = 1#3
 sessions = 20000
-function_code = [3, 16, 3] 
+function_code = [16] #[3, 16, 3] 
 
 try:
     for i in range(sessions): 
