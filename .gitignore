@@ -15,5 +15,5 @@ ENV/
 outputs/
 output_logs/
 lightning_logs/
-train_test_sets/
+#train_test_sets/
 .icspot/
