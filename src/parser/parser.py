@@ -6,14 +6,14 @@ from pyshark.packet.packet import Packet
 from tqdm import tqdm
 
 
-PCAP_PATH = "../../pcap_captures/tcpdump_write.pcap"
-DF_OUT_PATH = "../../parsed_datasets/tcpdump_write.csv"
+PCAP_PATH = "../../pcap_captures/tcpdump_read_20k.pcap"
+DF_OUT_PATH = "../../parsed_datasets/tcpdump_read_20k.csv"
 # hex, str
 FORMAT = "str"
 PORT = 502
 # tcp, mbtcp
 #CAPTURE_LAYER = "mbtcp" #uncomment this for full payload
-CAPTURE_LAYER = "modbus"
+CAPTURE_LAYER = "mbtcp"
 
 # Display filter to only keep modbus and tcp traffic in between the PLC and the HMI
 # display_filter = f"(modbus || tcp) && ((ip.src=={CLIENT_IP} && ip.dst=={PLC_IP}) || (ip.src=={PLC_IP} && ip.dst=={CLIENT_IP}))"
