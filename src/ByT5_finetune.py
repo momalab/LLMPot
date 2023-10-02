@@ -26,7 +26,7 @@ def main():
                 batch_size=8,
                 use_gpu=True,
                 dataloader_num_workers=128,
-                outputdir="../finetuned_models/outputs/byt5-large/no_context_30k",
+                outputdir="../finetuned_models/outputs/byt5-large/no_context_30k/",
                 early_stopping_patience_epochs=0,
                 save_only_last_epoch=True)
 
