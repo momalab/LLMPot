@@ -12,7 +12,8 @@ venv/
 ENV/
 
 .idea/
-outputs/
-output_logs/
-lightning_logs/
+models/
+logs/
+/src/lightning_logs/
+OLD/lightning_logs/
 .icspot/
