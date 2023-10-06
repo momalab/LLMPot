@@ -104,11 +104,11 @@ def validate(model: SimpleT5, result_file: TextIO, test_set: []):
             expected_response = test_set['response'][i]
             to_save = Result(index=i, request=query) #wireshark_index=int(test_set['wireshark_index'][i])
 
-            if "|" in sample:
+            if "|" in query:
                 question = query[query.rindex("|")+1:len(query)-1]
                 context = query[:query.rindex("|")]
-                inputs = model.tokenizer([question],[context], return_tensors="pt")
-                output = tokenizer.decode(inputs['input_ids'][0])
+                inputs = model.tokenizer(question=question,context=context, return_tensors="pt")
+                output = tokenizer.decode(inputs['input_ids'][0]) #inputs['attention_mask']
                 predicted_response = model.predict(output) #top_p = 0.1
             else:
                 predicted_response = model.predict(query)[0]

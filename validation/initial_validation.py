@@ -1,5 +1,5 @@
+import sys
 import pandas as pd
-import numpy as np
 from simplet5 import SimpleT5
 from transformers import ByT5Tokenizer 
 
@@ -19,16 +19,16 @@ for i in range(len(test_set)):
     query = test_set['request'][i]
     expected_response = test_set['response'][i]
 
-        if "|" in query:
+    if "|" in query:
 
-            question = query[query.rindex("|")+1:len(query)-1]
-            context = query[:query.rindex("|")]
-            inputs = model.tokenizer([question],[context], return_tensors="pt")
-            output = tokenizer.decode(inputs['input_ids'][0])
-            predicted_response = model.predict(output) 
+        question = query[query.rindex("|")+1:len(query)-1]
+        context = query[:query.rindex("|")]
+        inputs = model.tokenizer([question],[context], return_tensors="pt")
+        output = tokenizer.decode(inputs['input_ids'][0])
+        predicted_response = model.predict(output) 
 
-        else:
-            predicted_response = model.predict(query)[0] 
+    else:
+        predicted_response = model.predict(query)[0] 
 
     if predicted_response == expected_response:
         counter_valid +=1
