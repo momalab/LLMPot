@@ -10,10 +10,10 @@ def main():
     model = SimpleT5()
     model.from_pretrained(f"{sys.argv[1]}", f"google/{sys.argv[2]}") 
 
-    train_df = pd.read_csv(f"../datasets/train/{sys.argv[3]}")
+    train_df = pd.read_csv(f"../datasets/train/{sys.argv[3]}.csv")
     train_df = train_df[['source_text', 'target_text']]
 
-    val_df = pd.read_csv(f"../datasets/validation/{sys.argv[3]}")
+    val_df = pd.read_csv(f"../datasets/validation/{sys.argv[3]}.csv")
     val_df = val_df[['source_text', 'target_text']]
 
     model.train(train_df=train_df,
@@ -32,5 +32,6 @@ def main():
 if __name__ == '__main__':
     try:
         main()
+        logger.logging()
     except:
         logger.logging.error(traceback.format_exc())

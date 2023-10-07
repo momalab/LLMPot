@@ -6,7 +6,7 @@ from pymodbus.client import ModbusTcpClient
 #1: dataset size (# of samples), 2: if 0 no context else 1 with context
 
 SERVER_HOST = "localhost"
-SERVER_PORT = 5020
+SERVER_PORT = 502
 client : ModbusTcpClient = ModbusTcpClient(SERVER_HOST, port=SERVER_PORT)
 
 def generate_random_request():
@@ -54,7 +54,7 @@ def write_multiple_data(data_type, address, data_to_write, a):
 client.connect()
 
 try:
-    for i in range(int(sys.argv[1])): #dataset size/ # of samples
+    for i in range(int(sys.argv[1])*1000): #dataset size/ # of samples
        
         if int(sys.argv[2]) == 0: #no context
             function_code, address, num_elements, data_to_write, single_data_to_write = generate_random_request()
