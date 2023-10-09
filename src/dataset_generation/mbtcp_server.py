@@ -1,18 +1,12 @@
+import sys
+
 from pymodbus.server import StartTcpServer
 from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.datastore import ModbusSequentialDataBlock
 from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 
-import logging
 
-FORMAT = ('%(asctime)-15s %(name)-25s'
-          ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
-logging.basicConfig(format=FORMAT)
-log = logging.getLogger()
-log.setLevel(logging.DEBUG)
-
-
-def run_server():
+def start_server(address: str = "localhost", port: int = 502):
     store = ModbusSlaveContext(
         di=ModbusSequentialDataBlock(0, [17] * 100),
         co=ModbusSequentialDataBlock(0, [17] * 100),
@@ -29,8 +23,19 @@ def run_server():
     identity.ModelName = 'Pymodbus Server'
     identity.MajorMinorRevision = '1.5'
 
-    StartTcpServer(context=context, identity=identity, address=("localhost", 502))
+    print("Modbus Server started..")
+    StartTcpServer(context=context, identity=identity, address=(address, port))
+
+
+def main(argv: list[str]):
+    if len(argv) == 3:
+        server_address = str(argv[1])
+        server_port = int(argv[2])
+        start_server(server_address, server_port)
+    else:
+        start_server()
 
 
 if __name__ == "__main__":
-    run_server()
+    main(sys.argv)
+

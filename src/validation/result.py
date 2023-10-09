@@ -1,6 +1,5 @@
 class Result:
     index: int
-    wireshark_index: int
     request: str
     response: str
     test_set_response: str

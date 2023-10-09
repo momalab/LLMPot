@@ -3,15 +3,19 @@ import logging
 
 from logging.handlers import TimedRotatingFileHandler
 
-root = logging.getLogger()
-root.setLevel(logging.INFO)
 
-logFormatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
+def setup_custom_logger(name: str, path: str):
+    logging.root.setLevel(logging.INFO)
 
-fileHandler = TimedRotatingFileHandler(filename='log', when="midnight", backupCount=100)
-fileHandler.setFormatter(logFormatter)
-root.addHandler(fileHandler)
+    log_formatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
 
-consoleHandler = logging.StreamHandler()
-consoleHandler.setFormatter(logFormatter)
-root.addHandler(consoleHandler)
+    file_handler = TimedRotatingFileHandler(filename=f"{path}/{name}-{datetime.datetime.now().strftime('%Y%m%dT%H%M')}",
+                                            when="midnight", backupCount=100)
+    file_handler.setFormatter(log_formatter)
+    logging.root.addHandler(file_handler)
+
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(log_formatter)
+    logging.root.addHandler(console_handler)
+
+    return logging.getLogger(name)

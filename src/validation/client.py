@@ -14,7 +14,7 @@ def start_client_loop(client_socket: socket.socket, result_file: TextIO, test_se
         try:
             valid = False
             request = test_set['request'][i]
-            to_save = Result(index=i, wireshark_index=int(test_set['wireshark_index'][i]), request=request)
+            to_save = Result(index=i, request=request)
 
             client_socket.sendall(bytes.fromhex(request))
             response_bytes = client_socket.recv(2048).hex()
