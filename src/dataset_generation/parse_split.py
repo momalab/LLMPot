@@ -28,12 +28,15 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str
         if hasattr(packet, "modbus") and hasattr(packet.modbus, "request_frame"):
             request_idx = int(packet.modbus.request_frame)
             try:
-                dataset_dict["source_text"].append(encoding(eval(f"cap[{request_idx - 1}].{capture_layer}_raw.value"), enc_type))
-                dataset_dict["target_text"].append(encoding(eval(f"packet.{capture_layer}_raw.value"), enc_type))
+                dataset_dict["source_text"].append(
+                    encoding(eval(f"cap[{request_idx - 1}].{capture_layer}_raw.value"), enc_type))
+                dataset_dict["target_text"].append(
+                    encoding(eval(f"packet.{capture_layer}_raw.value"), enc_type))
             except KeyError as e:
                 discard_queue.append(request_idx)
             except Exception as e:
                 print(e)
+                exit(0)
 
     print(f"Request packets discarded: {discard_queue}")
 
@@ -49,8 +52,8 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str
             csv_context.write("source_text,target_text\n")
             for i in range(0, len(dataset_df) - 2):
                 csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
-                                   f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
-                                   f"{dataset_df['source_text'][i + 2]}:{dataset_df['target_text'][i + 2]}" + "\n")
+                                  f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
+                                  f"{dataset_df['source_text'][i + 2]}:{dataset_df['target_text'][i + 2]}" + "\n")
 
     result_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/context/{pcap}.csv")
 
