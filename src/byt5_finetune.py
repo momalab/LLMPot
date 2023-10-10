@@ -1,12 +1,13 @@
+import argparse
 import datetime
 import traceback
-import sys
-from logging import Logger
 
 import pandas as pd
 from simplet5 import SimpleT5
-from utilities import logger
+
 from init import OUTPUTS_DIR, PROJECT_ROOT_DIR
+from utilities import logger
+
 
 # 1: byt5, 2: google 3: byt5-small or byt5-large, 4: read csv file, 5:epochs, 6:precision, 7: workers
 
@@ -36,13 +37,25 @@ def finetune(model_type: str, model_name_path: str, model_name: str, csv_filenam
 
 
 def main():
-    model_type = sys.argv[1]
-    model_name_path = sys.argv[2]
-    model_name = sys.argv[3]
-    csv_filename = sys.argv[4]
-    epochs = int(sys.argv[5])
-    precision = int(sys.argv[6])
-    workers = int(sys.argv[7])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-mt', default="byt5", required=False)
+    parser.add_argument('-mp', default="google", required=False)
+    parser.add_argument('-mn', default="byt5-small", required=False)
+    parser.add_argument('-csv', required=True)
+    parser.add_argument('-e', default=10, required=False)
+    parser.add_argument('-p', default=32, required=False)
+    parser.add_argument('-w', default=2, required=False)
+    args = parser.parse_args()
+
+    model_type = args.mt
+    model_name_path = args.mp
+    model_name = args.mn
+    csv_filename = args.csv
+    epochs = int(args.e)
+    precision = int(args.p)
+    workers = int(args.w)
+
+    print(model_type, model_name_path, model_name)
 
     log = logger.setup_custom_logger(f"{model_type}_{model_name}_epochs-{epochs}_precision-{precision}", f"{OUTPUTS_DIR}/logs")
 
