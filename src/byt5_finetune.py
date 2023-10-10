@@ -1,6 +1,7 @@
 import datetime
 import traceback
 import sys
+from logging import Logger
 
 import pandas as pd
 from simplet5 import SimpleT5
