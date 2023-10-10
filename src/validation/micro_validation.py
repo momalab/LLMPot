@@ -1,5 +1,6 @@
 import argparse
 import json
+import traceback
 from typing import TextIO
 
 import pandas as pd
@@ -36,11 +37,11 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
             to_save.index = i
             to_save.request = request
             to_save.response = predicted_response
+            to_save.expected_response = expected_response
             to_save.valid = True
 
         except MbtcpValidatorException as exception:
             to_save.valid = False
-            to_save.expected_response = expected_response
             to_save.traceback = exception
         finally:
             result_file.write(json.dumps(to_save.__dict__) + "\n")
