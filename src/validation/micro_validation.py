@@ -1,6 +1,5 @@
 import argparse
 import json
-import traceback
 from typing import TextIO
 
 import pandas as pd
@@ -10,7 +9,6 @@ from transformers import ByT5Tokenizer
 from cfg import OUTPUTS_DIR, PROJECT_ROOT_DIR
 from mbtcp_validator import Validator
 from model.result import Result
-from exception.mbtcp_validator_exception import MbtcpValidatorException
 
 
 def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_file: TextIO):
@@ -40,9 +38,9 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
             to_save.expected_response = expected_response
             to_save.valid = True
 
-        except MbtcpValidatorException as exception:
+        except ValueError as exception:
             to_save.valid = False
-            to_save.error = exception
+            to_save.error = exception.__dict__
         finally:
             result_file.write(json.dumps(to_save.__dict__) + "\n")
 
@@ -54,7 +52,7 @@ def main():
     parser.add_argument('-mn', default="byt5-small", required=False)
     parser.add_argument('-mnf', required=True)
     parser.add_argument('-ts', required=True)
-    parser.add_argument('-g', default="True", required=False)
+    parser.add_argument('-g', default="False", required=False)
     args = parser.parse_args()
 
     model_type = args.mt
@@ -62,7 +60,7 @@ def main():
     model_name = args.mn
     finetuned_model_name = args.mnf
     test_set_name = args.ts
-    use_gpu = args.g
+    use_gpu = eval(args.g)
 
     model = SimpleT5()
     model.load_model(f"{model_type}", f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}", use_gpu=use_gpu)

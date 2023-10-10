@@ -1,6 +1,3 @@
-from validation.exception.mbtcp_validator_exception import MbtcpValidatorException
-
-
 class Validator:
 
     def __init__(self, request, response):
@@ -17,19 +14,19 @@ class Validator:
         q_tid = self.query_header[:2]
         r_tid = self.response_header[:2]
         if r_tid != q_tid:
-            raise MbtcpValidatorException(f"Trans_ID: {r_tid}, expected: {q_tid}")
+            raise ValueError(f"Trans_ID: {r_tid}, expected: {q_tid}")
         q_pid = self.query_header[2:4]
         r_pid = self.response_header[2:4]
         if r_pid != q_pid:
-            raise MbtcpValidatorException(f"Protocol_ID: {r_pid}, expected: {q_pid}")
+            raise ValueError(f"Protocol_ID: {r_pid}, expected: {q_pid}")
         q_uid = self.query_header[-1]
         r_uid = self.response_header[-1]
         if r_uid != q_uid:
-            raise MbtcpValidatorException(f"Uni_ID: {r_uid}, expected: {q_uid}")
+            raise ValueError(f"Uni_ID: {r_uid}, expected: {q_uid}")
         length = int(self.query_header[5], base=16)
         expected_length = len(self.query_payload)+1
         if length != expected_length:
-            raise MbtcpValidatorException(f"length: {length}, expected: {expected_length}")
+            raise ValueError(f"length: {length}, expected: {expected_length}")
 
     def check_payload(self):
         fc = self.response_payload[0]
@@ -37,7 +34,7 @@ class Validator:
         r_fc = self.response_payload[0]
 
         if r_fc != q_fc:
-            raise MbtcpValidatorException(f"FC: {r_fc}, expected: {q_fc}")
+            raise ValueError(f"FC: {r_fc}, expected: {q_fc}")
 
         if fc == "01":
             self._read_single_coil()
@@ -59,50 +56,50 @@ class Validator:
         byte_count = int(self.response_payload[1], base=16)
         expected_byte_count = int(bit_count / 8) + 1
         if byte_count != expected_byte_count:
-            raise MbtcpValidatorException(f"byte_count: {byte_count}, expected: {expected_byte_count}")
+            raise ValueError(f"byte_count: {byte_count}, expected: {expected_byte_count}")
 
     def _read_holding_registers(self):
         word_count = int(self.query_payload[-1], base=16)
         num_registers = int(len(self.response_payload[2:]) / 2)
         if num_registers != word_count:
-            raise MbtcpValidatorException(f"num_registers: {num_registers}, expected: {word_count}")
+            raise ValueError(f"num_registers: {num_registers}, expected: {word_count}")
         byte_count = int(self.response_payload[1], base=16)
         length_registers = len(self.response_payload[2:])
         if byte_count != length_registers:
-            raise MbtcpValidatorException(f"byte_count: {byte_count}, expected: {length_registers}")
+            raise ValueError(f"byte_count: {byte_count}, expected: {length_registers}")
 
     def _write_single_coil(self):
         if self.response_payload != self.query_payload:
-            raise MbtcpValidatorException(f"payload: {self.response_payload}, expected: {self.query_payload}")
+            raise ValueError(f"payload: {self.response_payload}, expected: {self.query_payload}")
 
     def _write_multiple_coils(self):
         q_ref = self.query_payload[1:3]
         r_ref = self.response_payload[1:3]
         if r_ref != q_ref:
-            raise MbtcpValidatorException(f"Reference: {r_ref}, expected: {q_ref}")
+            raise ValueError(f"Reference: {r_ref}, expected: {q_ref}")
         q_bit_count = self.query_payload[3:5]
         r_bit_count = self.response_payload[3:5]
         if r_bit_count != q_bit_count:
-            raise MbtcpValidatorException(f"Bit_Count: {r_bit_count}, expected: {q_bit_count}")
+            raise ValueError(f"Bit_Count: {r_bit_count}, expected: {q_bit_count}")
         q_byte_count = int(self.query_payload[5], base=16)
         data_length = len(self.query_payload) - len(self.query_payload[:6])
         if data_length != q_byte_count:
-            raise MbtcpValidatorException(f"data_length: {data_length}, expected: {q_byte_count}")
+            raise ValueError(f"data_length: {data_length}, expected: {q_byte_count}")
 
     def _read_multiple_registers(self):
         q_ref = self.query_payload[1:3]
         r_ref = self.response_payload[1:3]
         if r_ref != q_ref:
-            raise MbtcpValidatorException(f"Reference: {r_ref}, expected: {q_ref}")
+            raise ValueError(f"Reference: {r_ref}, expected: {q_ref}")
         q_word_count = self.query_payload[3:5]
         r_word_count = self.response_payload[3:5]
         if r_word_count != q_word_count:
-            raise MbtcpValidatorException(f"Word_count: {r_word_count}, expected: {q_word_count}")
+            raise ValueError(f"Word_count: {r_word_count}, expected: {q_word_count}")
         word_count = int(self.query_payload[4], base=16)
         num_registers = int(len(self.query_payload[6:]) / 2)
         if num_registers != word_count:
-            raise MbtcpValidatorException(f"num_registers: {num_registers}, expected: {word_count}")
+            raise ValueError(f"num_registers: {num_registers}, expected: {word_count}")
         byte_count = int(self.query_payload[5], base=16)
         bytes_registers = len(self.query_payload[6:])
         if bytes_registers != byte_count:
-            raise MbtcpValidatorException(f"bytes_registers: {bytes_registers}, expected: {byte_count}")
+            raise ValueError(f"bytes_registers: {bytes_registers}, expected: {byte_count}")
