@@ -1,4 +1,4 @@
-from src.validation.mbtcp_validator_exception import MbtcpValidatorException
+from src.validation.exception.mbtcp_validator_exception import MbtcpValidatorException
 
 
 class Validator:

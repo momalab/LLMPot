@@ -1,5 +1,5 @@
+import argparse
 import json
-import sys
 from typing import TextIO
 
 import pandas as pd
@@ -7,21 +7,19 @@ from simplet5 import SimpleT5
 from transformers import ByT5Tokenizer
 
 from mbtcp_validator import Validator
-from result import Result
+from src.validation.model.result import Result
 from src.init import PROJECT_ROOT_DIR, OUTPUTS_DIR
-from src.validation.mbtcp_validator_exception import MbtcpValidatorException
+from src.validation.exception.mbtcp_validator_exception import MbtcpValidatorException
 
 
-# 1: byt5, 2:google/byt5-small, 3:finetuned_model, 4:test_set, 5:0 no context 1 with context, 6:GPU bool
-
-def validate(model: SimpleT5, result_file: TextIO, test_set: [], tokenizer: ByT5Tokenizer):
+def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_file: TextIO):
     for i in range(len(test_set)):
         to_save = Result()
         request = test_set['request'][i]
         expected_response = test_set['response'][i]
         try:
             if "|" in request:
-                question = request[request.rindex("|")+1:len(request)-1]
+                question = request[request.rindex("|") + 1:len(request) - 1]
                 context = request[:request.rindex("|")]
                 inputs = model.tokenizer(question=question, context=context, return_tensors="pt")
                 output = tokenizer.decode(inputs['input_ids'][0])
@@ -33,7 +31,6 @@ def validate(model: SimpleT5, result_file: TextIO, test_set: [], tokenizer: ByT5
             validation = Validator(question, predicted_response)
             validation.check_header_ids()
             validation.check_payload()
-
 
             to_save.index = i
             to_save.request = request
@@ -49,14 +46,30 @@ def validate(model: SimpleT5, result_file: TextIO, test_set: [], tokenizer: ByT5
 
 
 def main():
-    model = SimpleT5()
-    model.load_model(f"{sys.argv[1]}", f"{PROJECT_ROOT_DIR}/models/{sys.argv[3]}",
-                     use_gpu=bool(sys.argv[6]))
-    tokenizer = ByT5Tokenizer.from_pretrained(f"{sys.argv[2]}")
-    test_set = pd.read_csv(f"{OUTPUTS_DIR}/datasets/test/{sys.argv[4]}")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-mt', default="byt5", required=False)
+    parser.add_argument('-mp', default="google", required=False)
+    parser.add_argument('-mn', default="byt5-small", required=False)
+    parser.add_argument('-mnf', required=True)
+    parser.add_argument('-ts', required=True)
+    parser.add_argument('-g', default=True, required=False)
+    args = parser.parse_args()
 
-    with open(f"{OUTPUTS_DIR}/validation_data/{sys.argv[3]}.jsonl", "a") as results_file:
-        validate(model, results_file, test_set, tokenizer)
+    model_type = args.mt
+    model_path = args.mp
+    model_name = args.mn
+    finetuned_model_name = args.mnf
+    test_set_name = args.ts
+    use_gpu = bool(args.g)
+
+    model = SimpleT5()
+    model.load_model(f"{model_type}", f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}", use_gpu=use_gpu)
+    tokenizer = ByT5Tokenizer.from_pretrained(f"{model_path}/{model_name}")
+    test_set = pd.read_csv(f"{OUTPUTS_DIR}/datasets/test/{test_set_name}.csv")
+    test_set = test_set.rename(columns={'source_text': 'request', 'target_text': 'response'})
+
+    with open(f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}.jsonl", "a") as result_file:
+        validate(model, tokenizer, test_set, result_file)
 
 
 if __name__ == '__main__':

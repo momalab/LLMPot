@@ -1,10 +1,11 @@
 class Result:
     index: int
+    context: str
     request: str
     response: str
-    test_set_response: str
+    expected_response: str
     valid: bool
-    traceback: str
+    error: str
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
