@@ -7,7 +7,7 @@ from simplet5 import SimpleT5
 from utilities import logger
 from init import OUTPUTS_DIR, PROJECT_ROOT_DIR
 
-# 1:  byt5, 2: byt5-small or byt5-large, 3: read csv file, 4:epochs, 5:precision, 6: workers
+# 1:  byt5, 2: google/byt5-small or google/byt5-large, 3: read csv file, 4:epochs, 5:precision, 6: workers
 
 log = logger.setup_custom_logger(f"{sys.argv[2]}_{sys.argv[3]}_{sys.argv[4]}epochs_{sys.argv[5]}precision",
                                  f"{OUTPUTS_DIR}/logs")
@@ -15,7 +15,7 @@ log = logger.setup_custom_logger(f"{sys.argv[2]}_{sys.argv[3]}_{sys.argv[4]}epoc
 
 def main():
     model = SimpleT5()
-    model.from_pretrained(f"{sys.argv[1]}", f"google/{sys.argv[2]}")
+    model.from_pretrained(f"{sys.argv[1]}", f"{sys.argv[2]}")
 
     train_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/train/{sys.argv[3]}.csv")
     train_df = train_df[['source_text', 'target_text']]
