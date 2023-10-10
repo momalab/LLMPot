@@ -15,3 +15,5 @@ ENV/
 OLD/lightning_logs/
 OLD/models/
 .icspot/
+
+/models
