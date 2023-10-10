@@ -6,7 +6,7 @@ from tqdm import tqdm
 from pyshark.packet.packet import Packet
 from sklearn.model_selection import train_test_split
 
-from src.init import OUTPUTS_DIR
+from cfg import OUTPUTS_DIR
 
 
 def encoding(line: str, enc_type: str):
