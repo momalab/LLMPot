@@ -1,4 +1,4 @@
-import sys
+import argparse
 import codecs
 import pyshark
 import pandas as pd
@@ -6,70 +6,79 @@ from tqdm import tqdm
 from pyshark.packet.packet import Packet
 from sklearn.model_selection import train_test_split
 
-#1: tcdpdump.pcap file 2:protocol (mbtcp), 3: 0 no context 1 with context > produce context structure 
+from src.init import OUTPUTS_DIR
 
-PCAP_PATH = f"../datasets/dumps/{sys.argv[1]}.pcap" 
-DF_OUT_PATH = f"../datasets/parsed/{sys.argv[1]}.csv"
-FORMAT = "str"
-PORT = 502
-CAPTURE_LAYER = f"{sys.argv[2]}" 
-DISPLAY_FILTER = f"{sys.argv[2]}"
 
-def encoding(line: str):
-    if FORMAT == "hex":
+def encoding(line: str, enc_type: str):
+    if enc_type == "hex":
         return codecs.decode(line, 'hex_codec')
     return line
 
-cap = pyshark.FileCapture(PCAP_PATH,
-                        use_json=True,
-                        include_raw=True,
-                        decode_as={f'tcp.port=={PORT}': f'{DISPLAY_FILTER}'},
-                        )
 
-dataset_dict = {"source_text": [], "target_text": []}
-discard_queue = []
-packet: Packet
+def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str):
+    cap = pyshark.FileCapture(f"{OUTPUTS_DIR}/datasets/dumps/{pcap}.pcap", use_json=True, include_raw=True,
+                              decode_as={f'tcp.port=={port}': f'{capture_layer}'})
 
-for packet in tqdm(cap):
+    dataset_dict = {"source_text": [], "target_text": []}
+    discard_queue = []
+    packet: Packet
 
-    if hasattr(packet, "modbus") and hasattr(packet.modbus, "request_frame"):
-        request_idx = int(packet.modbus.request_frame)
-        try:
-            dataset_dict["source_text"].append(encoding(eval(f"cap[{request_idx - 1}].{CAPTURE_LAYER}_raw.value")))
-            dataset_dict["target_text"].append(encoding(eval(f"packet.{CAPTURE_LAYER}_raw.value")))
-        except KeyError as e:
-            discard_queue.append(request_idx)
-        except Exception as e:
-            print(e)
+    for packet in tqdm(cap):
 
-print(f"Request packets discarded: {discard_queue}")
+        if hasattr(packet, "modbus") and hasattr(packet.modbus, "request_frame"):
+            request_idx = int(packet.modbus.request_frame)
+            try:
+                dataset_dict["source_text"].append(encoding(eval(f"cap[{request_idx - 1}].{capture_layer}_raw.value"), enc_type))
+                dataset_dict["target_text"].append(encoding(eval(f"packet.{capture_layer}_raw.value"), enc_type))
+            except KeyError as e:
+                discard_queue.append(request_idx)
+            except Exception as e:
+                print(e)
 
-min_len = min(len(dataset_dict["source_text"]), len(dataset_dict["target_text"]))
-dataset_dict["target_text"] = dataset_dict["target_text"][:min_len]
-dataset_dict["source_text"] = dataset_dict["source_text"][:min_len]
+    print(f"Request packets discarded: {discard_queue}")
 
-pkt_df = pd.DataFrame(dataset_dict)
-pkt_df.to_csv(DF_OUT_PATH)
+    min_len = min(len(dataset_dict["source_text"]), len(dataset_dict["target_text"]))
+    dataset_dict["target_text"] = dataset_dict["target_text"][:min_len]
+    dataset_dict["source_text"] = dataset_dict["source_text"][:min_len]
 
-if int(sys.argv[3]) == 0: #no context
-    pkt_df = pkt_df
+    dataset_df = pd.DataFrame(dataset_dict)
+    dataset_df.to_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv")
 
-elif int(sys.argv[3]) == 1: #context structure
-    dataset = pd.read_csv(f"../datasets/parsed/{sys.argv[1]}.csv")
-    context = ""
-    with open(f"../datasets/context/{sys.argv[1]}.csv", "a+") as wago_context: 
-        wago_context.write("source_text,target_text\n")
-        for i in range(0, len(pkt_df) - 2):
-            wago_context.write(f"{dataset['source_text'][i]}:{dataset['target_text'][i]}|"
-                            f"{dataset['source_text'][i + 1]}:{dataset['target_text'][i + 1]}|"
-                            f"{dataset['source_text'][i + 2]}:,{dataset['target_text'][i + 2]}" + "\n")
-    
-    pkt_df = pd.read_csv(f"../datasets/context/{sys.argv[1]}.csv") 
+    if context:
+        with open(f"{OUTPUTS_DIR}/datasets/context/{pcap}.csv", "a+") as csv_context:
+            csv_context.write("source_text,target_text\n")
+            for i in range(0, len(dataset_df) - 2):
+                csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
+                                   f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
+                                   f"{dataset_df['source_text'][i + 2]}:{dataset_df['target_text'][i + 2]}" + "\n")
 
-#split into train, test, validation sets
-train_df, val_test_df = train_test_split(pkt_df, test_size=0.2)
-val_df, test_df = train_test_split(val_test_df, test_size=0.5)
+    result_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/context/{pcap}.csv")
 
-train_df.to_csv(f"../datasets/train/{sys.argv[1]}.csv", index=True)
-test_df.to_csv(f"../datasets/test/{sys.argv[1]}.csv", index=True)
-val_df.to_csv(f"../datasets/validation/{sys.argv[1]}.csv", index=True)
+    train_df, val_test_df = train_test_split(result_df, test_size=0.2)
+    val_df, test_df = train_test_split(val_test_df, test_size=0.5)
+
+    train_df.to_csv(f"{OUTPUTS_DIR}/datasets/train/{pcap}.csv", index=True)
+    test_df.to_csv(f"{OUTPUTS_DIR}/datasets/test/{pcap}.csv", index=True)
+    val_df.to_csv(f"{OUTPUTS_DIR}/datasets/validation/{pcap}.csv", index=True)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-pcap', required=True)
+    parser.add_argument('-p', default="502", required=False)
+    parser.add_argument('-pr', default="mbtcp", required=False)
+    parser.add_argument('-c', default=False, required=False)
+    parser.add_argument('-f', default="str", required=False)
+    args = parser.parse_args()
+
+    pcap = args.pcap
+    port = args.p
+    capture_layer = args.pr
+    context = args.c
+    enc_type = args.f
+
+    parse(capture_layer, port, pcap, context, enc_type)
+
+
+if __name__ == '__main__':
+    main()
