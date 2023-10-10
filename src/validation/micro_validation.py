@@ -21,6 +21,7 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
             if "|" in request:
                 question = request[request.rindex("|") + 1:len(request) - 1]
                 context = request[:request.rindex("|")]
+                to_save.context = context
                 inputs = model.tokenizer(question=question, context=context, return_tensors="pt")
                 output = tokenizer.decode(inputs['input_ids'][0])
                 predicted_response = model.predict(output)
@@ -39,7 +40,7 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
 
         except MbtcpValidatorException as exception:
             to_save.valid = False
-            to_save.test_set_response = expected_response
+            to_save.expected_response = expected_response
             to_save.traceback = exception
         finally:
             result_file.write(json.dumps(to_save.__dict__) + "\n")
