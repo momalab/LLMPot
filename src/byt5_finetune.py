@@ -9,8 +9,6 @@ from init import OUTPUTS_DIR, PROJECT_ROOT_DIR
 from utilities import logger
 
 
-# 1: byt5, 2: google 3: byt5-small or byt5-large, 4: read csv file, 5:epochs, 6:precision, 7: workers
-
 def finetune(model_type: str, model_name_path: str, model_name: str, csv_filename: str, epochs: int, precision: int, workers: int):
     model = SimpleT5()
     model.from_pretrained(model_type, f"{model_name_path}/{model_name}")
