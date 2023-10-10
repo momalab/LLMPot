@@ -42,7 +42,7 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
 
         except MbtcpValidatorException as exception:
             to_save.valid = False
-            to_save.traceback = exception
+            to_save.error = exception
         finally:
             result_file.write(json.dumps(to_save.__dict__) + "\n")
 
@@ -54,7 +54,7 @@ def main():
     parser.add_argument('-mn', default="byt5-small", required=False)
     parser.add_argument('-mnf', required=True)
     parser.add_argument('-ts', required=True)
-    parser.add_argument('-g', default=True, required=False)
+    parser.add_argument('-g', default="True", required=False)
     args = parser.parse_args()
 
     model_type = args.mt
@@ -62,7 +62,7 @@ def main():
     model_name = args.mn
     finetuned_model_name = args.mnf
     test_set_name = args.ts
-    use_gpu = bool(args.g)
+    use_gpu = args.g
 
     model = SimpleT5()
     model.load_model(f"{model_type}", f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}", use_gpu=use_gpu)
