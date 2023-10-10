@@ -9,7 +9,7 @@ from init import OUTPUTS_DIR, PROJECT_ROOT_DIR
 
 # 1: byt5, 2: google 3: byt5-small or byt5-large, 4: read csv file, 5:epochs, 6:precision, 7: workers
 
-def finetune(model_type: str, model_name_path: str, model_name: str, csv_filename: str, epochs: int, precision: int, workers: int):
+def finetune(model_type: str, model_name_path: str, model_name: str, csv_filename: str, epochs: int, precision: int, workers: int, log: Logger):
     model = SimpleT5()
     model.from_pretrained(model_type, f"{model_name_path}/{model_name}")
 
@@ -29,6 +29,7 @@ def finetune(model_type: str, model_name_path: str, model_name: str, csv_filenam
                 dataloader_num_workers=workers,
                 outputdir=f"{PROJECT_ROOT_DIR}/models/{model_name}_{csv_filename}_epochs-{epochs}_precision-{precision}_{datetime.datetime.now().strftime('%Y%m%dT%H%M')}",
                 early_stopping_patience_epochs=0,
+                logger=log,
                 precision=precision,
                 save_only_last_epoch=True)
 
@@ -45,7 +46,7 @@ def main():
     log = logger.setup_custom_logger(f"{model_type}_{model_name}_epochs-{epochs}_precision-{precision}", f"{OUTPUTS_DIR}/logs")
 
     try:
-        finetune(model_type, model_name_path, model_name, csv_filename, epochs, precision, workers)
+        finetune(model_type, model_name_path, model_name, csv_filename, epochs, precision, workers, log)
     except:
         log.error(traceback.format_exc())
         exit(1)
