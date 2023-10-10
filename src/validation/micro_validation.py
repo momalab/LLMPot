@@ -6,10 +6,10 @@ import pandas as pd
 from simplet5 import SimpleT5
 from transformers import ByT5Tokenizer
 
+from cfg import OUTPUTS_DIR, PROJECT_ROOT_DIR
 from mbtcp_validator import Validator
-from src.validation.model.result import Result
-from src.init import PROJECT_ROOT_DIR, OUTPUTS_DIR
-from src.validation.exception.mbtcp_validator_exception import MbtcpValidatorException
+from model.result import Result
+from exception.mbtcp_validator_exception import MbtcpValidatorException
 
 
 def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_file: TextIO):
