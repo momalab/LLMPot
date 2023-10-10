@@ -7,13 +7,9 @@ from simplet5 import SimpleT5
 from utilities import logger
 from init import OUTPUTS_DIR, PROJECT_ROOT_DIR
 
-# 1:  byt5, 2: google/byt5-small or google/byt5-large, 3: read csv file, 4:epochs, 5:precision, 6: workers
+# 1: byt5, 2: google 3: byt5-small or byt5-large, 4: read csv file, 5:epochs, 6:precision, 7: workers
 
-log = logger.setup_custom_logger(f"{sys.argv[2]}_{sys.argv[3]}_epochs-{sys.argv[4]}_precision-{sys.argv[5]}",
-                                 f"{OUTPUTS_DIR}/logs")
-
-
-def finetune(model_type: str, model_name_path: str, model_name: str, csv_filename: str, epochs: int, precision: int):
+def finetune(model_type: str, model_name_path: str, model_name: str, csv_filename: str, epochs: int, precision: int, workers: int):
     model = SimpleT5()
     model.from_pretrained(model_type, f"{model_name_path}/{model_name}")
 
@@ -28,30 +24,31 @@ def finetune(model_type: str, model_name_path: str, model_name: str, csv_filenam
                 source_max_token_len=512,
                 target_max_token_len=128,
                 batch_size=8,
-                max_epochs=int(sys.argv[4]),
+                max_epochs=epochs,
                 use_gpu=True,
-                dataloader_num_workers=int(sys.argv[6]),
+                dataloader_num_workers=workers,
                 outputdir=f"{PROJECT_ROOT_DIR}/models/{model_name}_{csv_filename}_epochs-{epochs}_precision-{precision}_{datetime.datetime.now().strftime('%Y%m%dT%H%M')}",
                 early_stopping_patience_epochs=0,
-                precision=int(sys.argv[5]),
+                precision=precision,
                 save_only_last_epoch=True)
 
 
 def main():
-    try:
-        model_type = sys.argv[1]
-        model_name_path = sys.argv[2]
-        model_name = sys.argv[3]
-        csv_filename = sys.argv[3]
-        epochs = int(sys.argv[4])
-        precision = int(sys.argv[5])
+    model_type = sys.argv[1]
+    model_name_path = sys.argv[2]
+    model_name = sys.argv[3]
+    csv_filename = sys.argv[4]
+    epochs = int(sys.argv[5])
+    precision = int(sys.argv[6])
+    workers = int(sys.argv[7])
 
-        finetune(model_type, model_name_path, model_name, csv_filename, epochs, precision)
-    except KeyboardInterrupt:
-        log.error(traceback.format_exc())
-        exit(1)
+    log = logger.setup_custom_logger(f"{model_type}_{model_name}_epochs-{epochs}_precision-{precision}", f"{OUTPUTS_DIR}/logs")
+
+    try:
+        finetune(model_type, model_name_path, model_name, csv_filename, epochs, precision, workers)
     except:
         log.error(traceback.format_exc())
+        exit(1)
 
 
 if __name__ == '__main__':
