@@ -34,7 +34,7 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
             to_save.valid = True
         except ValueError as exception:
             to_save.valid = False
-            to_save.error = exception.__dict__
+            to_save.error = exception.__str__()
         finally:
             to_save.index = i
             to_save.context = context
