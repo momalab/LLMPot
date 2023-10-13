@@ -79,7 +79,7 @@ def main():
     test_set = pd.read_csv(f"{OUTPUTS_DIR}/datasets/test/{test_set_name}.csv")
     test_set = test_set.rename(columns={'source_text': 'request', 'target_text': 'response'})
 
-    with open(f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}.jsonl", "a") as result_file:
+    with open(f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}_{validation_type}.jsonl", "a") as result_file:
         validate(model, tokenizer, test_set, result_file, validation_type)
 
 
