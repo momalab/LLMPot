@@ -79,7 +79,7 @@ def main():
     pcap = args.pcap
     port = args.p
     capture_layer = args.pr
-    context = args.c
+    context = eval(args.c)
     enc_type = args.f
 
     parse(capture_layer, port, pcap, context, enc_type)
