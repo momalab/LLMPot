@@ -11,7 +11,7 @@ class MbtcpClient:
 
     @staticmethod
     def generate_random_request():
-        address = random.randint(0, 99)
+        address = random.randint(0, 64)
         num_elements = random.randint(1, 10)
         data_to_write = [random.randint(0, 65535) for _ in range(num_elements)]
         single_data_to_write = [random.randint(0, 65535)]
