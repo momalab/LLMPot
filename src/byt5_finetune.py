@@ -1,5 +1,6 @@
 import argparse
 import datetime
+import time
 import traceback
 
 import pandas as pd
@@ -9,7 +10,7 @@ from cfg import OUTPUTS_DIR, PROJECT_ROOT_DIR
 from utilities import logger
 
 
-def finetune(model_type: str, model_name_path: str, model_name: str, csv_filename: str, epochs: int, precision: int, workers: int):
+def finetune(model_type: str, model_name_path: str, model_name: str, csv_filename: str, epochs: int, precision: int, workers: int, start_time: float):
     model = SimpleT5()
     model.from_pretrained(model_type, f"{model_name_path}/{model_name}")
 
@@ -27,7 +28,8 @@ def finetune(model_type: str, model_name_path: str, model_name: str, csv_filenam
                 max_epochs=epochs,
                 use_gpu=True,
                 dataloader_num_workers=workers,
-                outputdir=f"{PROJECT_ROOT_DIR}/models/{model_name}_{csv_filename}_epochs-{epochs}_precision-{precision}_{datetime.datetime.now().strftime('%Y%m%dT%H%M')}",
+                outputdir=f"{PROJECT_ROOT_DIR}/models/{model_name}_{csv_filename}_epochs-{epochs}_precision-{precision}"
+                          f"_{datetime.datetime.fromtimestamp(start_time).strftime('%Y%m%dT%H%M')}",
                 early_stopping_patience_epochs=0,
                 precision=precision,
                 logger=False,
@@ -58,7 +60,14 @@ def main():
     log = logger.setup_custom_logger(f"{model_type}_{model_name}_epochs-{epochs}_precision-{precision}", f"{OUTPUTS_DIR}/logs")
 
     try:
-        finetune(model_type, model_name_path, model_name, csv_filename, epochs, precision, workers)
+        start_time = time.time()
+        log.info(f"Start time: {start_time} - {datetime.datetime.fromtimestamp(start_time)}")
+        finetune(model_type, model_name_path, model_name, csv_filename, epochs, precision, workers, start_time)
+        end_time = time.time()
+        log.info(f"End time: {end_time} - {datetime.datetime.fromtimestamp(end_time)}")
+        duration = end_time - start_time
+        log.info(f"Duration: {duration}")
+        log.info(f"Duration: {datetime.timedelta(seconds=duration)}")
     except:
         log.error(traceback.format_exc())
         exit(1)
