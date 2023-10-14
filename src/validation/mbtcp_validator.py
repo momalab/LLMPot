@@ -54,7 +54,10 @@ class Validator:
     def _read_single_coil(self):
         bit_count = int(self.query_payload[-1], base=16)
         byte_count = int(self.response_payload[1], base=16)
-        expected_byte_count = int(bit_count / 8) + 1
+        expected_byte_count = int(bit_count / 8)
+        if bit_count < 8:
+            expected_byte_count = int(bit_count / 8) + 1
+
         if byte_count != expected_byte_count:
             raise ValueError(f"byte_count: {byte_count}, expected: {expected_byte_count}")
 

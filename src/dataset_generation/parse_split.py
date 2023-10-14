@@ -55,7 +55,9 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str
                                   f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
                                   f"{dataset_df['source_text'][i + 2]}:{dataset_df['target_text'][i + 2]}" + "\n")
 
-    result_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/context/{pcap}.csv")
+        result_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/context/{pcap}.csv")
+    else:
+        result_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv")
 
     train_df, val_test_df = train_test_split(result_df, test_size=0.2)
     val_df, test_df = train_test_split(val_test_df, test_size=0.5)
@@ -77,7 +79,7 @@ def main():
     pcap = args.pcap
     port = args.p
     capture_layer = args.pr
-    context = args.c
+    context = eval(args.c)
     enc_type = args.f
 
     parse(capture_layer, port, pcap, context, enc_type)

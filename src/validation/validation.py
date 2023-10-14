@@ -34,7 +34,7 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
             to_save.valid = True
         except ValueError as exception:
             to_save.valid = False
-            to_save.error = exception.__dict__
+            to_save.error = exception.__str__()
         finally:
             to_save.index = i
             to_save.context = context
@@ -79,7 +79,7 @@ def main():
     test_set = pd.read_csv(f"{OUTPUTS_DIR}/datasets/test/{test_set_name}.csv")
     test_set = test_set.rename(columns={'source_text': 'request', 'target_text': 'response'})
 
-    with open(f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}.jsonl", "a") as result_file:
+    with open(f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}_{validation_type}.jsonl", "a") as result_file:
         validate(model, tokenizer, test_set, result_file, validation_type)
 
 

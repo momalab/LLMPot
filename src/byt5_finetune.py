@@ -5,7 +5,7 @@ import traceback
 import pandas as pd
 from simplet5 import SimpleT5
 
-from init import OUTPUTS_DIR, PROJECT_ROOT_DIR
+from cfg import OUTPUTS_DIR, PROJECT_ROOT_DIR
 from utilities import logger
 
 

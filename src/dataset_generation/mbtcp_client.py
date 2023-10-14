@@ -101,7 +101,7 @@ def start_client(samples_num: int, has_context: bool):
 
 def main(argv: list[str]):
     samples_num = int(argv[3]) * 1000
-    has_context = bool(argv[4])
+    has_context = eval(argv[4])
     start_client(samples_num, has_context)
 
 
