@@ -57,10 +57,12 @@ def main():
 
     print(model_type, model_name_path, model_name)
 
-    log = logger.setup_custom_logger(f"{model_type}_{model_name}_epochs-{epochs}_precision-{precision}", f"{OUTPUTS_DIR}/logs")
 
     try:
         start_time = time.time()
+        log = logger.setup_custom_logger(f"{model_type}_{model_name}_epochs-{epochs}_precision-{precision}"
+                                         f"_{datetime.datetime.fromtimestamp(start_time).strftime('%Y%m%dT%H%M')}",
+                                         f"{OUTPUTS_DIR}/logs")
         log.info(f"Start time: {start_time} - {datetime.datetime.fromtimestamp(start_time)}")
         finetune(model_type, model_name_path, model_name, csv_filename, epochs, precision, workers, start_time)
         end_time = time.time()
