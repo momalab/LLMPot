@@ -4,7 +4,6 @@ import pyshark
 import pandas as pd
 from tqdm import tqdm
 from pyshark.packet.packet import Packet
-from sklearn.model_selection import train_test_split
 
 from cfg import OUTPUTS_DIR
 
@@ -45,26 +44,16 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str
     dataset_dict["source_text"] = dataset_dict["source_text"][:min_len]
 
     dataset_df = pd.DataFrame(dataset_dict)
-    dataset_df.to_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv")
 
     if context:
-        with open(f"{OUTPUTS_DIR}/datasets/context/{pcap}.csv", "a+") as csv_context:
+        with open(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv", "a+") as csv_context:
             csv_context.write("source_text,target_text\n")
             for i in range(0, len(dataset_df) - 2):
                 csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
                                   f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
                                   f"{dataset_df['source_text'][i + 2]}:{dataset_df['target_text'][i + 2]}" + "\n")
-
-        result_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/context/{pcap}.csv")
     else:
-        result_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv")
-
-    train_df, val_test_df = train_test_split(result_df, test_size=0.2)
-    val_df, test_df = train_test_split(val_test_df, test_size=0.5)
-
-    train_df.to_csv(f"{OUTPUTS_DIR}/datasets/train/{pcap}.csv", index=True)
-    test_df.to_csv(f"{OUTPUTS_DIR}/datasets/test/{pcap}.csv", index=True)
-    val_df.to_csv(f"{OUTPUTS_DIR}/datasets/validation/{pcap}.csv", index=True)
+        dataset_df.to_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv")
 
 
 def main():
