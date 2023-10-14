@@ -51,7 +51,7 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str
             for i in range(0, len(dataset_df) - 2):
                 csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
                                   f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
-                                  f"{dataset_df['source_text'][i + 2]}:{dataset_df['target_text'][i + 2]}" + "\n")
+                                  f"{dataset_df['source_text'][i + 2]}:,{dataset_df['target_text'][i + 2]}" + "\n")
     else:
         dataset_df.to_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv", index=False)
 
