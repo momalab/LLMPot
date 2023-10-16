@@ -60,7 +60,7 @@ def main():
 
     try:
         start_time = time.time()
-        log = logger.setup_custom_logger(f"{model_type}_{model_name}_epochs-{epochs}_precision-{precision}"
+        log = logger.setup_custom_logger(f"{model_type}_{model_name}_{csv_filename}_epochs-{epochs}_precision-{precision}"
                                          f"_{datetime.datetime.fromtimestamp(start_time).strftime('%Y%m%dT%H%M')}",
                                          f"{OUTPUTS_DIR}/logs")
         log.info(f"Start time: {start_time} - {datetime.datetime.fromtimestamp(start_time)}")
