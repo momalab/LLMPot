@@ -15,6 +15,7 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
     for i in range(len(test_set)):
         to_save = Result()
         context = ""
+        question = ""
         request = test_set['request'][i]
         response = ""
         expected_response = test_set['response'][i]
@@ -38,7 +39,7 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
         finally:
             to_save.index = i
             to_save.context = context
-            to_save.request = request
+            to_save.request = question
             to_save.response = response
             to_save.expected_response = expected_response
             result_file.write(json.dumps(to_save.__dict__) + "\n")
