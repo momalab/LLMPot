@@ -51,7 +51,7 @@ class MbtcpClient:
         else:
             print(f"{data_type} to address {address}: {data_to_write}")
 
-    def start_client(self, samples_num: int, has_context: bool, function_code: int):
+    def start_client(self, samples_num: int, has_context: bool, initial_function_code: int):
         self._client.connect()
 
         try:
@@ -59,8 +59,10 @@ class MbtcpClient:
 
                 if not has_context:
                     address, num_elements, data_to_write, single_data_to_write = self.generate_random_request()
-                    if function_code == 0:
+                    if initial_function_code == 0:
                         function_code = random.choice([1, 3, 5, 15, 16])
+                    else:
+                        function_code = initial_function_code
 
                     if function_code == 1:  # Read Coils (FC 01)
                         self.read_data("Coils", address, 1, num_elements)
