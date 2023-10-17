@@ -14,6 +14,6 @@ def setup_custom_logger(name: str, path: str):
 
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
-    # logging.root.addHandler(console_handler)
+    logging.root.addHandler(console_handler)
 
     return logging.getLogger(name)
