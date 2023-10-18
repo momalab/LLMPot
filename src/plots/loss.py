@@ -1,12 +1,13 @@
-import argparse
+import os
 
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 from cfg import OUTPUTS_DIR
+from utilities.model.filename import Filename
 
 
-def main(log_filename: str = "lala"):
+def calculate_loss(log_filename: str = "lala"):
     with open(f"{OUTPUTS_DIR}/logs/{log_filename}") as log_file:
         log_lines = log_file.readlines()
 
@@ -28,17 +29,16 @@ def main(log_filename: str = "lala"):
     print(val_loss)
 
     fig = make_subplots()
-    fig.add_trace(go.Scatter(x=[*train_loss.keys()], y=[*train_loss.values()], mode='lines+markers', name='train',
-                             marker=dict(color="purple")))
-    fig.add_trace(go.Scatter(x=[*val_loss.keys()], y=[*val_loss.values()], mode='lines+markers', name='val',
-                             marker=dict(color="green")))
+    fig.add_trace(go.Scatter(x=[*train_loss.keys()], y=[*train_loss.values()], mode='lines+markers', name='train', marker=dict(color="purple")))
+    fig.add_trace(go.Scatter(x=[*val_loss.keys()], y=[*val_loss.values()], mode='lines+markers', name='val', marker=dict(color="green")))
+    fig.update_layout(title=log_filename)
     fig.show()
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-l', required=True)
-    args = parser.parse_args()
+def main():
+    for filename in os.listdir(f"{OUTPUTS_DIR}/logs/"):
+        calculate_loss(filename)
 
-    log_filename = args.l
-    main(log_filename)
+
+if __name__ == '__main__':
+    main()
