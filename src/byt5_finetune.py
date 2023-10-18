@@ -28,7 +28,7 @@ def finetune(model_type: str, model_name_path: str, model_name: str, csv_filenam
                 source_max_token_len=512,
                 target_max_token_len=128,
                 batch_size=8,
-                max_epochs=epochs,
+                max_epochs=epochs - 1,
                 use_gpu=True,
                 dataloader_num_workers=workers,
                 outputdir=output_folder,
@@ -55,7 +55,7 @@ def main():
     model_name_path = args.mp
     model_name = args.mn
     csv_filename = args.csv
-    epochs = int(args.e) - 1
+    epochs = int(args.e)
     precision = int(args.p)
     workers = int(args.w)
 
