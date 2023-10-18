@@ -55,7 +55,7 @@ def main():
     model_name_path = args.mp
     model_name = args.mn
     csv_filename = args.csv
-    epochs = int(args.e)
+    epochs = int(args.e) - 1
     precision = int(args.p)
     workers = int(args.w)
 
