@@ -78,11 +78,16 @@ def main():
     model = SimpleT5()
     for model_version in os.listdir(f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}"):
         the_epoch = model_version.split("-")[2]
+
         model.load_model(f"{model_type}", f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}/{model_version}", use_gpu=use_gpu)
         tokenizer = ByT5Tokenizer.from_pretrained(f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}/{model_version}")
+
         os.makedirs(os.path.dirname(f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}/{model_version}"), exist_ok=True)
-        with open(f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}/{finetuned_model_name}_epoch-{the_epoch}_{validation_type}.jsonl", "a") as result_file:
-            validate(model, tokenizer, test_set, result_file, validation_type)
+        result_file_path = f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}/{finetuned_model_name}_epoch-{the_epoch}_{validation_type}.jsonl"
+
+        if not os.path.isfile(result_file_path):
+            with open(result_file_path, "a") as result_file:
+                validate(model, tokenizer, test_set, result_file, validation_type)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 class Validator:
 
     def __init__(self, request, response):
-        self.request = request
+        self.request = request[:-1]
         self.response = response
         hex_chunks_query = [self.request[i:i + 2] for i in range(0, len(self.request), 2)]
         hex_chunks_response = [self.response[i:i + 2] for i in range(0, len(self.response), 2)]
