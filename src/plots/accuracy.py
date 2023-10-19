@@ -1,3 +1,4 @@
+import glob
 import os
 
 import pandas as pd
@@ -7,13 +8,14 @@ from cfg import OUTPUTS_DIR
 from utilities.model.validation_data_filename import ValidationDataFilename
 
 
-def calculate_accuracy(model_name: str):
-    directory = f"{OUTPUTS_DIR}/validation_data/{model_name}"
+def calculate_accuracy(model_name: str = ""):
+    directory = f"{OUTPUTS_DIR}/validation_data/"
 
     rows = []
-    for filename in os.listdir(directory):
-        filename_obj = ValidationDataFilename(filename)
-        with open(os.path.join(directory, filename)) as log_file:
+    for filename in glob.glob(f"{directory}/*/*.jsonl"):
+        filename_str = filename[filename.rindex("/") + 1:]
+        filename_obj = ValidationDataFilename(filename_str)
+        with open(filename) as log_file:
             df = pd.read_json(log_file, lines=True)
 
             accuracy = round(len(df.query(f"valid == {True}")) / len(df), 2)
@@ -22,8 +24,7 @@ def calculate_accuracy(model_name: str):
 
     df = pd.DataFrame(rows)
 
-    flavors(df)
-    # flavors(df, "dataset_size == 300 and model_name == 'byt5-large'")
+    flavors(df, "context == 'nocontext'")
 
 
 def flavors(df: pd.DataFrame, query: str = None):
@@ -31,9 +32,10 @@ def flavors(df: pd.DataFrame, query: str = None):
     if query is not None:
         df = df.query(query)
 
-    fig = px.bar(df, x='epoch', y='accuracy', barmode='group', title=f"Accuracy for {df.iloc[0]['name']}")
+    fig = px.scatter(df, x='epoch', y='accuracy', color="validation_type", title="Accuracy",
+                     hover_data=['model_name', 'dataset_size', 'validation_type', 'epoch', 'accuracy'])
     fig.show()
 
 
 if __name__ == '__main__':
-    calculate_accuracy("/byt5_byt5-small_mbtcp-context-6k_epochs-200_precision-32_20231019T1300")
+    calculate_accuracy("byt5_byt5-small_mbtcp-both-40k_epochs-9_precision-32_20231016T1052")
