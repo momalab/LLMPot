@@ -22,7 +22,7 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
         expected_response = test_set['response'][i]
         try:
             if "|" in request:
-                question = request[request.rindex("|") + 1:len(request) - 2]
+                question = request[request.rindex("|") + 1:len(request)]
                 context = request[:request.rindex("|") - 1]
                 context = request
                 inputs = model.tokenizer([(question, context)], return_tensors="pt")
