@@ -1,40 +1,39 @@
 import os
 
 import pandas as pd
+import plotly.express as px
 
 from cfg import OUTPUTS_DIR
-import plotly.graph_objects as go
+from utilities.model.filename import Filename
 
 
-def calculate_accuracy(flavor: str):
+def calculate_accuracy():
     directory = f"{OUTPUTS_DIR}/validation_data/"
 
-    validity = {}
-
+    rows = []
     for filename in os.listdir(directory):
+        filename_obj = Filename(filename)
         with open(os.path.join(directory, filename)) as log_file:
-            if flavor in filename:
-                validity[filename] = {}
-                df = pd.read_json(log_file, lines=True)
+            df = pd.read_json(log_file, lines=True)
 
-                validity[filename] = round(len(df.query(f"valid == {True}")) / len(df), 2)
+            accuracy = round(len(df.query(f"valid == {True}")) / len(df), 2)
+            filename_fields_dict = dict(**filename_obj.__dict__, **{"accuracy": accuracy})
+            rows.append(filename_fields_dict)
 
-    print(validity)
+    df = pd.DataFrame(rows)
 
-    fig = go.Figure()
-    fig.add_trace(go.Bar(x=[*validity.keys()], y=[*validity.values()], text=[*validity.values()]))
-    fig.update_layout(title=flavor)
+    flavors(df)
+    # flavors(df, "dataset_size == 300 and model_name == 'byt5-large'")
+
+
+def flavors(df: pd.DataFrame, query: str = None):
+    df.sort_values(["accuracy"], ascending=True)
+    if query is not None:
+        df = df.query(query)
+
+    fig = px.scatter(df, x='epochs', y='accuracy', color='name')
     fig.show()
 
 
 if __name__ == '__main__':
-    calculate_accuracy("micro")
-    calculate_accuracy("epochs-14")
-    calculate_accuracy("epochs-9")
-    calculate_accuracy("mbtcp-context")
-    calculate_accuracy("mbtcp-nocontext")
-    calculate_accuracy("300k")
-    calculate_accuracy("100k")
-    calculate_accuracy("30k")
-    calculate_accuracy("mbtcp-both")
-    calculate_accuracy("byt5")
+    calculate_accuracy()

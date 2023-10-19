@@ -1,6 +1,5 @@
 import datetime
 import os
-import time
 
 import pandas as pd
 import plotly.express as px
@@ -52,13 +51,6 @@ def flavors(df: pd.DataFrame, query: str = None):
         df = df.query(query)
 
     fig = px.scatter(df, x='epoch', y='epoch_duration_seconds', color='name')
-    # fig.update_layout(
-    #     yaxis=dict(
-    #         tickmode='array',
-    #         tickvals=df["duration"],
-    #         ticktext=df["duration_time"],
-    #     )
-    # )
     fig.show()
 
 
