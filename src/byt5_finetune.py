@@ -21,7 +21,7 @@ def finetune(model_type: str, model_name_path: str, model_name: str, csv_filenam
     val_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/validation/{csv_filename}.csv")
     val_df = val_df[['source_text', 'target_text']]
 
-    output_folder = (f"{PROJECT_ROOT_DIR}/models/{model_name}_{csv_filename}_epochs-{epochs}_precision-{precision}"
+    output_folder = (f"{PROJECT_ROOT_DIR}/models/{model_type}_{model_name}_{csv_filename}_epochs-{epochs}_precision-{precision}"
                      f"_{datetime.datetime.fromtimestamp(start_time).strftime('%Y%m%dT%H%M')}")
     model.train(train_df=train_df,
                 eval_df=val_df,
