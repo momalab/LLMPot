@@ -77,6 +77,7 @@ def main():
 
     model = SimpleT5()
     for model_version in os.listdir(f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}"):
+        os.makedirs(os.path.dirname(f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}/{model_version}"), exist_ok=True)
         the_epoch = model_version.split("-")[2]
         model.load_model(f"{model_type}", f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}/{model_version}", use_gpu=use_gpu)
         tokenizer = ByT5Tokenizer.from_pretrained(f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}/{model_version}")
