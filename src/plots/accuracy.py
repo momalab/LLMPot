@@ -24,7 +24,7 @@ def calculate_accuracy(model_name: str = ""):
 
     df = pd.DataFrame(rows)
 
-    flavors(df, "context == 'nocontext'")
+    flavors(df, "model_name == 'byt5-large'")
 
 
 def flavors(df: pd.DataFrame, query: str = None):

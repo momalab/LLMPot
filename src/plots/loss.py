@@ -37,7 +37,7 @@ def calculate_loss(log_filename: str = "lala"):
 
 def main():
     # for filename in os.listdir(f"{OUTPUTS_DIR}/logs/"):
-    calculate_loss("byt5_byt5-small_mbtcp-context-6k_epochs-200_precision-32_20231019T1522")
+    calculate_loss("byt5_byt5-large_mbtcp-nocontext_300k_epochs-14_precision-32_20231010T1126")
 
 
 if __name__ == '__main__':
