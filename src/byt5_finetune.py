@@ -32,7 +32,7 @@ def finetune(model_type: str, model_name_path: str, model_name: str, csv_filenam
                 use_gpu=True,
                 dataloader_num_workers=workers,
                 outputdir=output_folder,
-                early_stopping_patience_epochs=5,
+                early_stopping_patience_epochs=25,
                 precision=precision,
                 logger=False,
                 save_only_last_epoch=False)

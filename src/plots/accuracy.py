@@ -24,7 +24,7 @@ def calculate_accuracy(model_name: str = ""):
 
     df = pd.DataFrame(rows)
 
-    flavors(df, "model_name == 'byt5-large'")
+    flavors(df, "dataset_size == 6")
 
 
 def flavors(df: pd.DataFrame, query: str = None):
@@ -38,4 +38,4 @@ def flavors(df: pd.DataFrame, query: str = None):
 
 
 if __name__ == '__main__':
-    calculate_accuracy("byt5_byt5-small_mbtcp-both-40k_epochs-9_precision-32_20231016T1052")
+    calculate_accuracy("byt5_byt5-small_mbtcp-context-6k_epochs-200_precision-32_20231019T1522")
