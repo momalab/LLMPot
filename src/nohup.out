@@ -1,5 +1,0 @@
-Global seed set to 42
-Traceback (most recent call last):
-  File "/home/dam10098/ICSPot/src/./byt5_finetune.py", line 8, in <module>
-    from init import OUTPUTS_DIR, PROJECT_ROOT_DIR
-ModuleNotFoundError: No module named 'init'

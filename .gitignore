@@ -17,3 +17,4 @@ OLD/models/
 .icspot/
 
 /models
+/outputs/logs
