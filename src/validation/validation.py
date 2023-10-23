@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 from typing import TextIO
 
 import pandas as pd
@@ -15,16 +16,18 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
     for i in range(len(test_set)):
         to_save = Result()
         context = ""
+        question = ""
         request = test_set['request'][i]
         response = ""
         expected_response = test_set['response'][i]
         try:
             if "|" in request:
-                question = request[request.rindex("|") + 1:len(request) - 1]
-                context = request[:request.rindex("|")]
-                inputs = model.tokenizer(question=question, context=context, return_tensors="pt")
+                question = request[request.rindex("|") + 1:len(request)]
+                context = request[:request.rindex("|") - 1]
+                context = request
+                inputs = model.tokenizer([(question, context)], return_tensors="pt")
                 output = tokenizer.decode(inputs['input_ids'][0])
-                response = model.predict(output)
+                response = model.predict(output)[0]
             else:
                 question = request
                 response = model.predict(question)[0]
@@ -38,7 +41,7 @@ def validate(model: SimpleT5, tokenizer: ByT5Tokenizer, test_set: [], result_fil
         finally:
             to_save.index = i
             to_save.context = context
-            to_save.request = request
+            to_save.request = question
             to_save.response = response
             to_save.expected_response = expected_response
             result_file.write(json.dumps(to_save.__dict__) + "\n")
@@ -57,8 +60,6 @@ def validate_choice(validation_type: str, question: str, response: str, expected
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-mt', default="byt5", required=False)
-    parser.add_argument('-mp', default="google", required=False)
-    parser.add_argument('-mn', default="byt5-small", required=False)
     parser.add_argument('-mnf', required=True)
     parser.add_argument('-ts', required=True)
     parser.add_argument('-g', default="False", required=False)
@@ -66,21 +67,27 @@ def main():
     args = parser.parse_args()
 
     model_type = args.mt
-    model_path = args.mp
-    model_name = args.mn
     finetuned_model_name = args.mnf
     test_set_name = args.ts
     use_gpu = eval(args.g)
     validation_type = args.val
 
-    model = SimpleT5()
-    model.load_model(f"{model_type}", f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}", use_gpu=use_gpu)
-    tokenizer = ByT5Tokenizer.from_pretrained(f"{model_path}/{model_name}")
     test_set = pd.read_csv(f"{OUTPUTS_DIR}/datasets/test/{test_set_name}.csv")
     test_set = test_set.rename(columns={'source_text': 'request', 'target_text': 'response'})
 
-    with open(f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}_{validation_type}.jsonl", "a") as result_file:
-        validate(model, tokenizer, test_set, result_file, validation_type)
+    model = SimpleT5()
+    for model_version in os.listdir(f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}"):
+        the_epoch = model_version.split("-")[2]
+
+        model.load_model(f"{model_type}", f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}/{model_version}", use_gpu=use_gpu)
+        tokenizer = ByT5Tokenizer.from_pretrained(f"{PROJECT_ROOT_DIR}/models/{finetuned_model_name}/{model_version}")
+
+        os.makedirs(os.path.dirname(f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}/{model_version}"), exist_ok=True)
+        result_file_path = f"{OUTPUTS_DIR}/validation_data/{finetuned_model_name}/{finetuned_model_name}_epoch-{the_epoch}_{validation_type}.jsonl"
+
+        if not os.path.isfile(result_file_path):
+            with open(result_file_path, "a") as result_file:
+                validate(model, tokenizer, test_set, result_file, validation_type)
 
 
 if __name__ == '__main__':

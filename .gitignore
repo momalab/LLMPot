@@ -16,5 +16,5 @@ OLD/lightning_logs/
 OLD/models/
 .icspot/
 
-/models
-/outputs/logs
+/models/
+/outputs/
