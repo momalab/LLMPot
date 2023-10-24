@@ -12,8 +12,6 @@ venv/
 ENV/
 
 .idea/
-OLD/lightning_logs/
-OLD/models/
 .icspot/
 
 /models/
