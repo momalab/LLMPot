@@ -5,7 +5,7 @@ import torch
 import lightning as pl
 from accelerate import Accelerator
 from lightning.pytorch.callbacks import EarlyStopping, TQDMProgressBar
-from lightning.pytorch.loggers import TensorBoardLogger
+from lightning.pytorch.loggers import CSVLogger
 
 from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
 from transformers import BitsAndBytesConfig, PreTrainedTokenizer
@@ -95,7 +95,7 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, logger: TensorBoardLogger, early_stopping_patience_epochs: int = 20):
+    def train(self, logger: CSVLogger, early_stopping_patience_epochs: int = 20):
 
         callbacks = [TQDMProgressBar(refresh_rate=5)]
 
