@@ -60,7 +60,7 @@ class MbtcpClient:
                 if not has_context:
                     address, num_elements, data_to_write, single_data_to_write = self.generate_random_request()
                     if initial_function_code == 0:
-                        function_code = random.choice([1, 3, 5, 15, 16])
+                        function_code = random.choice([ 3, 16])
                     else:
                         function_code = initial_function_code
 

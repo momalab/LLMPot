@@ -3,11 +3,11 @@ import datetime
 import time
 import traceback
 
-import pandas as pd
 from simplet5 import SimpleT5
 
 from cfg import OUTPUTS_DIR, PROJECT_ROOT_DIR
-from utilities import logger
+from utilities.load_dataset import load_train_val_dfs
+from utilities.logger import TheLogger
 
 
 def finetune(model_type: str, model_name_path: str, model_name: str, csv_filename: str, epochs: int, precision: int,
@@ -15,14 +15,11 @@ def finetune(model_type: str, model_name_path: str, model_name: str, csv_filenam
     model = SimpleT5()
     model.from_pretrained(model_type, f"{model_name_path}/{model_name}")
 
-    train_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/train/{csv_filename}.csv")
-    train_df = train_df[['source_text', 'target_text']]
-
-    val_df = pd.read_csv(f"{OUTPUTS_DIR}/datasets/validation/{csv_filename}.csv")
-    val_df = val_df[['source_text', 'target_text']]
+    train_df, val_df = load_train_val_dfs(csv_filename)
 
     output_folder = (f"{PROJECT_ROOT_DIR}/models/{model_type}_{model_name}_{csv_filename}_epochs-{epochs}_precision-{precision}"
                      f"_{datetime.datetime.fromtimestamp(start_time).strftime('%Y%m%dT%H%M')}")
+
     model.train(train_df=train_df,
                 eval_df=val_df,
                 source_max_token_len=512,
@@ -62,14 +59,14 @@ def main():
     print(model_type, model_name_path, model_name)
 
     start_time = time.time()
-    log = logger.setup_custom_logger(f"{model_type}_{model_name}_{csv_filename}_epochs-{epochs}_precision-{precision}"
+    log = TheLogger(f"{model_type}_{model_name}_{csv_filename}_epochs-{epochs}_precision-{precision}"
                                      f"_{datetime.datetime.fromtimestamp(start_time).strftime('%Y%m%dT%H%M')}",
                                      f"{OUTPUTS_DIR}/logs")
     try:
         log.info(f"Start time: {start_time} - {datetime.datetime.fromtimestamp(start_time)}")
         finetune(model_type, model_name_path, model_name, csv_filename, epochs, precision, workers, start_time)
         end_time = time.time()
-        log.info(f"\nEnd time: {end_time} - {datetime.datetime.fromtimestamp(end_time)}")
+        log.info(f"End time: {end_time} - {datetime.datetime.fromtimestamp(end_time)}")
         duration = end_time - start_time
         log.info(f"Duration: {duration}")
         log.info(f"DurationTime: {datetime.timedelta(seconds=duration)}")
