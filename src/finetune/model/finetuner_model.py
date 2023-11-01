@@ -9,6 +9,7 @@ class FinetunerModel:
     dataset_filename: str
     epochs: int
     precision: int
+    workers: int
     start_time: float
     output_dir: str
     log_output_dir: str
@@ -16,6 +17,7 @@ class FinetunerModel:
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
+        self.checkpoints_dir = f"{cfg.OUTPUTS_DIR}/checkpoints/{self.__str__()}"
         self.output_dir = f"{cfg.OUTPUTS_DIR}/models/{self.__str__()}"
         self.log_output_dir = f"{cfg.OUTPUTS_DIR}/logs"
 

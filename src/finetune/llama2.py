@@ -1,9 +1,5 @@
-import torch
-import transformers
-from accelerate import Accelerator
-from datasets import Dataset, load_dataset
-from peft import prepare_model_for_kbit_training, get_peft_model
-from transformers import AutoTokenizer, LlamaTokenizerFast, AutoModelForCausalLM
+from datasets import load_dataset
+from transformers import LlamaTokenizerFast, AutoModelForCausalLM
 
 from cfg import OUTPUTS_DIR
 from finetune.custom_lightning.llama2_lightning_data_module import Llama2LightningDataModule
@@ -46,22 +42,7 @@ class Llama2(Finetuner):
         return tokenizer
 
     def _init_model(self):
-        model = AutoModelForCausalLM.from_pretrained(self._finetune_model.base_model_id(),
-                                                     quantization_config=self._quantization_config,
-                                                     return_dict=True)
-
-        if self._use_quantization:
-            model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
-            model.config.use_cache = False
-
-        if self._lora_config:
-            model = get_peft_model(model, self._lora_config)
-
-        if torch.cuda.device_count() > 1:
-            accelerator = Accelerator(gradient_accumulation_steps=2)
-            model = accelerator.prepare_model(model)
-
-            model.is_parallelizable = True
-            model.model_parallel = True
-
-        return model
+        self._model = AutoModelForCausalLM.from_pretrained(self._finetune_model.base_model_id(),
+                                                           quantization_config=self._quantization_config,
+                                                           return_dict=True)
+        super()._init_model()

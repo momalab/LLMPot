@@ -3,7 +3,10 @@ import datetime
 import time
 import traceback
 
+from lightning.pytorch.loggers import CSVLogger
+
 from finetune.byt5 import Byt5
+from finetune.llama2 import Llama2
 from finetune.model.finetuner_model import FinetunerModel
 from utilities.logger import TheLogger
 
@@ -12,7 +15,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-mt', default="google", required=False)
     parser.add_argument('-mn', default="byt5-small", required=False)
-    parser.add_argument('-csv', default="mbtcp-nocontext-6k_fc-3-16", required=False)
+    parser.add_argument('-csv', default="mbtcp-nocontext-10k", required=False)
     parser.add_argument('-e', default=10, required=False)
     parser.add_argument('-p', default=32, required=False)
     parser.add_argument('-w', default=2, required=False)
@@ -20,16 +23,21 @@ def main():
     parser.add_argument('-q', default="False", required=False)
     args = parser.parse_args()
 
-    finetune_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.csv,
-                                    epochs=args.e, precision=args.p, start_time=time.time())
-
     start_time = time.time()
+    finetune_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.csv,
+                                    epochs=args.e, precision=args.p, workers=args.w, start_time=start_time)
+
     log = TheLogger(finetune_model.__str__(), finetune_model.log_output_dir)
     try:
         log.info(f"Start time: {start_time} - {datetime.datetime.fromtimestamp(start_time)}")
 
-        byt5 = Byt5(finetune_model, use_lora=eval(args.l), use_quantization=eval(args.q))
-        byt5.train()
+        logger = CSVLogger(finetune_model.checkpoints_dir, name=finetune_model.__str__())
+        if finetune_model.model_type == "meta-llama":
+            llama2 = Llama2(finetune_model, use_lora=eval(args.l), use_quantization=eval(args.q))
+            llama2.train(logger)
+        else:
+            byt5 = Byt5(finetune_model, use_lora=eval(args.l), use_quantization=eval(args.q))
+            byt5.train(logger)
 
         end_time = time.time()
         log.info(f"End time: {end_time} - {datetime.datetime.fromtimestamp(end_time)}")

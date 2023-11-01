@@ -3,9 +3,11 @@ from typing import Any
 
 import torch
 import lightning as pl
+from accelerate import Accelerator
 from lightning.pytorch.callbacks import EarlyStopping, TQDMProgressBar
+from lightning.pytorch.loggers import TensorBoardLogger
 
-from peft import LoraConfig, TaskType
+from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
 from transformers import BitsAndBytesConfig, PreTrainedTokenizer
 
 from cfg import OUTPUTS_DIR
@@ -33,7 +35,7 @@ class Finetuner:
 
     _logger: TheLogger
 
-    def __init__(self, finetune_model: FinetunerModel, use_lora: bool = False, use_quantization: bool = False, use_gpu: bool = True):
+    def __init__(self, finetune_model: FinetunerModel, use_lora: bool = False, use_quantization: bool = False):
         self._finetune_model = finetune_model
         self._logger = TheLogger(self._finetune_model.__str__(), f"{OUTPUTS_DIR}/logs")
 
@@ -43,8 +45,8 @@ class Finetuner:
         self._use_lora = use_lora
         self._lora_config = self._init_lora_config()
 
-        self._tokenizer = self._init_tokenizer()
-        self._model = self._init_model()
+        self._init_tokenizer()
+        self._init_model()
 
         self.print_trainable_parameters()
 
@@ -58,7 +60,19 @@ class Finetuner:
 
     @abstractmethod
     def _init_model(self):
-        pass
+        if self._use_quantization:
+            self._model = prepare_model_for_kbit_training(self._model, use_gradient_checkpointing=True)
+            self._model.config.use_cache = False
+
+        if self._lora_config:
+            self._model = get_peft_model(self._model, self._lora_config)
+
+        if torch.cuda.device_count() > 1:
+            accelerator = Accelerator(gradient_accumulation_steps=2)
+            self._model = accelerator.prepare_model(self._model)
+
+            self._model.is_parallelizable = True
+            self._model.model_parallel = True
 
     def _init_lora_config(self) -> LoraConfig:
         if self._use_lora:
@@ -81,7 +95,7 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, early_stopping_patience_epochs: int = 20, logger="default"):
+    def train(self, logger: TensorBoardLogger, early_stopping_patience_epochs: int = 20):
 
         callbacks = [TQDMProgressBar(refresh_rate=5)]
 
@@ -89,14 +103,12 @@ class Finetuner:
             early_stop_callback = EarlyStopping(monitor="val_loss", min_delta=0.00, patience=early_stopping_patience_epochs, verbose=True, mode="min")
             callbacks.append(early_stop_callback)
 
-        loggers = True if logger == "default" else logger
-
-        trainer = pl.Trainer(logger=loggers,
+        trainer = pl.Trainer(logger=logger,
                              callbacks=callbacks,
                              max_epochs=self._finetune_model.epochs,
                              precision=self._finetune_model.precision,
                              log_every_n_steps=1,
-                             accelerator="gpu",
+                             accelerator="cpu",
                              )
 
         trainer.fit(self._custom_module, self._data_module)
