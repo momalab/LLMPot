@@ -31,13 +31,12 @@ def main():
     try:
         log.info(f"Start time: {start_time} - {datetime.datetime.fromtimestamp(start_time)}")
 
-        logger = CSVLogger(finetune_model.checkpoints_dir, name=finetune_model.__str__())
         if finetune_model.model_type == "meta-llama":
             llama2 = Llama2(finetune_model, use_lora=eval(args.l), use_quantization=eval(args.q))
-            llama2.train(logger)
+            llama2.train(logger=False)
         else:
             byt5 = Byt5(finetune_model, use_lora=eval(args.l), use_quantization=eval(args.q))
-            byt5.train(logger)
+            byt5.train(logger=False)
 
         end_time = time.time()
         log.info(f"End time: {end_time} - {datetime.datetime.fromtimestamp(end_time)}")
