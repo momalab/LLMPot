@@ -1,16 +1,16 @@
 pyshark~=0.6
-pandas~=2.0.3
-tqdm~=4.65.0
-pymodbus~=3.4.1
+pandas~=2.1.2
+tqdm==4.66.1
+pymodbus==3.5.4
 
 transformers==4.34.1
 torch==2.1.0
 
-accelerate
+accelerate~=0.24.1
 peft~=0.5.0
-datasets
+datasets~=2.14.6
 scipy
-pyarrow
+pyarrow==14.0.0
 lightning[extra]==2.1.0
 numpy
 bitsandbytes

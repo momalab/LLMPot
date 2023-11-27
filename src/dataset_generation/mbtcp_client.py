@@ -60,7 +60,7 @@ class MbtcpClient:
                 if not has_context:
                     address, num_elements, data_to_write, single_data_to_write = self.generate_random_request()
                     if initial_function_code == 0:
-                        function_code = random.choice([ 3, 16])
+                        function_code = random.choice([3, 16])
                     else:
                         function_code = initial_function_code
 
@@ -99,8 +99,8 @@ class MbtcpClient:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-ip', required=True)
-    parser.add_argument('-p', required=True)
+    parser.add_argument('-ip', default="localhost", required=True)
+    parser.add_argument('-p', default=502, required=True)
     parser.add_argument('-num', required=True)
     parser.add_argument('-c', default=True, required=False)
     parser.add_argument('-fun', default=0, required=False)
@@ -108,7 +108,7 @@ def main():
 
     server_address = args.ip
     server_port = int(args.p)
-    samples_num = int(args.num) * 1000
+    samples_num = int(args.num)
     has_context = eval(args.c)
     function_code = int(args.fun)
 

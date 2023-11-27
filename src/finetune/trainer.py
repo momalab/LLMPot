@@ -3,8 +3,6 @@ import datetime
 import time
 import traceback
 
-from lightning.pytorch.loggers import CSVLogger
-
 from finetune.byt5 import Byt5
 from finetune.llama2 import Llama2
 from finetune.model.finetuner_model import FinetunerModel
