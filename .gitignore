@@ -14,5 +14,5 @@ ENV/
 .idea/
 .icspot/
 
-/models/
-/outputs/
+models/
+outputs/

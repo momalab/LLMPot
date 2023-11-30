@@ -1,0 +1,36 @@
+runtime: python
+env: flex
+entrypoint: python src/honeypot/server.py
+
+service: honeypot
+
+runtime_config:
+  operating_system: "ubuntu22"
+  runtime_version: "3.10"
+
+network:
+  name: howkgpt-net
+  subnetwork_name: howkgpt-subnet-01
+  instance_ip_mode: internal
+#  forwarded_ports:
+#    - 502/tcp
+
+env_variables:
+  PYTHONPATH: "src"
+
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 4
+  cool_down_period_sec: 180
+  cpu_utilization:
+    target_utilization: 0.7
+  target_concurrent_requests: 100
+
+resources:
+  cpu: 2
+  memory_gb: 8
+  disk_size_gb: 40
+  volumes:
+  - name: ramdisk1
+    volume_type: tmpfs
+    size_gb: 0.5

@@ -8,6 +8,7 @@ class Filename:
     protocol: str
     context: str
     dataset_size: int
+    fc: []
     epochs: int
     precision: int
     start_time: datetime
@@ -21,6 +22,7 @@ class Filename:
         self.protocol = dataset[0]
         self.context = dataset[1]
         self.dataset_size = int(dataset[2][:-1])
-        self.epochs = int(fields[3].split("-")[1])
-        self.precision = int(fields[4].split("-")[1])
-        self.start_time = datetime.datetime.strptime(fields[5], "%Y%m%dT%H%M")
+        self.fc = fields[4].split("-")[1:2]
+        self.epochs = int(fields[4].split("-")[1])
+        self.precision = int(fields[5].split("-")[1])
+        self.start_time = datetime.datetime.strptime(fields[6], "%Y%m%dT%H%M")

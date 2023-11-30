@@ -7,10 +7,10 @@ class ValidationDataFilename(Filename):
 
     def __init__(self, filename: str):
         super().__init__(filename)
-        epoch = filename.split("_")[6]
+        epoch = filename.split("_")[7]
         try:
             self.epoch = int(epoch.split("-")[1])
             self.validation_type = filename.split("_")[7]
         except:
             self.epoch = self.epochs
-            self.validation_type = filename.split("_")[6].split(".")[0]
+            self.validation_type = filename.split("_")[7].split(".")[0]
