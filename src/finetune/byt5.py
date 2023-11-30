@@ -12,13 +12,14 @@ class Byt5(Finetuner):
 
     def __init__(self, finetune_model: FinetunerModel, use_lora: bool = True, use_quantization: bool = True):
         super().__init__(finetune_model, use_lora, use_quantization)
-        self._data_module = Byt5LightningDataModule(self._load_dataset(), self._tokenizer,
-                                                    batch_size=8,
+        dataset = self._load_dataset()
+        self._data_module = Byt5LightningDataModule(dataset, self._tokenizer,
+                                                    batch_size=1,
                                                     source_max_token_len=512,
                                                     target_max_token_len=128,
                                                     num_workers=16)
 
-        self._custom_module = Byt5LightningModule(tokenizer=self._tokenizer, model=self._model,
+        self._custom_module = Byt5LightningModule(tokenizer=self._tokenizer, model=self._model, dataset=dataset,
                                                   output_dir=finetune_model.output_dir,
                                                   save_only_last_epoch=False)
 

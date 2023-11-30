@@ -13,8 +13,8 @@ class TheLogger(logging.Logger):
 
         file_handler = TimedRotatingFileHandler(filename=f"{path}/{name}", when="midnight", backupCount=100)
         file_handler.setFormatter(log_formatter)
-        logging.root.addHandler(file_handler)
+        self.addHandler(file_handler)
 
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(log_formatter)
-        logging.root.addHandler(console_handler)
+        self.addHandler(console_handler)

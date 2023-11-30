@@ -8,6 +8,7 @@ class FinetunerModel:
     model_name: str
     dataset_filename: str
     epochs: int
+    epoch: str = None
     precision: int
     workers: int
     start_time: float
@@ -19,6 +20,8 @@ class FinetunerModel:
             setattr(self, key, value)
         self.checkpoints_dir = f"{cfg.OUTPUTS_DIR}/checkpoints/{self.__str__()}"
         self.output_dir = f"{cfg.OUTPUTS_DIR}/models/{self.__str__()}"
+        if self.epoch is not None:
+            self.output_dir = self.output_dir + f"/epoch-{self.epoch}"
         self.log_output_dir = f"{cfg.OUTPUTS_DIR}/logs"
 
     def __str__(self):

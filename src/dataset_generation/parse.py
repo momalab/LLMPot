@@ -49,9 +49,13 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str
         with open(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv", "a+") as csv_context:
             csv_context.write("source_text,target_text\n")
             for i in range(0, len(dataset_df) - 2):
-                csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
-                                  f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
-                                  f"{dataset_df['source_text'][i + 2]}:,{dataset_df['target_text'][i + 2]}" + "\n")
+                #csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
+                #                  f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
+                #                  f"{dataset_df['source_text'][i + 2]}:,{dataset_df['target_text'][i + 2]}" + "\n")
+                csv_context.write(f"Context: Request 1: {dataset_df['source_text'][i]} Response 1: {dataset_df['target_text'][i]}"
+                                  f" Request 2: {dataset_df['source_text'][i + 1]} Response 2: {dataset_df['target_text'][i + 1]}"
+                                  f" Request 3: {dataset_df['source_text'][i + 2]} Response 3: ,{dataset_df['target_text'][i + 2]}" + "\n")
+
     else:
         dataset_df.to_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv", index=False)
 

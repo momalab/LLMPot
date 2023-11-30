@@ -3,14 +3,14 @@ from typing import Any
 
 import torch
 import lightning as pl
-from accelerate import Accelerator
-from lightning.pytorch.callbacks import EarlyStopping, TQDMProgressBar
+from lightning.pytorch.callbacks import EarlyStopping
 from lightning.pytorch.loggers import CSVLogger
 
 from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
 from transformers import BitsAndBytesConfig, PreTrainedTokenizer
 
 from cfg import OUTPUTS_DIR
+from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 from finetune.model.finetuner_model import FinetunerModel
 from utilities.logger import TheLogger
 
@@ -67,12 +67,12 @@ class Finetuner:
         if self._lora_config:
             self._model = get_peft_model(self._model, self._lora_config)
 
-        if torch.cuda.device_count() > 1:
-            accelerator = Accelerator(gradient_accumulation_steps=2)
-            self._model = accelerator.prepare_model(self._model)
-
-            self._model.is_parallelizable = True
-            self._model.model_parallel = True
+        # if torch.cuda.device_count() > 1:
+        #     accelerator = Accelerator(gradient_accumulation_steps=2)
+        #     self._model = accelerator.prepare_model(self._model)
+        #
+        #     self._model.is_parallelizable = True
+        #     self._model.model_parallel = True
 
     def _init_lora_config(self) -> LoraConfig:
         if self._use_lora:
@@ -95,23 +95,27 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, logger: CSVLogger, early_stopping_patience_epochs: int = 20):
+    def train(self, logger: CSVLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 10):
 
-        callbacks = [TQDMProgressBar(refresh_rate=5)]
+        with open(f"{finetune_model.log_output_dir}/{finetune_model.__str__()}", "a") as f:
+            callbacks = [FileTQDMProgressBar(f, refresh_rate=5)]
 
-        if early_stopping_patience_epochs > 0:
-            early_stop_callback = EarlyStopping(monitor="val_loss", min_delta=0.00, patience=early_stopping_patience_epochs, verbose=True, mode="min")
-            callbacks.append(early_stop_callback)
+            if early_stopping_patience_epochs > 0:
+                early_stop_callback = EarlyStopping(monitor="val_loss", min_delta=0.00,
+                                                    patience=early_stopping_patience_epochs, verbose=True, mode="min")
+                callbacks.append(early_stop_callback)
 
-        trainer = pl.Trainer(logger=logger,
-                             callbacks=callbacks,
-                             max_epochs=self._finetune_model.epochs,
-                             precision=self._finetune_model.precision,
-                             log_every_n_steps=1,
-                             accelerator="cpu",
-                             )
+            trainer = pl.Trainer(logger=logger,
+                                 callbacks=callbacks,
+                                 max_epochs=self._finetune_model.epochs,
+                                 precision=self._finetune_model.precision,
+                                 log_every_n_steps=1,
+                                 accelerator="gpu",
+                                 devices=1,
+                                 strategy="ddp",
+                                 )
 
-        trainer.fit(self._custom_module, self._data_module)
+            trainer.fit(self._custom_module, self._data_module)
 
     def print_trainable_parameters(self):
         trainable_params = 0
