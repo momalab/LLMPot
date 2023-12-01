@@ -9,7 +9,7 @@ class MbtcpClient:
 
     @staticmethod
     def generate_request(sample, data):
-        address = [x for x in range(0, 100)]
+        address = [x for x in range(0, 101)]
         num_elements = 1
         single_data_to_write = [y for y in range(0, 10)] 
         return address[sample], num_elements, single_data_to_write[data]
