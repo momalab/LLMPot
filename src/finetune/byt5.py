@@ -1,3 +1,4 @@
+import pylab as pl
 from datasets import load_dataset
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration, PreTrainedModel
 
@@ -14,14 +15,15 @@ class Byt5(Finetuner):
         super().__init__(finetune_model, use_lora, use_quantization)
         dataset = self._load_dataset()
         self._data_module = Byt5LightningDataModule(dataset, self._tokenizer,
-                                                    batch_size=1,
+                                                    batch_size=4,
                                                     source_max_token_len=512,
                                                     target_max_token_len=128,
                                                     num_workers=16)
 
         self._custom_module = Byt5LightningModule(tokenizer=self._tokenizer, model=self._model, dataset=dataset,
                                                   output_dir=finetune_model.output_dir,
-                                                  save_only_last_epoch=False)
+                                                  save_only_last_epoch=False,
+                                                  finetuner_model=finetune_model)
 
     def _load_dataset(self):
         dataset = load_dataset('csv', data_files={

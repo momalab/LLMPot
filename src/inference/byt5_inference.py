@@ -13,6 +13,12 @@ class ModelWrapper:
         self._model = self._load_model()
         self._tokenizer = ByT5Tokenizer.from_pretrained(self._finetuner_model.base_model_id())
 
+    def __init__(self, model, finetuner_model: FinetunerModel):
+        self._finetuner_model = finetuner_model
+        self._model = model
+        self._cuda_device = model.device
+        self._tokenizer = ByT5Tokenizer.from_pretrained(self._finetuner_model.base_model_id())
+
     @property
     def the_model(self):
         return self._model
@@ -20,12 +26,12 @@ class ModelWrapper:
     def _load_model(self):
         model = T5ForConditionalGeneration.from_pretrained(self._finetuner_model.output_dir)
         model.eval()
-        model = model.to(f"cuda:{self._cuda_device}")
+        model = model.to(self._cuda_device)
         return model
 
     def predict(self, request: str):
         input_ids = self._tokenizer.encode(request, return_tensors="pt", add_special_tokens=True)
-        input_ids = input_ids.to(f"cuda:{self._cuda_device}")
+        input_ids = input_ids.to(self._cuda_device)
         with torch.no_grad():
             outputs = self._model.generate(input_ids,
                                            num_beams=2,

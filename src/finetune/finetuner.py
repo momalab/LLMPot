@@ -1,17 +1,17 @@
 from abc import abstractmethod
 from typing import Any
 
-import torch
 import lightning as pl
+import torch
 from lightning.pytorch.callbacks import EarlyStopping
 from lightning.pytorch.loggers import CSVLogger
-
 from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
 from transformers import BitsAndBytesConfig, PreTrainedTokenizer
 
+import cfg
 from cfg import OUTPUTS_DIR
-from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 from finetune.model.finetuner_model import FinetunerModel
+from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 from utilities.logger import TheLogger
 
 torch.set_float32_matmul_precision('medium')
@@ -95,7 +95,11 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, logger: CSVLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 10):
+    def train(self, logger: CSVLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 0):
+
+        from pytorch_lightning.loggers import TensorBoardLogger
+
+        logger = TensorBoardLogger(f"{cfg.OUTPUTS_DIR}/logs", name="my_model")
 
         with open(f"{finetune_model.log_output_dir}/{finetune_model.__str__()}", "a") as f:
             callbacks = [FileTQDMProgressBar(f, refresh_rate=5)]

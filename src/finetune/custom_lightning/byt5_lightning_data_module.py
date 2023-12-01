@@ -14,8 +14,15 @@ class Byt5LightningDataModule(pl.LightningDataModule):
         self._batch_size = batch_size
         self._tokenizer = tokenizer
         self._num_workers = num_workers
+        self._dataset = dataset
         self._train_dataset = Byt5Dataset(
             dataset["train"],
+            self._tokenizer,
+            source_max_token_len,
+            target_max_token_len,
+        )
+        self._val_dataset = Byt5Dataset(
+            dataset["val"],
             self._tokenizer,
             source_max_token_len,
             target_max_token_len,
@@ -31,7 +38,7 @@ class Byt5LightningDataModule(pl.LightningDataModule):
         return DataLoader(self._train_dataset, batch_size=self._batch_size, shuffle=False, num_workers=self._num_workers)
 
     def test_dataloader(self):
-        return DataLoader(self._test_dataset, batch_size=self._batch_size, shuffle=False, num_workers=self._num_workers)
+        return DataLoader(self._dataset["test"], batch_size=self._batch_size, shuffle=False, num_workers=self._num_workers)
 
     def val_dataloader(self):
-        return DataLoader(self._test_dataset, batch_size=self._batch_size, shuffle=False, num_workers=self._num_workers)
+        return DataLoader(self._val_dataset, batch_size=self._batch_size, shuffle=False, num_workers=self._num_workers)
