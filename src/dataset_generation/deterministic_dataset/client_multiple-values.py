@@ -12,10 +12,18 @@ class MbtcpClient:
     def generate_request(sample, element, data_value):
         address = [x for x in range(0, 100)]
         num_elements = [z for z in range(1, 4)]
-        values_combinations = itertools.product(range(data_value), repeat=num_elements[element])            
-        return address[sample], num_elements[element], values_combinations
+        boolean_value = 2 # ON or OFF/ True or False
+        values_combinations = itertools.product(range(data_value), repeat=num_elements[element])  
+        coils_combinations = itertools.product(range(boolean_value), repeat=num_elements[element])          
+        return address[sample], num_elements[element], values_combinations, coils_combinations
     
     def read_data(self, data_type, address, a, num_elements):
+        if a == 1:
+            result = self._client.read_coils(address, num_elements, unit=0x01)
+            if result.isError():
+                print(f"Failed to read {data_type}. Error: {result.bits[0]}")
+            else:
+                print(f"{data_type} at address {address}: {result.bits[0]}")
         if a == 3:
             result = self._client.read_holding_registers(address, num_elements, unit=0x01)
             if result.isError():
@@ -24,13 +32,19 @@ class MbtcpClient:
                 print(f"{data_type} at address {address}: {result.registers}")
 
     def write_multiple_data(self, data_type, address, data_to_write, a):
+        if a == 15:
+            result = self._client.write_coils(address, data_to_write, unit=0x01)
+            if result.isError():
+                print(f"Failed to write {data_type}. Error: {result.bits[0]}")
+            else:
+                print(f"{data_type} to address {address}: {data_to_write}")
         if a == 16:
             result = self._client.write_registers(address, data_to_write, unit=0x01)
             if result.isError():
                 print(f"Failed to write {data_type}. Error: {result}")
             else:
                 print(f"{data_type} to address {address}: {data_to_write}")
-                
+        
 
     def start_client(self, samples_num: int, data_value: int, max_elements:int):
         self._client.connect()
@@ -38,12 +52,16 @@ class MbtcpClient:
         try:            
             for element in range(max_elements): 
                 for sample in range(samples_num): 
-                    address, num_elements, values_combinations = self.generate_request(sample, element, data_value)      
+                    address, num_elements, values_combinations, coils_combinations = self.generate_request(sample, element, data_value)      
                     for values_to_write in values_combinations:
                         self.read_data("Read Multiple Registers", address, 3, num_elements)
                         self.write_multiple_data("Write Multiple Registers", address, values_to_write, 16)
-                        
+            
                     self.read_data("Read Multiple Registers", address, 3, num_elements)
+                    
+                    for coil_value in coils_combinations:
+                        self.read_data("Read Multiple Coils", address, 1, num_elements)
+                        self.write_multiple_data("Write Multiple Coils", address, coil_value, 15)
                 
         except KeyboardInterrupt:
             print("Client stopped by user.")
