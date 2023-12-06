@@ -49,9 +49,9 @@ class MbtcpClient:
             for sample in range(samples_num):
                 for data in range(data_value):
                     address, num_elements, single_data_to_write = self.generate_request(sample, data)      
-                    self.read_data("Read holding Registers", address, 3, num_elements)
-                    self.write_single_data("Write Multiple Registers", address, single_data_to_write, 6, value_to_write=0)
-                self.read_data("Read holding Registers", address, 3, num_elements)
+                    self.read_data("Read Single Registers", address, 3, num_elements)
+                    self.write_single_data("Write Single Registers", address, single_data_to_write, 6, value_to_write=0)
+                self.read_data("Read Single Registers", address, 3, num_elements)
                 
                 for coil in range(2): #On or Off / True or False
                     value_to_write = [z for z in [True, False]]

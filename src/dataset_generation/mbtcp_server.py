@@ -9,8 +9,8 @@ from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 def start_server(address: str = "localhost", port: int = 502):
     store = ModbusSlaveContext(
         di=ModbusSequentialDataBlock(0, [0] * 100),
-        co=ModbusSequentialDataBlock(0, [0] * 101),
-        hr=ModbusSequentialDataBlock(0, [0] * 101),
+        co=ModbusSequentialDataBlock(0, [0] * 103),
+        hr=ModbusSequentialDataBlock(0, [0] * 103),
         ir=ModbusSequentialDataBlock(0, [0] * 100))
 
     context = ModbusServerContext(slaves=store, single=True)
