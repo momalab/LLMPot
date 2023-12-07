@@ -1,22 +1,20 @@
 from datetime import datetime
 
 import torch
-from transformers import ByT5Tokenizer, T5ForConditionalGeneration
+from transformers import ByT5Tokenizer, T5ForConditionalGeneration, PreTrainedModel
 
 from finetune.model.finetuner_model import FinetunerModel
 
 
 class ModelWrapper:
-    def __init__(self, finetuner_model: FinetunerModel, cuda_device: int = 0):
+    def __init__(self, finetuner_model: FinetunerModel, cuda_device: int = 0, model: PreTrainedModel = None):
         self._finetuner_model = finetuner_model
-        self._cuda_device = cuda_device
-        self._model = self._load_model()
-        self._tokenizer = ByT5Tokenizer.from_pretrained(self._finetuner_model.base_model_id())
-
-    def __init__(self, model, finetuner_model: FinetunerModel):
-        self._finetuner_model = finetuner_model
-        self._model = model
-        self._cuda_device = model.device
+        if model is None:
+            self._cuda_device = cuda_device
+            self._model = self._load_model()
+        else:
+            self._cuda_device = model.device
+            self._model = model
         self._tokenizer = ByT5Tokenizer.from_pretrained(self._finetuner_model.base_model_id())
 
     @property
