@@ -1,83 +1,90 @@
 import argparse
 import json
+import multiprocessing as mp
 import os
-import random
-from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 
-import pandas as pd
+from datasets import Dataset
+from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import ByT5Tokenizer
 
+import utilities.load_dataset
 from cfg import OUTPUTS_DIR, PROJECT_ROOT_DIR
 from finetune.model.finetuner_model import FinetunerModel
 from inference.byt5_inference import ModelWrapper
-from mbtcp_validator import Validator
-from model.result import Result
-import multiprocessing as mp
+from validation.mbtcp_validator import Validator
+from validation.model.result import Result
 
 
-def validate(args):
-    model, tokenizer, test_set, result_file_path, validation_type = args
-    print(f"######: {model.the_model.device}")
-    with open(result_file_path, "a") as result_file:
-        for i in tqdm(range(len(test_set))):
-            to_save = Result()
-            context = ""
-            question = ""
-            request = test_set['request'][i]
-            response = ""
-            expected_response = test_set['response'][i]
-            try:
-                if "|" in request:
-                    question = request[request.rindex("|") + 1:len(request)]
-                    context = request[:request.rindex("|") - 1]
-                    context = request
-                    inputs = model.the_model.tokenizer([(question, context)], return_tensors="pt")
-                    output = tokenizer.decode(inputs['input_ids'][0])
-                    response = model.predict(output)[0]
+class ValidatorWrapper:
 
-                elif ("Context :" in request ) or ("Context ->" in request): #for new context structures
-                    question = request[request.rindex(" Request 3:") + 1:len(request)] #"Request 2:.. Reponse3:"
-                    context = request
-                    inputs = model.the_model.tokenizer([(question, context)], return_tensors="pt")
-                    output = tokenizer.decode(inputs['input_ids'][0])
-                    response = model.predict(output)[0]
+    def validate_wrapper(self, args):
+        model, tokenizer, batch, result_file_path, validation_type = args
+        self.validate(model, tokenizer, batch, result_file_path, validation_type)
 
-                    #request without instructions
-                    question = request[request.rindex("Request 3:") - 1:request.rindex("Reponse 3:")]
-                    question = question.rpartition("Request 3:")
-                    question = question[2]
-                    question = question.strip()
+    def validate(self, model: ModelWrapper, tokenizer: ByT5Tokenizer, batch: dict, result_file_path: str, validation_type: str) -> float:
+        valid = 0
+        batch_size = len(batch['request'])
+        with open(result_file_path, "a") as result_file:
+            for request, response in zip(batch["request"], batch["response"]):
+                to_save = Result()
+                context = ""
+                question = ""
+                expected_response = response
+                try:
+                    if "|" in request:
+                        question = request[request.rindex("|") + 1:len(request)]
+                        context = request[:request.rindex("|") - 1]
+                        context = request
+                        inputs = model.the_model.tokenizer([(question, context)], return_tensors="pt")
+                        output = tokenizer.decode(inputs['input_ids'][0])
+                        response = model.predict(output)
 
-                else:
-                    question = request
-                    response = model.predict(question)
+                    elif ("Context :" in request) or ("Context ->" in request):
+                        question = request[request.rindex(" Request 3:") + 1:len(request)]
+                        context = request
+                        inputs = model.the_model.tokenizer([(question, context)], return_tensors="pt")
+                        output = tokenizer.decode(inputs['input_ids'][0])
+                        response = model.predict(output)
 
-                validate_choice(validation_type, question, response, expected_response)
+                        question = request[request.rindex("Request 3:") - 1:request.rindex("Reponse 3:")]
+                        question = question.rpartition("Request 3:")
+                        question = question[2]
+                        question = question.strip()
 
-                to_save.valid = True
+                    else:
+                        question = request
+                        response = model.predict(question)
 
-            except ValueError as exception:
-                to_save.valid = False
-                to_save.error = exception.__str__()
-            finally:
-                to_save.index = i
-                to_save.context = context
-                to_save.request = question
-                to_save.response = response
-                to_save.expected_response = expected_response
-                result_file.write(json.dumps(to_save.__dict__) + "\n")
+                    self.validate_choice(validation_type, question, response, expected_response)
 
+                    to_save.valid = True
 
-def validate_choice(validation_type: str, question: str, response: str, expected_response: str):
-    if validation_type == "micro":
-        validation = Validator(question, response)
-        validation.check_header_ids()
-        validation.check_payload()
-    else:
-        if response != expected_response:
-            raise ValueError("Not same as expected.")
+                except ValueError as exception:
+                    to_save.valid = False
+                    to_save.error = exception.__str__()
+                finally:
+                    if to_save.valid:
+                        valid = valid + 1
+                    # to_save.index = index
+                    to_save.context = context
+                    to_save.request = question
+                    to_save.response = response
+                    to_save.expected_response = expected_response
+                    result_file.write(json.dumps(to_save.__dict__) + "\n")
+
+        return round(valid / batch_size, 2)
+
+    @staticmethod
+    def validate_choice(validation_type: str, question: str, response: str, expected_response: str):
+        if validation_type == "micro":
+            validation = Validator(question, response)
+            validation.check_header_ids()
+            validation.check_payload()
+        else:
+            if response != expected_response:
+                raise ValueError("Not same as expected.")
 
 
 def main():
@@ -86,7 +93,7 @@ def main():
     parser.add_argument('-mt', default="google", required=False)
     parser.add_argument('-mn', default="byt5-small", required=False)
     parser.add_argument('-ts', default="mbtcp-nocontext-6k_fc-3-16", required=False)
-    parser.add_argument('-t', default="20231128T1911", required=False)
+    parser.add_argument('-t', default="20231130T2036", required=False)
     parser.add_argument('-e', default=100, required=False)
     parser.add_argument('-p', default=32, required=False)
     parser.add_argument('-w', default=2, required=False)
@@ -103,8 +110,8 @@ def main():
     finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.ts,
                                      epochs=args.e, precision=args.p, workers=args.w, start_time=datetime_obj.timestamp())
 
-    test_set = pd.read_csv(f"{OUTPUTS_DIR}/datasets/test/{test_set_name}.csv")
-    test_set = test_set.rename(columns={'source_text': 'request', 'target_text': 'response'})
+    test_set = utilities.load_dataset.load_dataset_from_file(f"{test_set_name}")["test"]
+    test_set = DataLoader(test_set, batch_size=len(test_set), shuffle=False, num_workers=1)
 
     args = list()
     tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
@@ -118,13 +125,16 @@ def main():
 
         os.makedirs(os.path.dirname(f"{OUTPUTS_DIR}/validation_data/{finetuner_model.__str__()}/{model_version}"), exist_ok=True)
         result_file_path = f"{OUTPUTS_DIR}/validation_data/{finetuner_model.__str__()}/{finetuner_model.__str__()}_epoch-{the_epoch}_{validation_type}.jsonl"
-        args.append((model, tokenizer, test_set, result_file_path, validation_type))
+        for batch in test_set:
+            args.append((model, tokenizer, batch, result_file_path, validation_type))
         index = index + 1
         if index == 8:
             index = 0
 
+    validator = ValidatorWrapper()
+
     with mp.Pool(processes=16) as pool:
-        list(pool.map(validate, args))
+        list(pool.map(validator.validate_wrapper, args))
 
 
 if __name__ == '__main__':
