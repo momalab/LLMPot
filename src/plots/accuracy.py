@@ -23,8 +23,9 @@ def calculate_accuracy(model_name: str = ""):
             rows.append(filename_fields_dict)
 
     df = pd.DataFrame(rows)
+    print(df)
 
-    flavors(df, "dataset_size == 6", model_name)
+    flavors(df, "dataset_size == 2", model_name)
 
 
 def flavors(df: pd.DataFrame, query: str = None, model_name: str = "accuracy"):
@@ -39,4 +40,4 @@ def flavors(df: pd.DataFrame, query: str = None, model_name: str = "accuracy"):
 
 
 if __name__ == '__main__':
-    calculate_accuracy("google_byt5-small_mbtcp-nocontext-6k_fc-3-16_epochs-100_precision-32_20231128T1437")
+    calculate_accuracy("google_byt5-small_mbtcp-deterministic-2k_fc-3-16_epochs-1_precision-32_20231212T1434")

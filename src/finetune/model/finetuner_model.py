@@ -26,7 +26,7 @@ class FinetunerModel:
 
     def __str__(self):
         return (f"{self.the_name}_"
-                f"_{datetime.datetime.fromtimestamp(self.start_time).strftime('%Y%m%dT%H%M')}")
+                f"{datetime.datetime.fromtimestamp(self.start_time).strftime('%Y%m%dT%H%M')}")
 
     def base_model_id(self):
         return f"{self.model_type}/{self.model_name}"
