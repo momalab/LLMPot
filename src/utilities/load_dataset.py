@@ -1,4 +1,5 @@
 import pandas as pd
+from datasets import load_dataset
 
 from cfg import OUTPUTS_DIR
 
@@ -11,3 +12,12 @@ def load_train_val_dfs(csv_filename):
     val_df = val_df[['source_text', 'target_text']]
 
     return train_df, val_df
+
+
+def load_dataset_from_file(dataset_filename: str):
+    dataset = load_dataset('csv', data_files={
+        'train': f"{OUTPUTS_DIR}/datasets/train/{dataset_filename}.csv",
+        'val': f"{OUTPUTS_DIR}/datasets/validation/{dataset_filename}.csv",
+        'test': f"{OUTPUTS_DIR}/datasets/test/{dataset_filename}.csv"})
+    dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
+    return dataset.remove_columns("Unnamed: 0")

@@ -20,7 +20,7 @@ class Byt5Dataset(Dataset):
         data_row = self._data[index]
 
         source_text_encoding = self._tokenizer(
-            data_row["source_text"],
+            data_row["request"],
             max_length=self._source_max_token_len,
             padding="max_length",
             truncation=True,
@@ -30,7 +30,7 @@ class Byt5Dataset(Dataset):
         )
 
         target_text_encoding = self._tokenizer(
-            data_row["target_text"],
+            data_row["response"],
             max_length=self._target_max_token_len,
             padding="max_length",
             truncation=True,

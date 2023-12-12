@@ -1,17 +1,19 @@
+import os
 from abc import abstractmethod
 from typing import Any
 
+from lightning import LightningModule, LightningDataModule, Callback
+from lightning.pytorch import Trainer
+from lightning.pytorch.loggers import TensorBoardLogger
 import torch
-import lightning as pl
 from lightning.pytorch.callbacks import EarlyStopping
 from lightning.pytorch.loggers import CSVLogger
-
 from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
 from transformers import BitsAndBytesConfig, PreTrainedTokenizer
 
 from cfg import OUTPUTS_DIR
-from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 from finetune.model.finetuner_model import FinetunerModel
+from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 from utilities.logger import TheLogger
 
 torch.set_float32_matmul_precision('medium')
@@ -30,8 +32,8 @@ class Finetuner:
     _finetune_model: FinetunerModel
     _start_time: float
 
-    _custom_module: pl.LightningModule
-    _data_module: pl.LightningDataModule
+    _custom_module: LightningModule
+    _data_module: LightningDataModule
 
     _logger: TheLogger
 
@@ -95,25 +97,24 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, logger: CSVLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 10):
-
+    def train(self, logger: TensorBoardLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 0):
         with open(f"{finetune_model.log_output_dir}/{finetune_model.__str__()}", "a") as f:
-            callbacks = [FileTQDMProgressBar(f, refresh_rate=5)]
+            callbacks = [FileTQDMProgressBar(f, refresh_rate=5), MetricsLogger()]
 
             if early_stopping_patience_epochs > 0:
                 early_stop_callback = EarlyStopping(monitor="val_loss", min_delta=0.00,
                                                     patience=early_stopping_patience_epochs, verbose=True, mode="min")
                 callbacks.append(early_stop_callback)
 
-            trainer = pl.Trainer(logger=logger,
-                                 callbacks=callbacks,
-                                 max_epochs=self._finetune_model.epochs,
-                                 precision=self._finetune_model.precision,
-                                 log_every_n_steps=1,
-                                 accelerator="gpu",
-                                 devices=1,
-                                 strategy="ddp",
-                                 )
+            trainer = Trainer(logger=logger,
+                              callbacks=callbacks,
+                              max_epochs=self._finetune_model.epochs,
+                              precision=self._finetune_model.precision,
+                              log_every_n_steps=1,
+                              accelerator="gpu",
+                              devices=os.getenv('CUDA_VISIBLE_DEVICES'),
+                              strategy="ddp",
+                              )
 
             trainer.fit(self._custom_module, self._data_module)
 
@@ -125,3 +126,11 @@ class Finetuner:
             if param.requires_grad:
                 trainable_params += param.numel()
         self._logger.info(f"trainable params: {trainable_params} || all params: {all_param} || trainable%: {100 * trainable_params / all_param}")
+
+
+class MetricsLogger(Callback):
+    def on_train_epoch_end(self, trainer, pl_module):
+        if trainer.is_global_zero:
+            epoch_metrics = trainer.callback_metrics
+            if 'train_loss' in epoch_metrics:
+                trainer.logger.experiment.add_scalars('loss', {'val': epoch_metrics['val_loss'].item(), 'train': epoch_metrics['train_loss'].item()}, trainer.current_epoch)
