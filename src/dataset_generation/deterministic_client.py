@@ -123,7 +123,6 @@ def main():
     multiple_data_value = int(args.mul) #values 0 to 2 > restrict the data in multiple registers
     max_elements = int(args.elem) #max 3 registers per packet
     function_code = args.fun
-    print(f"fun: {function_code}")
     
     mbtcp_client = MbtcpClient(server_address, server_port)
     mbtcp_client.start_client(samples_num, single_data_value, multiple_data_value, max_elements, function_code)

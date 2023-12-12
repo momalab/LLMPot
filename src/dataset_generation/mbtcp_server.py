@@ -4,14 +4,14 @@ from pymodbus.server import StartTcpServer
 from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.datastore import ModbusSequentialDataBlock
 from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
-
+from pymodbus.constants import ModbusStatus
 
 def start_server(address: str = "localhost", port: int = 502):
     store = ModbusSlaveContext(
-        di=ModbusSequentialDataBlock(0, [0] * 100),
-        co=ModbusSequentialDataBlock(0, [0] * 103),
-        hr=ModbusSequentialDataBlock(0, [0] * 103),
-        ir=ModbusSequentialDataBlock(0, [0] * 100))
+        di=ModbusSequentialDataBlock(0, [0] * 101),#read coil
+        co=ModbusSequentialDataBlock(0, [0] * 103), #write coil
+        hr=ModbusSequentialDataBlock(0, [0] * 103), #write reg
+        ir=ModbusSequentialDataBlock(0, [0] * 101)) #read reg
 
     context = ModbusServerContext(slaves=store, single=True)
 
@@ -38,4 +38,3 @@ def main(argv: list[str]):
 
 if __name__ == "__main__":
     main(sys.argv)
-
