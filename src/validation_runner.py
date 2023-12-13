@@ -55,7 +55,7 @@ def main():
         print(module.model.device)
 
         os.makedirs(os.path.dirname(f"{OUTPUTS_DIR}/validation_data/{finetuner_model.__str__()}/{model_version}"), exist_ok=True)
-        result_file_path = f"{OUTPUTS_DIR}/validation_data/{finetuner_model.__str__()}/{finetuner_model.__str__()}_epoch-{the_epoch}_{validation_type}.jsonl"
+        result_file_path = f"{OUTPUTS_DIR}/validation_data/{finetuner_model.__str__()}/epoch-{the_epoch}_val_type-{validation_type}.jsonl"
         for batch in test_set:
             arguments.append((batch, result_file_path, validation_type))
         index = index + 1

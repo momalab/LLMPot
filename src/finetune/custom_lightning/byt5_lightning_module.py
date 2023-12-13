@@ -72,8 +72,8 @@ class Byt5LightningModule(LightningModule):
         self.model.eval()
         with torch.no_grad():
             for batch in test_set:
-                accuracy.append(self.validate(batch, self._finetuner_model.dataset_filename, "micro"))
-                accuracy_exactly.append(self.validate(batch, self._finetuner_model.dataset_filename, "exactly"))
+                accuracy.append(self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro"))
+                accuracy_exactly.append(self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"), "exactly"))
 
             self.log("accuracy_micro", mean(accuracy), prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
             self.log("accuracy_exactly", mean(accuracy_exactly), prog_bar=True, logger=True, sync_dist=True, on_epoch=True)

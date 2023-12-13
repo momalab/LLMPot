@@ -99,17 +99,17 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, logger: TensorBoardLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 0):
+    def train(self, logger: TensorBoardLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 20):
         with open(f"{finetune_model.log_output_dir}/{finetune_model.__str__()}", "a") as f:
 
             checkpoint_callback = ModelCheckpoint(
                 monitor='val_loss',
-                filename='model-{epoch:02d}-{val_loss:.2f}',
+                filename='{epoch:02d}-{val_loss:.4f}',
                 save_top_k=3,
                 mode='min',
                 auto_insert_metric_name=False
             )
-            callbacks = [FileTQDMProgressBar(f, refresh_rate=5), checkpoint_callback, MetricsLogger()]
+            callbacks = [FileTQDMProgressBar(f, refresh_rate=3), checkpoint_callback, MetricsLogger()]
 
             if early_stopping_patience_epochs > 0:
                 early_stop_callback = EarlyStopping(monitor="val_loss", min_delta=0.00,
@@ -118,7 +118,7 @@ class Finetuner:
 
             trainer = Trainer(logger=logger,
                               callbacks=callbacks,
-                              max_epochs=10,
+                              max_epochs=self._finetuner_model.epochs,
                               precision=self._finetuner_model.precision,
                               log_every_n_steps=1,
                               accelerator="gpu",
