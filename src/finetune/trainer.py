@@ -4,9 +4,8 @@ import time
 import traceback
 
 from lightning.pytorch.loggers import TensorBoardLogger
-from lightning.pytorch.loggers import CSVLogger
 
-import cfg
+from cfg import OUTPUTS_DIR
 from finetune.byt5 import Byt5
 from finetune.llama2 import Llama2
 from finetune.model.finetuner_model import FinetunerModel
@@ -17,7 +16,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-mt', default="google", required=False)
     parser.add_argument('-mn', default="byt5-small", required=False)
-    parser.add_argument('-csv', default="mbtcp-deterministic-2k_fc-3-16", required=False)
+    parser.add_argument('-csv', default="mbtcp-deterministic-2k_fc-3-6", required=False)
     parser.add_argument('-e', default=100, required=False)
     parser.add_argument('-p', default=32, required=False)
     parser.add_argument('-w', default=2, required=False)
@@ -26,22 +25,21 @@ def main():
     args = parser.parse_args()
 
     start_time = time.time()
-    finetune_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.csv,
-                                    epochs=args.e, precision=args.p, workers=args.w, start_time=start_time)
+    finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.csv,
+                                     epochs=args.e, precision=args.p, workers=args.w, start_time=start_time)
 
-    log = TheLogger(finetune_model.__str__(), finetune_model.log_output_dir)
+    log = TheLogger(finetuner_model.__str__(), finetuner_model.log_output_dir)
     try:
         log.info(f"Start time: {start_time} - {datetime.datetime.fromtimestamp(start_time)}")
 
-        # logger = CSVLogger(finetune_model.checkpoints_dir, name=finetune_model.__str__())
-        logger = TensorBoardLogger(finetune_model.checkpoints_dir, name=finetune_model.the_name, version=finetune_model.start_datetime)
+        logger = TensorBoardLogger(f"{OUTPUTS_DIR}/checkpoints/", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
 
-        if finetune_model.model_type == "meta-llama":
-            llama2 = Llama2(finetune_model, use_lora=eval(args.l), use_quantization=eval(args.q))
-            llama2.train(logger, finetune_model)
+        if finetuner_model.model_type == "meta-llama":
+            llama2 = Llama2(finetuner_model, use_lora=eval(args.l), use_quantization=eval(args.q))
+            llama2.train(logger, finetuner_model)
         else:
-            byt5 = Byt5(finetune_model, use_lora=eval(args.l), use_quantization=eval(args.q))
-            byt5.train(logger, finetune_model)
+            byt5 = Byt5(finetuner_model, use_lora=eval(args.l), use_quantization=eval(args.q))
+            byt5.train(logger, finetuner_model)
 
         end_time = time.time()
         log.info(f"End time: {end_time} - {datetime.datetime.fromtimestamp(end_time)}")

@@ -10,12 +10,8 @@ class FileTQDMProgressBar(TQDMProgressBar):
 
     def init_train_tqdm(self):
         return Tqdm(
-            desc=self.train_description,
-            position=(2 * self.process_position),
-            disable=self.is_disabled,
             leave=True,
             dynamic_ncols=True,
             file=self._file,
             smoothing=0,
-            bar_format=self.BAR_FORMAT,
         )

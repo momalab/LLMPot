@@ -1,17 +1,17 @@
 import os
 from abc import abstractmethod
-from typing import Any
 
-from lightning import LightningModule, LightningDataModule, Callback
-from lightning.pytorch import Trainer
-from lightning.pytorch.loggers import TensorBoardLogger
 import torch
-from lightning.pytorch.callbacks import EarlyStopping
-from lightning.pytorch.loggers import CSVLogger
+from datasets import Dataset
+from lightning import LightningModule, LightningDataModule
+from lightning.pytorch import Trainer
+from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
+from lightning.pytorch.loggers import TensorBoardLogger
 from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
-from transformers import BitsAndBytesConfig, PreTrainedTokenizer
+from transformers import BitsAndBytesConfig, PreTrainedTokenizer, PreTrainedModel
 
 from cfg import OUTPUTS_DIR
+from finetune.callbacks.metrics_logger import MetricsLogger
 from finetune.model.finetuner_model import FinetunerModel
 from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 from utilities.logger import TheLogger
@@ -21,7 +21,7 @@ torch.set_float32_matmul_precision('medium')
 
 class Finetuner:
     _tokenizer: PreTrainedTokenizer
-    _model: Any
+    _model: PreTrainedModel
 
     _quantization_config: BitsAndBytesConfig
     _lora_config: LoraConfig
@@ -37,9 +37,9 @@ class Finetuner:
 
     _logger: TheLogger
 
-    def __init__(self, finetune_model: FinetunerModel, use_lora: bool = False, use_quantization: bool = False):
-        self._finetune_model = finetune_model
-        self._logger = TheLogger(self._finetune_model.__str__(), f"{OUTPUTS_DIR}/logs")
+    def __init__(self, finetuner_model: FinetunerModel, use_lora: bool = False, use_quantization: bool = False):
+        self._finetuner_model = finetuner_model
+        self._logger = TheLogger(self._finetuner_model.__str__(), f"{OUTPUTS_DIR}/logs")
 
         self._use_quantization = use_quantization
         self._quantization_config = self._init_quantization()
@@ -47,21 +47,21 @@ class Finetuner:
         self._use_lora = use_lora
         self._lora_config = self._init_lora_config()
 
-        self._init_tokenizer()
-        self._init_model()
+        self._tokenizer = self._init_tokenizer()
+        self._model = self._init_model()
 
         self.print_trainable_parameters()
 
     @abstractmethod
-    def _load_dataset(self):
+    def _load_dataset(self) -> Dataset:
         pass
 
     @abstractmethod
-    def _init_tokenizer(self):
+    def _init_tokenizer(self) -> PreTrainedTokenizer:
         pass
 
     @abstractmethod
-    def _init_model(self):
+    def _init_model(self) -> PreTrainedModel:
         if self._use_quantization:
             self._model = prepare_model_for_kbit_training(self._model, use_gradient_checkpointing=True)
             self._model.config.use_cache = False
@@ -75,6 +75,8 @@ class Finetuner:
         #
         #     self._model.is_parallelizable = True
         #     self._model.model_parallel = True
+
+        return self._model
 
     def _init_lora_config(self) -> LoraConfig:
         if self._use_lora:
@@ -97,9 +99,17 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, logger: TensorBoardLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 0):
+    def train(self, logger: TensorBoardLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 20):
         with open(f"{finetune_model.log_output_dir}/{finetune_model.__str__()}", "a") as f:
-            callbacks = [FileTQDMProgressBar(f, refresh_rate=5), MetricsLogger()]
+
+            checkpoint_callback = ModelCheckpoint(
+                monitor='val_loss',
+                filename='{epoch:02d}-{val_loss:.4f}',
+                save_top_k=3,
+                mode='min',
+                auto_insert_metric_name=False
+            )
+            callbacks = [FileTQDMProgressBar(f, refresh_rate=3), checkpoint_callback, MetricsLogger()]
 
             if early_stopping_patience_epochs > 0:
                 early_stop_callback = EarlyStopping(monitor="val_loss", min_delta=0.00,
@@ -108,8 +118,8 @@ class Finetuner:
 
             trainer = Trainer(logger=logger,
                               callbacks=callbacks,
-                              max_epochs=self._finetune_model.epochs,
-                              precision=self._finetune_model.precision,
+                              max_epochs=self._finetuner_model.epochs,
+                              precision=self._finetuner_model.precision,
                               log_every_n_steps=1,
                               accelerator="gpu",
                               devices=os.getenv('CUDA_VISIBLE_DEVICES'),
@@ -126,11 +136,3 @@ class Finetuner:
             if param.requires_grad:
                 trainable_params += param.numel()
         self._logger.info(f"trainable params: {trainable_params} || all params: {all_param} || trainable%: {100 * trainable_params / all_param}")
-
-
-class MetricsLogger(Callback):
-    def on_train_epoch_end(self, trainer, pl_module):
-        if trainer.is_global_zero:
-            epoch_metrics = trainer.callback_metrics
-            if 'train_loss' in epoch_metrics:
-                trainer.logger.experiment.add_scalars('loss', {'val': epoch_metrics['val_loss'].item(), 'train': epoch_metrics['train_loss'].item()}, trainer.current_epoch)

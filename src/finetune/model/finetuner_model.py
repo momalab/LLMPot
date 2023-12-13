@@ -1,4 +1,5 @@
 import datetime
+import os
 
 import cfg
 
@@ -18,7 +19,7 @@ class FinetunerModel:
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        self.checkpoints_dir = f"{cfg.OUTPUTS_DIR}/checkpoints"
+        self.checkpoints_dir = f"{cfg.OUTPUTS_DIR}/checkpoints/{self.__str__()}"
         self.output_dir = f"{cfg.OUTPUTS_DIR}/models/{self.__str__()}"
         if self.epoch is not None:
             self.output_dir = self.output_dir + f"/epoch-{self.epoch}"
@@ -26,7 +27,7 @@ class FinetunerModel:
 
     def __str__(self):
         return (f"{self.the_name}_"
-                f"_{datetime.datetime.fromtimestamp(self.start_time).strftime('%Y%m%dT%H%M')}")
+                f"{datetime.datetime.fromtimestamp(self.start_time).strftime('%Y%m%dT%H%M')}")
 
     def base_model_id(self):
         return f"{self.model_type}/{self.model_name}"
@@ -43,6 +44,6 @@ class FinetunerModel:
                 f"epochs-{self.epochs}_"
                 f"precision-{self.precision}")
 
-
-
-
+    def get_validation_filename(self, epoch, validation_type):
+        os.makedirs(os.path.dirname(f"{cfg.OUTPUTS_DIR}/validation_data/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"), exist_ok=True)
+        return f"{cfg.OUTPUTS_DIR}/validation_data/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"
