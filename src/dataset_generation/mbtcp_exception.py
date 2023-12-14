@@ -64,7 +64,7 @@ class MbtcpClient:
                         print(f"Exc {ex}: {exception_code[ex]}")
                         
                         if exception_code[ex] == '1':
-                            valid_functioncode = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 15, 16, 20, 22, 23, 24, 43, 128]
+                            valid_functioncode = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
                             false_functioncode = random.choice([x for x in range(0, 254) if x not in valid_functioncode])
                             address = random.randint(0, 100)
                             num_elements = random.randint(1, 3)
