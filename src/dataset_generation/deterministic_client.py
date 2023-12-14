@@ -59,7 +59,7 @@ class MbtcpClient:
             else:
                 print(f"{data_type} to address {address}: {data_to_write}")
 
-    def start_client(self, samples_num: int, single_data_value: int, multiple_data_value: int, max_elements: int, function_code: list):
+    def start_client(self, samples_num: int, single_data_value: int, multiple_data_value: int, max_elements: int, function_code: str):
         self._client.connect()
         
         try:
@@ -110,10 +110,10 @@ def main():
     parser.add_argument('-ip', default="localhost", required=False)
     parser.add_argument('-p', default=502, required=False)
     parser.add_argument('-num', default=100, required=False) 
-    parser.add_argument('-dat', default=10, required=True)
-    parser.add_argument('-mul', default=3, required=True)
-    parser.add_argument('-elem', default=3, required=True)
-    parser.add_argument('-fun', type=list_of_strings, required=True) #
+    parser.add_argument('-dat', default=10, required=False)
+    parser.add_argument('-mul', default=3, required=False)
+    parser.add_argument('-elem', default=3, required=False)
+    parser.add_argument('-fun', default='15', required=False) #example: -fun 1,3,etc change type to list #OR for single test default='16' and False and type int
     args = parser.parse_args()
 
     server_address = args.ip

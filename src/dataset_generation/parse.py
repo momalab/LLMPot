@@ -14,7 +14,7 @@ def encoding(line: str, enc_type: str):
     return line
 
 
-def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str):
+def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str, exception: bool):
     cap = pyshark.FileCapture(f"{OUTPUTS_DIR}/datasets/dumps/{pcap}.pcap", use_json=True, include_raw=True,
                               decode_as={f'tcp.port=={port}': f'{capture_layer}'})
 
@@ -23,19 +23,28 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str
     packet: Packet
 
     for packet in tqdm(cap):
-
-        if hasattr(packet, "modbus") and hasattr(packet.modbus, "request_frame"):
-            request_idx = int(packet.modbus.request_frame)
-            try:
-                dataset_dict["source_text"].append(
-                    encoding(eval(f"cap[{request_idx - 1}].{capture_layer}_raw.value"), enc_type))
-                dataset_dict["target_text"].append(
-                    encoding(eval(f"packet.{capture_layer}_raw.value"), enc_type))
-            except KeyError as e:
-                discard_queue.append(request_idx)
-            except Exception as e:
-                print(e)
-                exit(0)
+        if exception:
+            if hasattr(packet, "modbus") and hasattr(packet.modbus, "exception_code"):
+                tid = int(packet.mbtcp.trans_id, 16)
+                dataset_dict["target_text"].append(encoding(eval(f"packet.{capture_layer}_raw.value"), enc_type))
+            
+                for packet in tqdm(cap):
+                    if hasattr(packet, "modbus") and not hasattr(packet.modbus, "exception_code") and hasattr(packet.mbtcp, "trans_id") and (int(packet.mbtcp.trans_id, 16) == tid):
+                        dataset_dict["source_text"].append(encoding(eval(f"packet.{capture_layer}_raw.value"), enc_type))
+        else:
+            
+            if hasattr(packet, "modbus") and hasattr(packet.modbus, "request_frame"):
+                request_idx = int(packet.modbus.request_frame)
+                try:
+                    dataset_dict["source_text"].append(
+                        encoding(eval(f"cap[{request_idx - 1}].{capture_layer}_raw.value"), enc_type))
+                    dataset_dict["target_text"].append(
+                        encoding(eval(f"packet.{capture_layer}_raw.value"), enc_type))
+                except KeyError as e:
+                    discard_queue.append(request_idx)
+                except Exception as e:
+                    print(e)
+                    exit(0)
 
     print(f"Request packets discarded: {discard_queue}")
 
@@ -52,10 +61,7 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str
                 csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
                                  f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
                                  f"{dataset_df['source_text'][i + 2]}:,{dataset_df['target_text'][i + 2]}" + "\n")
-                # csv_context.write(f"Context: Request 1: {dataset_df['source_text'][i]} Response 1: {dataset_df['target_text'][i]}"
-                #                   f" Request 2: {dataset_df['source_text'][i + 1]} Response 2: {dataset_df['target_text'][i + 1]}"
-                #                   f" Request 3: {dataset_df['source_text'][i + 2]} Response 3: ,{dataset_df['target_text'][i + 2]}" + "\n")
-
+                
     else:
         dataset_df.to_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv", index=False)
 
@@ -67,6 +73,7 @@ def main():
     parser.add_argument('-pr', default="mbtcp", required=False)
     parser.add_argument('-c', default=False, required=False)
     parser.add_argument('-f', default="str", required=False)
+    parser.add_argument('-exc', default=False, required=False)
     args = parser.parse_args()
 
     pcap = args.pcap
@@ -74,8 +81,9 @@ def main():
     capture_layer = args.pr
     context = eval(args.c)
     enc_type = args.f
+    exception = eval(args.exc)
 
-    parse(capture_layer, port, pcap, context, enc_type)
+    parse(capture_layer, port, pcap, context, enc_type, exception)
 
 
 if __name__ == '__main__':
