@@ -15,14 +15,14 @@ ENV/
 .icspot/
 
 models/
-outputs/
-# outputs/datasets/context
-# outputs/datasets/test
-# outputs/datasets/train
-# outputs/datasets/validation
-# outputs/logs
-# outputs/metrics
-# outputs/plots
-# outputs/validation_data
-# outputs/validation_data_newcontext
-# outputs/validation_data_old
+# outputs/
+outputs/datasets/context
+outputs/datasets/test
+outputs/datasets/train
+outputs/datasets/validation
+outputs/logs
+outputs/metrics
+outputs/plots
+outputs/validation_data
+outputs/validation_data_newcontext
+outputs/validation_data_old
