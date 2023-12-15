@@ -27,11 +27,9 @@ def predict(request: str, model, tokenizer):
     input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True)
     print(input_ids)
     input_ids = input_ids.to("cuda:0")
-    model2 = T5ForConditionalGeneration.from_pretrained("google/byt5-small").to("cuda:0")
-    model2.eval()
     with torch.no_grad():
-        loss, logits = model(input_ids)
-        print(tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0])
+        # loss, logits = model(input_ids)
+        # print(tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0])
         logits = model.model.generate(input_ids,
                                       num_beams=2,
                                       max_length=512,
@@ -43,19 +41,6 @@ def predict(request: str, model, tokenizer):
                                       num_return_sequences=1,
                                       do_sample=True
                                       )
-        print(tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0])
-        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-        logits = model2.generate(input_ids,
-                                 num_beams=2,
-                                 max_length=512,
-                                 repetition_penalty=2.5,
-                                 length_penalty=1.0,
-                                 early_stopping=True,
-                                 top_p=0.95,
-                                 top_k=50,
-                                 num_return_sequences=1,
-                                 do_sample=True
-                                 )
         print(tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0])
 
 
