@@ -19,7 +19,7 @@ class FinetunerModel:
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        self.checkpoints_dir = f"{cfg.OUTPUTS_DIR}/checkpoints/{self.__str__()}"
+        self.checkpoints_dir = f"{cfg.OUTPUTS_DIR}/checkpoints"
         self.output_dir = f"{cfg.OUTPUTS_DIR}/models/{self.__str__()}"
         if self.epoch is not None:
             self.output_dir = self.output_dir + f"/epoch-{self.epoch}"

@@ -122,7 +122,7 @@ class Finetuner:
                               precision=self._finetuner_model.precision,
                               log_every_n_steps=1,
                               accelerator="gpu",
-                              devices=os.getenv('CUDA_VISIBLE_DEVICES'),
+                              devices=len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")),
                               strategy="ddp",
                               )
 

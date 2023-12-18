@@ -18,13 +18,13 @@ def main():
 
     parser.add_argument('-mt', default="google", required=False)
     parser.add_argument('-mn', default="byt5-small", required=False)
-    parser.add_argument('-ts', default="mbtcp-deterministic-2k_fc-3-16", required=False)
-    parser.add_argument('-t', default="20231212T1434", required=False)
-    parser.add_argument('-e', default=1, required=False)
+    parser.add_argument('-ts', default="mbtcp-deterministicContext-2k_fc-3-6", required=False)
+    parser.add_argument('-t', default="20231214T1531", required=False)
+    parser.add_argument('-e', default=100, required=False)
     parser.add_argument('-p', default=32, required=False)
     parser.add_argument('-w', default=2, required=False)
     parser.add_argument('-g', default="True", required=False)
-    parser.add_argument('-val', default="exactly", required=False)
+    parser.add_argument('-val', default="micro", required=False)
     args = parser.parse_args()
 
     test_set_name = args.ts
@@ -51,7 +51,7 @@ def main():
             tokenizer=ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id()),
             model=T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id()),
             finetuner_model=finetuner_model)
-        module.model.to(f"cuda:{index}")
+        module.model.to(f"cuda:0")
         print(module.model.device)
 
         os.makedirs(os.path.dirname(f"{OUTPUTS_DIR}/validation_data/{finetuner_model.__str__()}/{model_version}"), exist_ok=True)
@@ -62,7 +62,7 @@ def main():
         if index == 8:
             index = 0
 
-    with mp.Pool(processes=16) as pool:
+    with mp.Pool(processes=1) as pool:
         list(pool.map(module.validate_wrapper, arguments))
 
 

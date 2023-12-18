@@ -121,29 +121,15 @@ class Byt5LightningModule(LightningModule):
                 question = ""
                 expected_response = response
                 try:
+                    question = request
+                    response = self.generate(question)
+
                     if "|" in request:
                         question = request[request.rindex("|") + 1:len(request)]
                         context = request[:request.rindex("|") - 1]
-                        context = request
-                        inputs = self.model.base_model.tokenizer([(question, context)], return_tensors="pt")
-                        output = self.model.base_model.tokenizer.decode(inputs['input_ids'][0])
-                        response = self.generate(output)
-
-                    elif ("Context :" in request) or ("Context ->" in request):
-                        question = request[request.rindex(" Request 3:") + 1:len(request)]
-                        context = request
-                        inputs = self.model.base_model.tokenizer([(question, context)], return_tensors="pt")
-                        output = self.model.base_model.decode(inputs['input_ids'][0])
-                        response = self.generate(output)
-
-                        question = request[request.rindex("Request 3:") - 1:request.rindex("Reponse 3:")]
-                        question = question.rpartition("Request 3:")
-                        question = question[2]
-                        question = question.strip()
-
-                    else:
-                        question = request
-                        response = self.generate(question)
+                        # inputs = self.model.base_model.tokenizer([(question, context)], return_tensors="pt")
+                        # output = self.model.base_model.tokenizer.decode(inputs['input_ids'][0])
+                        # response = self.generate(output)
 
                     self.validate_choice(validation_type, question, response, expected_response)
 
