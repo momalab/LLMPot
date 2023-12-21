@@ -10,14 +10,17 @@ from finetune.model.finetuner_model import FinetunerModel
 
 
 def _load_model():
-    start_time = time.time()
     finetune_model = FinetunerModel(model_type="google", model_name="byt5-small",
                                     dataset_filename="mbtcp-deterministic-2k_fc-3-16",
-                                    epochs=1, precision=32, workers=2, start_time=start_time)
+                                    epochs=1, precision=32, workers=2, start_datetime="20231213T1449")
     tokenizer = ByT5Tokenizer.from_pretrained("google/byt5-small")
+    model = T5ForConditionalGeneration.from_pretrained("google/byt5-small")
     model = Byt5LightningModule.load_from_checkpoint(
-        checkpoint_path="/media/shared/ICSPot/outputs/checkpoints/google_byt5-small_mbtcp-deterministic-2k_fc-3-16_epochs-1_precision-32/20231211T1654/checkpoints/model-09-0.06.ckpt",
-        finetuner_model=finetune_model)
+        checkpoint_path="/media/shared/ICSPot/outputs/checkpoints/google_byt5-small_mbtcp-deterministicContext-2k_fc-3-6_epochs-100_precision-32/20231214T1600/checkpoints/39-0.0000.ckpt",
+        finetuner_model=finetune_model,
+        tokenizer=tokenizer,
+        model=model
+    )
     model.eval()
     model = model.to("cuda:0")
     return model, tokenizer

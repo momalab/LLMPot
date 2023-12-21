@@ -99,8 +99,8 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, logger: TensorBoardLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 20):
-        with open(f"{finetune_model.log_output_dir}/{finetune_model.__str__()}", "a") as f:
+    def train(self, logger: TensorBoardLogger, finetuner_model: FinetunerModel, early_stopping_patience_epochs: int = 20):
+        with open(f"{finetuner_model.log_output_dir}/{finetuner_model.__str__()}", "a") as f:
 
             checkpoint_callback = ModelCheckpoint(
                 monitor='val_loss',
