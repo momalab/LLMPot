@@ -120,13 +120,6 @@ class Byt5LightningModule(LightningModule):
 
     def validate(self, batch: dict, result_file_path: str, validation_type: str) -> float:
         valid = 0
-        print("$$$$$$$$$$")
-        print(batch)
-        print(batch)
-        print(batch)
-        print(batch)
-        print(batch)
-        print(batch)
         batch_size = len(batch['request'])
         with open(result_file_path, "a") as result_file:
             for request, response in zip(batch["request"], batch["response"]):

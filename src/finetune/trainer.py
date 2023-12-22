@@ -17,12 +17,11 @@ def main():
     parser.add_argument('-mt', default="google", required=False)
     parser.add_argument('-mn', default="byt5-small", required=False)
     parser.add_argument('-csv', default="mbtcp-deterministicContext-2k_fc-3-6", required=False)
-    parser.add_argument('-e', default=2, required=False)
+    parser.add_argument('-e', default=20, required=False)
     parser.add_argument('-p', default=32, required=False)
     parser.add_argument('-w', default=2, required=False)
     parser.add_argument('-l', default="False", required=False)
     parser.add_argument('-q', default="False", required=False)
-    parser.add_argument('-fptr', default=True, required=False)
     args = parser.parse_args()
 
     start_time = time.time()
@@ -39,7 +38,7 @@ def main():
             llama2 = Llama2(finetuner_model, use_lora=eval(args.l), use_quantization=eval(args.q))
             llama2.train(logger, finetuner_model)
         else:
-            byt5 = Byt5(finetuner_model, use_lora=eval(args.l), use_quantization=eval(args.q), from_pretrained=args.fptr)
+            byt5 = Byt5(finetuner_model, use_lora=eval(args.l), use_quantization=eval(args.q))
             byt5.train(logger, finetuner_model)
 
         end_time = time.time()

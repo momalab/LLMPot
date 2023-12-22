@@ -22,6 +22,7 @@ def main():
     parser.add_argument('-e', default=100, required=False)
     parser.add_argument('-p', default=32, required=False)
     parser.add_argument('-dt', default="20231213T1449", required=False)
+    parser.add_argument('-ds', default="mbtcp-deterministic-2k_fc-3-6", required=False)
     args = parser.parse_args()
 
     finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.csv,
@@ -37,17 +38,16 @@ def main():
                           strategy="ddp",
                           )
 
-        tokenizer = ByT5Tokenizer.from_pretrained("google/byt5-small")
-        model_orig = T5ForConditionalGeneration.from_pretrained("google/byt5-small")
+        tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
+        model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
         model = Byt5LightningModule.load_from_checkpoint(
-            checkpoint_path="/media/shared/ICSPot/outputs/checkpoints/google_byt5-small_mbtcp-deterministicContext-2k_fc-3-6_epochs-100_precision-32/20231214T1600/checkpoints/39-0.0000.ckpt",
+            checkpoint_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/best.ckpt",
             finetuner_model=finetuner_model,
             tokenizer=tokenizer,
             model=model_orig)
         model.eval()
 
-        dataset = load_dataset('csv', data_files={
-            'test': f"{OUTPUTS_DIR}/datasets/test/mbtcp-deterministicContext-2k_fc-3-6.csv"})
+        dataset = load_dataset('csv', data_files={'test': f"{OUTPUTS_DIR}/datasets/test/{args.ds}.csv"})
         dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
         dataset = dataset.remove_columns("Unnamed: 0")
 
