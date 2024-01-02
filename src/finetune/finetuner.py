@@ -12,6 +12,7 @@ from transformers import BitsAndBytesConfig, PreTrainedTokenizer, PreTrainedMode
 
 from cfg import OUTPUTS_DIR
 from finetune.callbacks.metrics_logger import MetricsLogger
+from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
 from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 from utilities.logger import TheLogger
@@ -99,13 +100,13 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, logger: TensorBoardLogger, finetune_model: FinetunerModel, early_stopping_patience_epochs: int = 20):
-        with open(f"{finetune_model.log_output_dir}/{finetune_model.__str__()}", "a") as f:
+    def train(self, logger: TensorBoardLogger, finetuner_model: FinetunerModel, early_stopping_patience_epochs: int = 20):
+        with open(f"{finetuner_model.log_output_dir}/{finetuner_model.__str__()}", "a") as f:
 
             checkpoint_callback = ModelCheckpoint(
                 monitor='val_loss',
-                filename='{epoch:02d}-{val_loss:.4f}',
-                save_top_k=3,
+                filename='best',
+                save_top_k=1,
                 mode='min',
                 auto_insert_metric_name=False
             )
@@ -118,11 +119,11 @@ class Finetuner:
 
             trainer = Trainer(logger=logger,
                               callbacks=callbacks,
-                              max_epochs=self._finetuner_model.epochs,
+                              max_epochs=5,
                               precision=self._finetuner_model.precision,
                               log_every_n_steps=1,
                               accelerator="gpu",
-                              devices=os.getenv('CUDA_VISIBLE_DEVICES'),
+                              devices=len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")),
                               strategy="ddp",
                               )
 

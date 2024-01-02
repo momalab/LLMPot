@@ -5,7 +5,7 @@ import utilities.load_dataset
 from finetune.custom_lightning.byt5_lightning_data_module import Byt5LightningDataModule
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
-from finetuner import Finetuner
+from finetune.finetuner import Finetuner
 
 
 class Byt5(Finetuner):

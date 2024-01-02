@@ -23,6 +23,9 @@ class Byt5LightningModule(LightningModule):
         self._tokenizer = tokenizer
         self._model = model
 
+        self._accuracy = []
+        self._accuracy_exactly = []
+
     def forward(self, input_ids, attention_mask, decoder_attention_mask, labels=None):
         output = self.model(
             input_ids=input_ids,
@@ -56,28 +59,32 @@ class Byt5LightningModule(LightningModule):
         return loss
 
     def test_step(self, batch, batch_size):
-        pass
+        with torch.no_grad():
+            self._accuracy.append(self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro"))
+            self._accuracy_exactly.append(self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"), "exactly"))
+            self.log("accuracy_micro", mean(self._accuracy), prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
+            self.log("accuracy_none", mean(self._accuracy_exactly), prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
+
+    def on_test_end(self) -> None:
+        self.logger.experiment.add_scalars('accuracy_epoch', {'micro': mean(self._accuracy), 'none': mean(self._accuracy_exactly)}, self.current_epoch)
+        self._accuracy = []
+        self._accuracy_exactly = []
 
     def configure_optimizers(self):
         return AdamW(self.parameters(), lr=0.0001)
 
-    def test_dataloader(self) -> DataLoader:
+    def _custom_test_dataloader(self) -> DataLoader:
         sampler = DistributedSampler(self._dataset["test"])
         return DataLoader(self._dataset["test"], batch_size=10, shuffle=False, num_workers=8, sampler=sampler)
 
     def on_train_epoch_end(self) -> None:
-        accuracy = []
-        accuracy_exactly = []
-        test_set = self.test_dataloader()
+        test_set = self._custom_test_dataloader()
         self.model.eval()
         with torch.no_grad():
             for batch in test_set:
-                accuracy.append(self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro"))
-                accuracy_exactly.append(self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"), "exactly"))
+                self.test_step(batch, 10)
 
-            self.log("accuracy_micro", mean(accuracy), prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
-            self.log("accuracy_exactly", mean(accuracy_exactly), prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
-            self.logger.experiment.add_scalars('accuracy_epoch', {'micro': mean(accuracy), 'exactly': mean(accuracy_exactly)}, self.current_epoch)
+            self.on_test_end()
         self.model.train()
 
     @property
@@ -121,29 +128,15 @@ class Byt5LightningModule(LightningModule):
                 question = ""
                 expected_response = response
                 try:
+                    question = request
+                    response = self.generate(question)
+
                     if "|" in request:
                         question = request[request.rindex("|") + 1:len(request)]
                         context = request[:request.rindex("|") - 1]
-                        context = request
-                        inputs = self.model.base_model.tokenizer([(question, context)], return_tensors="pt")
-                        output = self.model.base_model.tokenizer.decode(inputs['input_ids'][0])
-                        response = self.generate(output)
-
-                    elif ("Context :" in request) or ("Context ->" in request):
-                        question = request[request.rindex(" Request 3:") + 1:len(request)]
-                        context = request
-                        inputs = self.model.base_model.tokenizer([(question, context)], return_tensors="pt")
-                        output = self.model.base_model.decode(inputs['input_ids'][0])
-                        response = self.generate(output)
-
-                        question = request[request.rindex("Request 3:") - 1:request.rindex("Reponse 3:")]
-                        question = question.rpartition("Request 3:")
-                        question = question[2]
-                        question = question.strip()
-
-                    else:
-                        question = request
-                        response = self.generate(question)
+                        # inputs = self.model.base_model.tokenizer([(question, context)], return_tensors="pt")
+                        # output = self.model.base_model.tokenizer.decode(inputs['input_ids'][0])
+                        # response = self.generate(output)
 
                     self.validate_choice(validation_type, question, response, expected_response)
 
