@@ -17,7 +17,6 @@ def main():
     parser.add_argument('-mt', default="google", required=False)
     parser.add_argument('-mn', default="byt5-small", required=False)
     parser.add_argument('-csv', default="mbtcp-deterministicContext-2k_fc-3-6", required=False)
-    parser.add_argument('-e', default=20, required=False)
     parser.add_argument('-p', default=32, required=False)
     parser.add_argument('-w', default=2, required=False)
     parser.add_argument('-l', default="False", required=False)
@@ -26,7 +25,7 @@ def main():
 
     start_time = time.time()
     finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.csv,
-                                     epochs=args.e, precision=args.p, workers=args.w, start_time=start_time)
+                                     precision=args.p, workers=args.w, start_time=start_time)
 
     log = TheLogger(finetuner_model.__str__(), finetuner_model.log_output_dir)
     try:

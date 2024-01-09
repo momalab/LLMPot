@@ -119,7 +119,7 @@ class Finetuner:
 
             trainer = Trainer(logger=logger,
                               callbacks=callbacks,
-                              max_epochs=5,
+                              max_epochs=100,
                               precision=self._finetuner_model.precision,
                               log_every_n_steps=1,
                               accelerator="gpu",
