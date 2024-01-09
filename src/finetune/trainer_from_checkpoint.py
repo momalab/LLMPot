@@ -38,7 +38,7 @@ def main():
 
             checkpoint_callback = ModelCheckpoint(
                 monitor='val_loss',
-                filename=finetuner_model.dataset_filename,
+                filename=args.csv,
                 save_top_k=1,
                 mode='min',
                 auto_insert_metric_name=False
@@ -46,7 +46,7 @@ def main():
             callbacks = [FileTQDMProgressBar(f, refresh_rate=3), checkpoint_callback, MetricsLogger()]
 
             early_stop_callback = EarlyStopping(monitor="val_loss", min_delta=0.00,
-                                                patience=10, verbose=True, mode="min")
+                                                patience=5, verbose=True, mode="min")
             callbacks.append(early_stop_callback)
 
             trainer = Trainer(logger=logger,

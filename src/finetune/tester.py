@@ -18,6 +18,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-mt', default="google", required=False)
     parser.add_argument('-mn', default="byt5-small", required=False)
+    parser.add_argument('-base', default="mbtcp-deterministic-2k_fc-3-6", required=False)
     parser.add_argument('-csv', default="mbtcp-deterministic-2k_fc-3-6", required=False)
     parser.add_argument('-e', default=100, required=False)
     parser.add_argument('-p', default=32, required=False)
@@ -25,8 +26,8 @@ def main():
     parser.add_argument('-ds', default="mbtcp-deterministic-2k_fc-3-6", required=False)
     args = parser.parse_args()
 
-    finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.csv,
-                                     epochs=args.e, precision=args.p, start_datetime=args.dt)
+    finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.base,
+                                     precision=args.p, start_datetime=args.dt)
 
     try:
         logger = TensorBoardLogger(f"{OUTPUTS_DIR}/checkpoints/", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
@@ -41,7 +42,7 @@ def main():
         tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
         model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
         model = Byt5LightningModule.load_from_checkpoint(
-            checkpoint_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/best.ckpt",
+            checkpoint_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.csv}.ckpt",
             finetuner_model=finetuner_model,
             tokenizer=tokenizer,
             model=model_orig)
