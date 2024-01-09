@@ -105,7 +105,7 @@ class Finetuner:
 
             checkpoint_callback = ModelCheckpoint(
                 monitor='val_loss',
-                filename='best',
+                filename=finetuner_model.dataset_filename,
                 save_top_k=1,
                 mode='min',
                 auto_insert_metric_name=False

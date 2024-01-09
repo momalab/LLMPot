@@ -21,13 +21,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-mt', default="google", required=False)
     parser.add_argument('-mn', default="byt5-small", required=False)
+    parser.add_argument('-base', default="mbtcp-deterministic-2k_fc-3-6", required=False)
     parser.add_argument('-csv', default="mbtcp-deterministic-2k_fc-3-6", required=False)
     parser.add_argument('-p', default=32, required=False)
     parser.add_argument('-dt', default="20231222T1214", required=False)
     parser.add_argument('-ds', default="mbtcp-exceptions-6k", required=False)
     args = parser.parse_args()
 
-    finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.csv, precision=args.p, start_datetime=args.dt)
+    finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.base, precision=args.p, start_datetime=args.dt)
 
     try:
         with open(f"{finetuner_model.log_output_dir}/{finetuner_model.__str__()}", "a") as f:
@@ -37,7 +38,7 @@ def main():
 
             checkpoint_callback = ModelCheckpoint(
                 monitor='val_loss',
-                filename='best',
+                filename=finetuner_model.dataset_filename,
                 save_top_k=1,
                 mode='min',
                 auto_insert_metric_name=False
@@ -62,7 +63,7 @@ def main():
             dataset = load_dataset.load_dataset_from_file(dataset_filename=finetuner_model.dataset_filename)
             model_orig = T5ForConditionalGeneration.from_pretrained("google/byt5-small")
             model = Byt5LightningModule.load_from_checkpoint(
-                checkpoint_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/best.ckpt",
+                checkpoint_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.csv}.ckpt",
                 finetuner_model=finetuner_model,
                 tokenizer=tokenizer,
                 dataset=dataset,
@@ -76,7 +77,7 @@ def main():
                                                   num_workers=2)
 
             trainer.fit(model=model, datamodule=data_module,
-                        ckpt_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/best.ckpt")
+                        ckpt_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.csv}.ckpt")
     except:
         print(traceback.format_exc())
         exit(1)
