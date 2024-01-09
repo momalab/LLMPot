@@ -28,7 +28,7 @@ def main():
     parser.add_argument('-ds', required=False)
     args = parser.parse_args()
 
-    finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.base, precision=args.p, start_datetime=args.dt)
+    finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.csv, precision=args.p, start_datetime=args.dt)
 
     try:
         with open(f"{finetuner_model.log_output_dir}/{finetuner_model.__str__()}", "a") as f:
