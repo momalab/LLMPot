@@ -63,7 +63,7 @@ def main():
             dataset = load_dataset.load_dataset_from_file(dataset_filename=finetuner_model.dataset_filename)
             model_orig = T5ForConditionalGeneration.from_pretrained("google/byt5-small")
             model = Byt5LightningModule.load_from_checkpoint(
-                checkpoint_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.csv}.ckpt",
+                checkpoint_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.base}.ckpt",
                 finetuner_model=finetuner_model,
                 tokenizer=tokenizer,
                 dataset=dataset,
@@ -77,7 +77,7 @@ def main():
                                                   num_workers=2)
 
             trainer.fit(model=model, datamodule=data_module,
-                        ckpt_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.csv}.ckpt")
+                        ckpt_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.base}.ckpt")
     except:
         print(traceback.format_exc())
         exit(1)
