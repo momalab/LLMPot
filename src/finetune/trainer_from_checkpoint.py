@@ -21,9 +21,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-mt', default="google", required=False)
     parser.add_argument('-mn', default="byt5-small", required=False)
-    parser.add_argument('-csv', default="mbtcp-deterministicContext-2k_fc-3-6", required=False)
+    parser.add_argument('-csv', default="mbtcp-deterministic-2k_fc-3-6", required=False)
     parser.add_argument('-p', default=32, required=False)
-    parser.add_argument('-dt', default="20231221T1803", required=False)
+    parser.add_argument('-dt', default="20231222T1214", required=False)
+    parser.add_argument('-ds', default="mbtcp-exceptions-6k", required=False)
     args = parser.parse_args()
 
     finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.csv, precision=args.p, start_datetime=args.dt)
@@ -31,6 +32,8 @@ def main():
     try:
         with open(f"{finetuner_model.log_output_dir}/{finetuner_model.__str__()}", "a") as f:
             logger = TensorBoardLogger(f"{OUTPUTS_DIR}/checkpoints/", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
+            if args.ds is not None:
+                finetuner_model.dataset_filename = args.ds
 
             checkpoint_callback = ModelCheckpoint(
                 monitor='val_loss',
@@ -47,7 +50,7 @@ def main():
 
             trainer = Trainer(logger=logger,
                               callbacks=callbacks,
-                              max_epochs=10,
+                              max_epochs=100,
                               precision=finetuner_model.precision,
                               log_every_n_steps=1,
                               accelerator="gpu",
