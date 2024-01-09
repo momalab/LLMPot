@@ -25,7 +25,7 @@ def main():
     parser.add_argument('-csv', default="mbtcp-deterministic-2k_fc-3-6", required=False)
     parser.add_argument('-p', default=32, required=False)
     parser.add_argument('-dt', default="20231222T1214", required=False)
-    parser.add_argument('-ds', default="mbtcp-exceptions-6k", required=False)
+    parser.add_argument('-ds', required=False)
     args = parser.parse_args()
 
     finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.base, precision=args.p, start_datetime=args.dt)
