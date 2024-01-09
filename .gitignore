@@ -16,11 +16,6 @@ ENV/
 
 models/
 outputs/checkpoints
-outputs/datasets/context
-outputs/datasets/test
-outputs/datasets/train
-outputs/datasets/validation
-# outputs/datasets/dumps
 outputs/logs
 outputs/metrics
 outputs/plots
