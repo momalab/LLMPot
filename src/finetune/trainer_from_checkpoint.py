@@ -76,8 +76,7 @@ def main():
                                                   target_max_token_len=256,
                                                   num_workers=2)
 
-            trainer.fit(model=model, datamodule=data_module,
-                        ckpt_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.base}.ckpt")
+            trainer.fit(model=model, datamodule=data_module)
     except:
         print(traceback.format_exc())
         exit(1)
