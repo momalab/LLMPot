@@ -2,6 +2,7 @@ import argparse
 import os
 import traceback
 
+import torch
 from datasets import load_dataset
 from lightning import Trainer
 from lightning.pytorch.loggers import TensorBoardLogger
@@ -13,6 +14,7 @@ from finetune.custom_lightning.byt5_dataset import Byt5Dataset
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
 
+torch.set_float32_matmul_precision('medium')
 
 def main():
     parser = argparse.ArgumentParser()

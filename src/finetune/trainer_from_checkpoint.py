@@ -13,6 +13,7 @@ from finetune.callbacks.metrics_logger import MetricsLogger
 from finetune.custom_lightning.byt5_lightning_data_module import Byt5LightningDataModule
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
+from finetune.my_early_stopping import MyEarlyStopping
 from utilities import load_dataset
 from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 
@@ -33,25 +34,27 @@ def main():
     try:
         with open(f"{finetuner_model.log_output_dir}/{finetuner_model.__str__()}", "a") as f:
             logger = TensorBoardLogger(f"{OUTPUTS_DIR}/checkpoints/", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
+            logger.experiment._epoch = 0
             if args.ds is not None:
                 finetuner_model.dataset_filename = args.ds
 
             checkpoint_callback = ModelCheckpoint(
                 monitor='val_loss',
                 filename=args.csv,
-                save_top_k=1,
+                save_top_k=0,
+                save_last=True,
                 mode='min',
                 auto_insert_metric_name=False
             )
             callbacks = [FileTQDMProgressBar(f, refresh_rate=3), checkpoint_callback, MetricsLogger()]
 
             early_stop_callback = EarlyStopping(monitor="val_loss", min_delta=0.00,
-                                                patience=5, verbose=True, mode="min")
+                                                patience=20, verbose=True, mode="min")
             callbacks.append(early_stop_callback)
 
             trainer = Trainer(logger=logger,
                               callbacks=callbacks,
-                              max_epochs=150,
+                              max_epochs=50,
                               precision=finetuner_model.precision,
                               log_every_n_steps=1,
                               accelerator="gpu",
@@ -76,7 +79,9 @@ def main():
                                                   target_max_token_len=256,
                                                   num_workers=2)
 
-            trainer.fit(model=model, datamodule=data_module)
+            trainer.fit(model=model, datamodule=data_module,
+                        ckpt_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.base}.ckpt"
+                        )
     except:
         print(traceback.format_exc())
         exit(1)
