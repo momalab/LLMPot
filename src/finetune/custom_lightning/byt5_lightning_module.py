@@ -62,11 +62,11 @@ class Byt5LightningModule(LightningModule):
         with torch.no_grad():
             self._accuracy.append(self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro"))
             self._accuracy_exactly.append(self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"), "exactly"))
-            self.log("accuracy_micro", mean(self._accuracy), batch_size=batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
-            self.log("accuracy_none", mean(self._accuracy_exactly), batch_size=batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
 
     def on_test_end(self) -> None:
         self.logger.experiment.add_scalars('accuracy_epoch', {'micro': mean(self._accuracy), 'none': mean(self._accuracy_exactly)}, self.current_epoch)
+        self.log("accuracy_micro", mean(self._accuracy), prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
+        self.log("accuracy_none", mean(self._accuracy_exactly), prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
         self._accuracy = []
         self._accuracy_exactly = []
 
