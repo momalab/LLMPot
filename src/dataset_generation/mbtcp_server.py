@@ -1,12 +1,24 @@
 import sys
+import logging
 
 from pymodbus.server import StartTcpServer
 from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.datastore import ModbusSequentialDataBlock
 from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
-from pymodbus.constants import ModbusStatus
 
+def setup_logging():
+    """
+    Set up and configure logging.
+    """
+    logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
+                        level=logging.DEBUG,
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    
 def start_server(address: str = "localhost", port: int = 502):
+    setup_logging()
+    
+    logging.info("Starting Modbus Server")
+
     store = ModbusSlaveContext(
         di=ModbusSequentialDataBlock(0, [0] * 101),#read coil
         co=ModbusSequentialDataBlock(0, [0] * 103), #write coil
@@ -23,7 +35,7 @@ def start_server(address: str = "localhost", port: int = 502):
     identity.ModelName = 'Pymodbus Server'
     identity.MajorMinorRevision = '1.5'
 
-    print("Modbus Server started..")
+    # print("Modbus Server started..")
     StartTcpServer(context=context, identity=identity, address=(address, port))
 
 
