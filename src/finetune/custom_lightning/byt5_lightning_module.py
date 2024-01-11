@@ -2,6 +2,7 @@ import json
 from statistics import mean
 
 import torch
+import torchmetrics
 from lightning.pytorch import LightningModule
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, DistributedSampler
@@ -59,14 +60,18 @@ class Byt5LightningModule(LightningModule):
         return loss
 
     def test_step(self, batch, batch_size):
-        with torch.no_grad():
-            self._accuracy.append(self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro"))
-            self._accuracy_exactly.append(self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"), "exactly"))
+        micro = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro")
+        exactly = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"),"exactly")
+
+        self._accuracy.append(micro)
+        self._accuracy_exactly.append(exactly)
+
+        self.log("accuracy_micro", micro, batch_size=1, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
+        self.log("accuracy_none", exactly, batch_size=1, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
 
     def on_test_end(self) -> None:
-        self.logger.experiment.add_scalars('accuracy_epoch', {'micro': mean(self._accuracy), 'none': mean(self._accuracy_exactly)}, self.current_epoch)
-        self.log("accuracy_micro", mean(self._accuracy), prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
-        self.log("accuracy_none", mean(self._accuracy_exactly), prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
+        print("Accuracy micro: ", mean(self._accuracy))
+        print("Accuracy none: ", mean(self._accuracy_exactly))
         self._accuracy = []
         self._accuracy_exactly = []
 
