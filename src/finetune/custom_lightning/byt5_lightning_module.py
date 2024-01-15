@@ -70,7 +70,7 @@ class Byt5LightningModule(LightningModule):
         self.log("accuracy_none", exactly, batch_size=1, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
 
     def on_test_end(self) -> None:
-        self.logger.experiment.add_scalars('accuracy_epoch', {'micro': mean(self._accuracy), 'none': mean(self._accuracy_exactly)}, self.current_epoch + 1)
+        self.logger.experiment.add_scalars('accuracy_epoch', {'micro': mean(self._accuracy), 'none': mean(self._accuracy_exactly)}, self.current_epoch)
         self._accuracy = []
         self._accuracy_exactly = []
 

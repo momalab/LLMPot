@@ -52,7 +52,6 @@ def main():
 
         dataset = load_dataset('csv', data_files={'test': f"{OUTPUTS_DIR}/datasets/test/{args.ds}.csv"})
         dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
-        dataset = dataset.remove_columns("Unnamed: 0")
 
         dataloader = DataLoader(dataset["test"], batch_size=10, shuffle=True, num_workers=1)
         trainer.test(model=model, dataloaders=dataloader)
