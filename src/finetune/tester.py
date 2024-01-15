@@ -54,7 +54,7 @@ def main():
         dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
         dataset = dataset.remove_columns("Unnamed: 0")
 
-        dataloader = DataLoader(dataset["test"], batch_size=10, shuffle=False, num_workers=4)
+        dataloader = DataLoader(dataset["test"], batch_size=10, shuffle=False, num_workers=1)
         trainer.test(model=model, dataloaders=dataloader)
 
     except:
