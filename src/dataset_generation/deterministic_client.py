@@ -9,7 +9,7 @@ class MbtcpClient:
 
     @staticmethod
     def generate_request(sample, element, multiple_data_value, data):
-        address = [x for x in range(0, 101)]
+        address = [x for x in range(0, (sample+1))]
         num_elements = [z for z in range(1, 4)]
         boolean_value = 2
         single_data_to_write = [y for y in range(0, 10)] 
@@ -72,7 +72,7 @@ def main():
     parser.add_argument('-dat', default=10, required=False)
     parser.add_argument('-mul', default=3, required=False)
     parser.add_argument('-elem', default=3, required=False)
-    parser.add_argument('-fun', type=list_of_strings, required=True) #example: -fun 1,3,etc change type to list #OR for single test default='16' and False and type int
+    parser.add_argument('-fun', type=list_of_strings, required=True) #example: type=list_of_strings use -fun 1,3,etc t #OR for single test default='16' and False
     args = parser.parse_args()
 
     server_address = args.ip
