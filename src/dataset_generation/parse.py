@@ -71,9 +71,9 @@ def main():
     parser.add_argument('-pcap', required=True)
     parser.add_argument('-p', default="502", required=False)
     parser.add_argument('-pr', default="mbtcp", required=False)
-    parser.add_argument('-c', default=False, required=False)
+    parser.add_argument('-c', default="False", required=False)
     parser.add_argument('-f', default="str", required=False)
-    parser.add_argument('-exc', default=False, required=False)
+    parser.add_argument('-exc', default="False", required=False)
     args = parser.parse_args()
 
     pcap = args.pcap
