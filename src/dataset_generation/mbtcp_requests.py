@@ -18,7 +18,7 @@ class Mbtcp_Requests:
         if a == 1:
             result = self._client.read_coils(address, num_elements, unit=0x01)
             if result.isError():
-                return print(f"Failed to read {data_type}. Error: {result.bits[0]}")
+                return print(f"Failed to read {data_type}. Error: {result}")
             else:
                 return print(f"{data_type} at address {address}: {result},{result.bits[0]}")
         if a == 3:
@@ -28,13 +28,13 @@ class Mbtcp_Requests:
             else:
                 return print(f"{data_type} at address {address}: {result.registers}")
 
-    def write_single_data(self, data_type, address, single_data_to_write, a, value_to_write):
+    def write_single_data(self, data_type, address, single_data_to_write, a):
         if a == 5:
-            result = self._client.write_coil(address, value_to_write, unit=0x01)
+            result = self._client.write_coil(address, single_data_to_write, unit=0x01)
             if result.isError():
-                return print(f"Failed to write {data_type}. Error: {result.bits[0]}")
+                return print(f"Failed to write {data_type}. Error: {result}")
             else:
-                return print(f"{data_type} to address {address}: {value_to_write}")
+                return print(f"{data_type} to address {address}: {single_data_to_write}")
         if a == 6:
             result = self._client.write_register(address, single_data_to_write, unit=0x01)
             if result.isError():
@@ -46,7 +46,7 @@ class Mbtcp_Requests:
         if a == 15:
             result = self._client.write_coils(address, data_to_write, unit=0x01)
             if result.isError():
-                return print(f"Failed to write {data_type}. Error: {result.bits[0]}")
+                return print(f"Failed to write {data_type}. Error: {result}")
             else:
                 return print(f"{data_type} to address {address}: {data_to_write}")
         if a == 16:

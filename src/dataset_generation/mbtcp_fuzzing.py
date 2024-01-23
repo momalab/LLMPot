@@ -1,4 +1,5 @@
 # Note: activate ../boofuzz/.fuzz/bin/activate for this script to work
+# And start the mbtcp_server.py
 from boofuzz import *
 
 def get_response(target, fuzz_data_logger, session, sock, *args, **kwargs):
