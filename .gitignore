@@ -19,6 +19,7 @@ outputs/checkpoints
 outputs/logs
 outputs/metrics
 outputs/plots
+outputs/datasets/dumps
 outputs/validation_data
 outputs/validation_data_newcontext
 outputs/validation_data_old
