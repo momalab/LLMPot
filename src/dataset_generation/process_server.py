@@ -20,7 +20,7 @@ reg = {1: 0}
 coil = {0: 0}
 reg_block = ModbusSparseDataBlock(reg)
 coil_block = ModbusSparseDataBlock(coil)
-store = ModbusSlaveContext(hr=reg_block, di=coil_block)
+store = ModbusSlaveContext(hr=reg_block, di=coil_block, co=ModbusSparseDataBlock({0: 0}))
 
 context = ModbusServerContext(slaves=store, single=True)
 

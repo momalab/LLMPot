@@ -19,6 +19,7 @@ class MbtcpClient:
 
                         print(f"Exc: {exception}")
 
+                        #Illegal Function Code
                         if exception == '1':
                             valid_functioncode = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
                             false_functioncode = random.choice([x for x in range(0, 254) if x not in valid_functioncode])
@@ -29,6 +30,7 @@ class MbtcpClient:
                             request = CustomInvalidFunctionRequest(false_functioncode)
                             print(self.mbtcp_requests.execute(request))
 
+                        #Illegal Data Address
                         if exception == '2':
                             address = random.randint(100, 125)
                             num_elements = random.randint(1, 3)
@@ -36,30 +38,23 @@ class MbtcpClient:
                             single_data_to_write = random.randint(0, 10)
                             print(f"Elements: {num_elements}, Address: {address}")
 
-                            print(f"FC: {function}")
                             if function == '1':
-                                self.mbtcp_requests.read_data(
-                                    "Read Coil", address, 1, num_elements)
+                                self.mbtcp_requests.read_data("Read Coil", address, 1, num_elements)
                             if function == '3':
-                                self.mbtcp_requests.read_data(
-                                    "Read Holding Registers", address, 3, num_elements)
+                                self.mbtcp_requests.read_data("Read Holding Registers", address, 3, num_elements)
                             if function == '5':
-                                self.mbtcp_requests.write_single_data(
-                                    "Write Single Coil", address, single_data_to_write, 5)
+                                self.mbtcp_requests.write_single_data("Write Single Coil", address, single_data_to_write, 5)
                             if function == '6':
-                                self.mbtcp_requests.write_single_data(
-                                    "Write Single Register", address, single_data_to_write, 6)
+                                self.mbtcp_requests.write_single_data("Write Single Register", address, single_data_to_write, 6)
                             if function == '15':
-                                self.mbtcp_requests.write_multiple_data(
-                                    "Write Multiple Coils", address, mult_data_to_write, 15)
+                                self.mbtcp_requests.write_multiple_data("Write Multiple Coils", address, mult_data_to_write, 15)
                             if function == '16':
-                                self.mbtcp_requests.write_multiple_data(
-                                    "Write Multiple Registers", address, mult_data_to_write, 16)
+                                self.mbtcp_requests.write_multiple_data("Write Multiple Registers", address, mult_data_to_write, 16)
 
+                        #Illegal Data Value
                         if exception == '3':  # Note nothing happens for FC 5 nd 6 here
                             address = random.randint(0, 100)
 
-                            print(f"FC: {function}")
                             if function == '1':
                                 num_elements = random.randint(2001, 2040)  # max of 2000 coils
                                 print(f"Elements: {num_elements}, Address: {address}")
