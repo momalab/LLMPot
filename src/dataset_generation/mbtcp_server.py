@@ -6,17 +6,19 @@ from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.datastore import ModbusSequentialDataBlock
 from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 
+
 def setup_logging():
     """
     Set up and configure logging.
     """
     logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
-                        level=logging.DEBUG,
+                        level=logging.INFO,
                         datefmt='%Y-%m-%d %H:%M:%S')
-    
+
+
 def start_server(address: str = "localhost", port: int = 502):
     setup_logging()
-    
+
     logging.info("Starting Modbus Server")
 
     store = ModbusSlaveContext(
