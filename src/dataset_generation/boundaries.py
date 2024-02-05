@@ -9,33 +9,30 @@ from mbtcp_requests import Mbtcp_Requests
 
 
 class MbtcpClient:
-    def __init__(self, server_address: str, server_port: int):
+    def __init__(self, server_address: str, server_port: int, deterministic: bool = False):
         self.client = ModbusTcpClient(server_address, port=server_port)
+        self._deterministic = deterministic
         self.client.connect()
 
-    @staticmethod
-    def generate_single_request(number_of_values):
-        random_midpoint = random.randrange(1, number_of_values - 2)
-        single_data_to_write = [0, random_midpoint, number_of_values - 1]
+    def generate_single_request(self, max_value):
+        if self._deterministic is True:
+            return list(range(0, max_value - 1))
+
+        random_midpoint = random.randrange(1, max_value - 2)
+        single_data_to_write = [0, random_midpoint, max_value - 1]
 
         return single_data_to_write
-
-    @staticmethod
-    def generate_multiple_register_requests(elements, number_of_values):
-        boundaries = []
-        for i in range(elements + 1):
-            random_midpoint = random.randrange(1, number_of_values - 2)
-            boundaries.append([0, random_midpoint, number_of_values - 1])
-
-        return boundaries
 
     @staticmethod
     def generate_multiple_coil_requests(elements):
         return itertools.product(range(2), repeat=elements + 1)
 
-    @staticmethod
-    def generate_combinations(single_data_value, elements):
-        nums = [0, random.randrange(1, single_data_value - 2), 9]
+    def generate_combinations(self, max_value, elements):
+        if self._deterministic is True:
+            nums = list(range(0, max_value))
+        else:
+            nums = [0, random.randrange(1, max_value - 2), max_value - 1]
+
         combinations = itertools.product(nums, repeat=elements + 1)
         return {i: list(t) for i, t in enumerate(combinations)}
 
@@ -59,6 +56,7 @@ class MbtcpClient:
                         for data in single_data_to_write:
                             self.client.read_holding_registers(starting_address, 1, unit=0x01)
                             self.client.write_register(starting_address, data, unit=0x01)
+                        self.client.read_holding_registers(starting_address, 1, unit=0x01)
 
                 if function == '16':
                     for elements in range(max_elements):
@@ -78,6 +76,7 @@ class MbtcpClient:
                             for coil_values in coils_combinations:
                                 self.client.read_coils(starting_address, num_elements=1, unit=0x01)
                                 self.client.write_coils(starting_address, coil_values, unit=0x01)
+                            self.client.read_coils(starting_address, num_elements=1, unit=0x01)
 
         except KeyboardInterrupt:
             print("Client stopped by user.")
@@ -91,20 +90,21 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
     parser.add_argument('-p', default=502, required=False)
-    parser.add_argument('-num', default=100, required=False)
-    parser.add_argument('-dat', default=10, required=False)
+    parser.add_argument('-addr', default=10, required=False)
+    parser.add_argument('-max', default=10, required=False)
     parser.add_argument('-elem', default=3, required=False)
+    parser.add_argument('-deterministic', default=False, required=False)
     parser.add_argument('-fun', type=list_of_strings, required=True)
     args = parser.parse_args()
 
-    server_address = args.ip
-    server_port = int(args.p)
-    num_addresses = int(args.num)
-    max_value = int(args.dat)
+    ip = args.ip
+    port = int(args.p)
+    num_addresses = int(args.addr)
+    max_value = int(args.max)
     max_elements = int(args.elem)
     function_code = args.fun
     
-    mbtcp_client = MbtcpClient(server_address, server_port)
+    mbtcp_client = MbtcpClient(ip, port, args.deterministic)
     mbtcp_client.start_client(num_addresses, max_value, max_elements, function_code)
 
 

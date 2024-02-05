@@ -7,20 +7,18 @@ import time
 def update_control_logic():
     while True:
         temperature = store.getValues(0x03, 0, count=1)[0]
-        print(f"Temperature: {temperature}")
-        if int(temperature) > 30:
-            store.setValues(0x01, 0, [True])
+        if int(temperature) > 25:
+            store.setValues(0x02, 0, [True])
         else:
-            store.setValues(0x01, 0, [False])
-        print(f"Coil: {store.getValues(0x01, 0, count=1)}")
-        time.sleep(2)
+            store.setValues(0x02, 0, [False])
+        time.sleep(0.1)
         
 
-reg = {1: 0}
-coil = {0: 0}
-reg_block = ModbusSparseDataBlock(reg)
-coil_block = ModbusSparseDataBlock(coil)
-store = ModbusSlaveContext(hr=reg_block, di=coil_block, co=ModbusSparseDataBlock({0: 0}))
+input_reg_block = ModbusSparseDataBlock({1: [0, 0]})
+holding_reg_block = ModbusSparseDataBlock({1: [0, 0]})
+discrete_block = ModbusSparseDataBlock({0: 0})
+coil_block = ModbusSparseDataBlock({})
+store = ModbusSlaveContext(ir=input_reg_block, hr=holding_reg_block, di=discrete_block, co=coil_block)
 
 context = ModbusServerContext(slaves=store, single=True)
 

@@ -100,7 +100,7 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, logger: TensorBoardLogger, finetuner_model: FinetunerModel, early_stopping_patience_epochs: int = 5):
+    def train(self, logger: TensorBoardLogger, finetuner_model: FinetunerModel, early_stopping_patience_epochs: int = 15):
         with open(f"{finetuner_model.log_output_dir}/{finetuner_model.__str__()}", "a") as f:
 
             checkpoint_callback = ModelCheckpoint(
@@ -120,7 +120,7 @@ class Finetuner:
 
             trainer = Trainer(logger=logger,
                               callbacks=callbacks,
-                              max_epochs=30,
+                              max_epochs=100,
                               precision=self._finetuner_model.precision,
                               log_every_n_steps=1,
                               accelerator="gpu",
