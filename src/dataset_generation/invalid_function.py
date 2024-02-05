@@ -12,7 +12,6 @@ class CustomInvalidFunctionRequest(ModbusRequest):
         length = random.choice([16,32,48,64]) #max 2024  bits
         hex_request= ''.join(random.choice(hex_chars) for _ in range(length))
         print(hex_request)
-        print(f"bytes: {bytes.fromhex(hex_request)}")
         return bytes.fromhex(hex_request)
 
 
