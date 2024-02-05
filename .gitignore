@@ -16,6 +16,3 @@ ENV/
 
 models/
 outputs/datasets/dumps
-outputs/datasets/test
-outputs/datasets/train
-outputs/datasets/validation
