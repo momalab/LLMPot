@@ -15,11 +15,7 @@ ENV/
 .icspot/
 
 models/
-outputs/checkpoints
-outputs/logs
-outputs/metrics
-outputs/plots
-outputs/datasets/
-outputs/validation_data
-outputs/validation_data_newcontext
-outputs/validation_data_old
+outputs/datasets/dumps
+outputs/datasets/test
+outputs/datasets/train
+outputs/datasets/validation
