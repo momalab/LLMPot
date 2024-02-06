@@ -1,12 +1,8 @@
+import random
 import argparse
 import itertools
-import random
-
-from pymodbus.client import ModbusTcpClient
 from tqdm import tqdm
-
-from mbtcp_requests import Mbtcp_Requests
-
+from pymodbus.client import ModbusTcpClient
 
 class MbtcpClient:
     def __init__(self, server_address: str, server_port: int, deterministic: bool = False):
@@ -103,7 +99,7 @@ def main():
     max_value = int(args.max)
     max_elements = int(args.elem)
     function_code = args.fun
-    
+
     mbtcp_client = MbtcpClient(ip, port, args.deterministic)
     mbtcp_client.start_client(num_addresses, max_value, max_elements, function_code)
 

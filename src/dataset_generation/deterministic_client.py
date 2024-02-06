@@ -16,10 +16,10 @@ class MbtcpClient:
         values_combinations = itertools.product(range(multiple_data_value), repeat=num_elements[element])  
         coils_combinations = itertools.product(range(boolean_value), repeat=num_elements[element])          
         return address[sample], num_elements[element], single_data_to_write[data], values_combinations, coils_combinations
-    
+
     def start_client(self, samples_num: int, single_data_value: int, multiple_data_value: int, max_elements: int, function_code: str):
         self.mbtcp_requests.connect_client()
-        
+
         try:
             for function in function_code:
                 if (function == '1') or (function == '5'): 
@@ -30,7 +30,7 @@ class MbtcpClient:
                                 value_to_write = [z for z in [True, False]]
                                 self.mbtcp_requests.read_data("Read Single Coil", address, 1, num_elements=1)
                                 self.mbtcp_requests.write_single_data("Write Single Coil", address, single_data_to_write, 5, value_to_write[coil])
-                    
+
                 if (function == '3') or (function == '6'):
                     for element in range(1): #Explicitly for read/write single register
                         for sample in range(samples_num):
@@ -39,7 +39,7 @@ class MbtcpClient:
                                 self.mbtcp_requests.read_data("Read Single Registers", address, 3, num_elements=1)
                                 self.mbtcp_requests.write_single_data("Write Single Registers", address, single_data_to_write, 6, value_to_write=0)
                             self.mbtcp_requests.read_data("Read Single Registers", address, 3, num_elements=1)
-                    
+
                 if function == '16':
                     for element in range(max_elements): #Covers 1, 2, and 3 registers requests
                         for sample in range(samples_num): 

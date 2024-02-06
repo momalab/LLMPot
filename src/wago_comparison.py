@@ -1,10 +1,9 @@
 import json
 import socket
 import argparse
-
-import pandas
+import pandas as pd
 from cfg import OUTPUTS_DIR
-from utilities.load_dataset import load_dataset_from_file
+# from utilities.load_dataset import load_dataset_from_file
 
 class Result:
     index: int
@@ -30,7 +29,7 @@ def start_client(server_address, server_port, test_set, result_file):
         for modbus_request in range(len(test_set)):
             try:
                 to_save = Result()
-                request = test_set['request'][modbus_request]
+                request = test_set['source_text'][modbus_request]
 
                 if "|" in request:
                     request_to_wago = request[request.rindex("|")+1:len(request)-1]
@@ -46,9 +45,9 @@ def start_client(server_address, server_port, test_set, result_file):
                 response_from_wago = response_from_wago.hex()
                 print(f"Response in hex: {response_from_wago}")
 
-                predicted_response = test_set['response'][modbus_request]
+                predicted_response = test_set['target_text'][modbus_request]
 
-                to_save.index = modbus_request+1
+                to_save.index = modbus_request
                 to_save.request = request_to_wago
                 to_save.response = response_from_wago
                 to_save.test_set_response = predicted_response
@@ -80,18 +79,19 @@ def main():
     server_address = args.ip
     server_port = int(args.p)
     csv_filename = args.csv
-    
-    test_set = load_dataset_from_file(f"{csv_filename}")["test"]
+
+    # test_set = load_dataset_from_file(f"{csv_filename}")["test"]
+    test_set = pd.read_csv(f"{OUTPUTS_DIR}/datasets/parsed/{csv_filename}.csv")
+    test_set = test_set[['source_text', 'target_text']]
 
     with open(f"{OUTPUTS_DIR}/validation_data/{csv_filename}.jsonl", "a") as results_file:
         start_client(server_address, server_port, test_set, results_file)
 
-    print("############################")
-    #Calculate results
+    print("############# Calculate results #############")
     with open(f"{OUTPUTS_DIR}/validation_data/{csv_filename}.jsonl", 'r') as file:
         data = [json.loads(line) for line in file]
 
-    df = pandas.DataFrame(data)
+    df = pd.DataFrame(data)
     valid = len(df.query('valid == True'))
     invalid = len(df.query('valid == False'))
     valid_percentage = 100 * (valid/len(test_set))
