@@ -164,7 +164,7 @@ class Byt5LightningModule(LightningModule):
                     to_save.expected_response = expected_response
                     result_file.write(json.dumps(to_save.__dict__) + "\n")
 
-        return round(valid / batch_size, 2)
+        return round(valid / batch_size, 5)
 
     @staticmethod
     def validate_choice(validation_type: str, question: str, response: str, expected_response: str):
