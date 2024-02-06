@@ -37,15 +37,12 @@ def write_coil(client: ModbusTcpClient, cool, address):
     return cooling_update
 
 
-def illegal_function(client, boundary):
-    valid_function_code = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
-    false_function_code = [x for x in range(0, 254) if x not in valid_function_code] #233 total illegal fc
-
-    random_midpoint = random.randrange(min(false_function_code)+1, max(false_function_code)-1)
-    false_function_code = [min(false_function_code), random_midpoint, max(false_function_code)]
-    print(f"False FC: {false_function_code[boundary]}")
-
-    request = CustomInvalidFunctionRequest(false_function_code[boundary])
+def illegal_function(client, sample):
+    valid_function_codes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
+    false_function_codes = [x for x in range(0, 254) if x not in valid_function_codes]
+    false_function_code = false_function_codes[sample]
+    print(f"False FC: {false_function_code}")
+    request = CustomInvalidFunctionRequest(false_function_code)
     return client.execute(request)
 
 
@@ -78,6 +75,7 @@ def start_client(server_address, server_port, samples_num, boundaries_num):
             random_midpoint = random.randrange(3, 48)
             hr_addresses = [2, random_midpoint, 49]
 
+            boundary = 0
             for boundary in range(boundaries_num):
                 exception_function = [(read_holding_register, [client, hr_addresses[boundary]]),
                                     (write_holding_register, [client, temp, hr_addresses[boundary]]),
@@ -85,8 +83,12 @@ def start_client(server_address, server_port, samples_num, boundaries_num):
                                     (write_coil, [client, cool, coil_addresses[boundary]])]
 
                 function, args = random.choice(exception_function)
-                exceptions = [(illegal_function, [client, boundary]), (function, [*args])]
-
+                if sample >= 233: #233 is the total number of false function codes
+                    update_sample = random.randrange(0, 232)
+                    print(f"update_sample: {update_sample}")
+                    exceptions = [(illegal_function, [client, update_sample]), (function, [*args])]
+                else:
+                    exceptions = [(illegal_function, [client, sample]), (function, [*args])]
                 functions.extend(exceptions)
                 random.shuffle(functions)
 

@@ -12,7 +12,6 @@ def update_control_logic():
         else:
             store.setValues(0x02, 0, [False])
         time.sleep(0.1)
-        
 
 input_reg_block = ModbusSparseDataBlock({1: [0, 0]})
 holding_reg_block = ModbusSparseDataBlock({1: [0, 0]})
