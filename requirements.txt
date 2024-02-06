@@ -1,7 +1,7 @@
 pyshark~=0.6
 pandas~=2.0.3
 tqdm~=4.65.0
-pymodbus~=3.4.1
+pymodbus~=3.6.3
 
 transformers==4.34.1
 
