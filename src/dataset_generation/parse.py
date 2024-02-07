@@ -14,7 +14,7 @@ def encoding(line: str, enc_type: str):
     return line
 
 
-def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str):
+def parse(capture_layer: str, port: int, pcap: str, context: bool, context_length: int, enc_type: str):
     cap = pyshark.FileCapture(f"{OUTPUTS_DIR}/datasets/dumps/{pcap}.pcap", use_json=True, include_raw=True,
                               decode_as={f'tcp.port=={port}': f'{capture_layer}'})
 
@@ -39,10 +39,27 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str
     if context:
         with open(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv", "a+") as csv_context:
             csv_context.write("source_text,target_text\n")
-            for i in range(0, len(dataset_df) - 2):
-                csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
-                                  f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
-                                  f"{dataset_df['source_text'][i + 2]}:,{dataset_df['target_text'][i + 2]}" + "\n")
+            for i in range(0, len(dataset_df) - context_length):
+                if context_length == 1:
+                    csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
+                                      f"{dataset_df['source_text'][i + 1]}:,{dataset_df['target_text'][i + 1]}" + "\n")
+                if context_length == 2:
+                    csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
+                                      f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
+                                      f"{dataset_df['source_text'][i + 2]}:,{dataset_df['target_text'][i + 2]}" + "\n")
+                if context_length == 3:
+                    csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
+                                      f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
+                                      f"{dataset_df['source_text'][i + 2]}:{dataset_df['target_text'][i + 2]}|"
+                                      f"{dataset_df['source_text'][i + 3]}:,{dataset_df['target_text'][i + 3]}" + "\n")
+                if context_length == 4:
+                    csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
+                                      f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
+                                      f"{dataset_df['source_text'][i + 2]}:{dataset_df['target_text'][i + 2]}|"
+                                      f"{dataset_df['source_text'][i + 3]}:{dataset_df['target_text'][i + 3]}|"
+                                      f"{dataset_df['source_text'][i + 4]}:,{dataset_df['target_text'][i + 4]}" + "\n")
+
+
                 
     else:
         dataset_df.to_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv", index=False)
@@ -50,10 +67,11 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, enc_type: str
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-pcap', required=True)
+    parser.add_argument('-pcap',required=True)
     parser.add_argument('-p', default="502", required=False)
     parser.add_argument('-pr', default="mbtcp", required=False)
     parser.add_argument('-c', default="False", required=False)
+    parser.add_argument('-clen', default=2, required=False)
     parser.add_argument('-f', default="str", required=False)
     args = parser.parse_args()
 
@@ -61,9 +79,10 @@ def main():
     port = args.p
     capture_layer = args.pr
     context = eval(args.c)
+    context_length = int(args.clen)
     enc_type = args.f
 
-    parse(capture_layer, port, pcap, context, enc_type)
+    parse(capture_layer, port, pcap, context, context_length, enc_type)
 
 
 if __name__ == '__main__':
