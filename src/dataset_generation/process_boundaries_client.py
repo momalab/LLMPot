@@ -37,12 +37,26 @@ def write_coil(client: ModbusTcpClient, cool, address):
     return cooling_update
 
 
-def illegal_function(client, sample):
-    valid_function_codes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
-    false_function_codes = [x for x in range(0, 254) if x not in valid_function_codes]
-    false_function_code = false_function_codes[sample]
-    print(f"False FC: {false_function_code}")
-    request = CustomInvalidFunctionRequest(false_function_code)
+valid_function_codes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
+false_function_codes = [x for x in range(0, 254) if x not in valid_function_codes]
+used_function_codes = set()
+
+
+def select_unused_element():
+    unused_elements = [el for el in false_function_codes if el not in used_function_codes]
+
+    if not unused_elements:
+        used_function_codes.clear()
+        unused_elements = false_function_codes
+
+    selected_element = random.choice(unused_elements)
+    used_function_codes.add(selected_element)
+
+    return selected_element
+
+
+def illegal_function(client):
+    request = CustomInvalidFunctionRequest(select_unused_element())
     return client.execute(request)
 
 
@@ -83,12 +97,7 @@ def start_client(server_address, server_port, samples_num, boundaries_num):
                                     (write_coil, [client, cool, coil_addresses[boundary]])]
 
                 function, args = random.choice(exception_function)
-                if sample >= 233: #233 is the total number of false function codes
-                    update_sample = random.randrange(0, 232)
-                    print(f"update_sample: {update_sample}")
-                    exceptions = [(illegal_function, [client, update_sample]), (function, [*args])]
-                else:
-                    exceptions = [(illegal_function, [client, sample]), (function, [*args])]
+                exceptions = [(illegal_function, [client]), (function, [*args])]
                 functions.extend(exceptions)
                 random.shuffle(functions)
 
