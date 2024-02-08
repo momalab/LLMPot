@@ -11,6 +11,8 @@ from finetune.llama2 import Llama2
 from finetune.model.finetuner_model import FinetunerModel
 from utilities.logger import TheLogger
 
+VAL_LOSS = "val_loss"
+TRAIN_LOSS = "train_loss"
 
 def main():
     parser = argparse.ArgumentParser()
@@ -37,7 +39,7 @@ def main():
             llama2 = Llama2(finetuner_model, use_lora=eval(args.l), use_quantization=eval(args.q))
             llama2.train(logger, finetuner_model)
         else:
-            byt5 = Byt5(finetuner_model, use_lora=eval(args.l), use_quantization=eval(args.q))
+            byt5 = Byt5(finetuner_model, VAL_LOSS, TRAIN_LOSS, use_lora=eval(args.l), use_quantization=eval(args.q))
             byt5.train(logger, finetuner_model)
 
         end_time = time.time()
