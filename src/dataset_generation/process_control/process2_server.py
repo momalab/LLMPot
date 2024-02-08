@@ -5,7 +5,7 @@ from pymodbus.datastore import ModbusSparseDataBlock
 import time
 
 def update_control_logic():
-    while True: 
+    while True:
         # Water Tank Level Control System:
         upper_level_limit = 70
         lower_level_limit = 30
