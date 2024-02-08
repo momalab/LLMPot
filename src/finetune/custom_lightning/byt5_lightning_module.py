@@ -15,13 +15,16 @@ from validation.model.result import Result
 
 class Byt5LightningModule(LightningModule):
 
-    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, dataset=None):
+    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, val_loss_const: str, train_loss_const: str, dataset=None):
         super().__init__()
         self._finetuner_model = finetuner_model
         self._dataset = dataset
 
         self._tokenizer = tokenizer
         self._model = model
+
+        self._val_loss_const = val_loss_const
+        self._train_loss_const = train_loss_const
 
         self._accuracy: [float] = []
         self._accuracy_exactly: [float] = []
@@ -44,7 +47,7 @@ class Byt5LightningModule(LightningModule):
             decoder_attention_mask=batch["decoder_attention_mask"],
         )
 
-        self.log("train_loss", loss, prog_bar=True, logger=True, on_epoch=True, on_step=True, sync_dist=True)
+        self.log(self._train_loss_const, loss, prog_bar=True, logger=True, on_epoch=True, on_step=True, sync_dist=True)
         return loss
 
     def validation_step(self, batch, batch_size):
@@ -55,34 +58,34 @@ class Byt5LightningModule(LightningModule):
             decoder_attention_mask=batch["decoder_attention_mask"],
         )
 
-        self.log("val_loss", loss, prog_bar=True, logger=True, on_epoch=True, on_step=True, sync_dist=True)
+        self.log(self._val_loss_const, loss, prog_bar=True, logger=True, on_epoch=True, on_step=True, sync_dist=True)
         return loss
 
     def test_step(self, batch, batch_size):
-        micro = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro")
+        # micro = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro")
         exactly = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"),"exactly")
 
-        self._accuracy.append(micro)
+        # self._accuracy.append(micro)
         self._accuracy_exactly.append(exactly)
 
-        self.log("accuracy/micro", micro, batch_size=10, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
-        self.log("accuracy/none", exactly, batch_size=10, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
+        # self.log("accuracy/micro", micro, batch_size=10, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
+        self.log("accuracy/none", exactly, batch_size=10, prog_bar=True, logger=True, sync_dist=True)
 
     def on_test_end(self) -> None:
         self.on_test_end_custom()
 
     def on_test_end_custom(self) -> None:
-        micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
+        # micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
         none = torch.tensor(self._accuracy_exactly, dtype=torch.float, device=self.device)
-        dist.all_reduce(micro, op=dist.ReduceOp.SUM)
+        # dist.all_reduce(micro, op=dist.ReduceOp.SUM)
         dist.all_reduce(none, op=dist.ReduceOp.SUM)
-        micro = torch.mean(micro)
+        # micro = torch.mean(micro)
         none = torch.mean(none)
-        micro /= dist.get_world_size()
+        # micro /= dist.get_world_size()
         none /= dist.get_world_size()
 
         if self.global_rank == 0:
-            self.logger.experiment.add_scalars('accuracy_test', {'micro': micro, 'none': none}, self.current_epoch)
+            self.logger.experiment.add_scalars('accuracy', {'none': none}, self.current_epoch)
 
         self._accuracy = []
         self._accuracy_exactly = []
@@ -96,7 +99,6 @@ class Byt5LightningModule(LightningModule):
 
     def on_train_epoch_end(self) -> None:
         test_set: DataLoader = self._custom_test_dataloader()
-        print(f"Test set size: {len(test_set)} - {len(self._dataset['test'])}")
         self.model.eval()
 
         for batch in test_set:

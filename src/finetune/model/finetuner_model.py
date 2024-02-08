@@ -28,18 +28,14 @@ class FinetunerModel:
         self.log_output_dir = f"{cfg.OUTPUTS_DIR}/logs"
 
     def __str__(self):
-        return (f"{self.the_name}_"
-                f"{self.start_datetime}")
+        return f"{self.the_name}_{self.start_datetime}"
 
     def base_model_id(self):
         return f"{self.model_type}/{self.model_name}"
 
     @property
     def the_name(self):
-        return (f"{self.model_type}_"
-                f"{self.model_name}_"
-                f"{self.dataset_filename}_"
-                f"precision-{self.precision}")
+        return f"{self.model_type}_{self.model_name}_{self.dataset_filename}"
 
     def get_validation_filename(self, epoch, validation_type):
         os.makedirs(os.path.dirname(f"{cfg.OUTPUTS_DIR}/validation_data/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"), exist_ok=True)

@@ -38,7 +38,7 @@ class Finetuner:
 
     _logger: TheLogger
 
-    def __init__(self, finetuner_model: FinetunerModel, use_lora: bool = False, use_quantization: bool = False):
+    def __init__(self, finetuner_model: FinetunerModel, val_loss_const: str, train_loss_const: str, use_lora: bool = False, use_quantization: bool = False):
         self._finetuner_model = finetuner_model
         self._logger = TheLogger(self._finetuner_model.__str__(), f"{OUTPUTS_DIR}/logs")
 
@@ -50,6 +50,9 @@ class Finetuner:
 
         self._tokenizer = self._init_tokenizer()
         self._model = self._init_model()
+
+        self._val_loss_const = val_loss_const
+        self._train_loss_const = train_loss_const
 
         self.print_trainable_parameters()
 
@@ -104,7 +107,7 @@ class Finetuner:
         with open(f"{finetuner_model.log_output_dir}/{finetuner_model.__str__()}", "a") as f:
 
             checkpoint_callback = ModelCheckpoint(
-                monitor='val_loss',
+                monitor=self._val_loss_const,
                 filename=finetuner_model.dataset_filename,
                 save_top_k=0,
                 save_last=True,
@@ -114,7 +117,7 @@ class Finetuner:
             callbacks = [FileTQDMProgressBar(f, refresh_rate=3), checkpoint_callback, MetricsLogger()]
 
             if early_stopping_patience_epochs > 0:
-                early_stop_callback = EarlyStopping(monitor="val_loss", min_delta=0.00,
+                early_stop_callback = EarlyStopping(monitor=self._val_loss_const, min_delta=0.00,
                                                     patience=early_stopping_patience_epochs, verbose=True, mode="min")
                 callbacks.append(early_stop_callback)
 

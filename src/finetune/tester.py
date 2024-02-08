@@ -16,6 +16,9 @@ from finetune.model.finetuner_model import FinetunerModel
 
 torch.set_float32_matmul_precision('medium')
 
+VAL_LOSS = "val_loss"
+TRAIN_LOSS = "train_loss"
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-mt', default="google", required=False)
@@ -47,7 +50,10 @@ def main():
             checkpoint_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.csv}.ckpt",
             finetuner_model=finetuner_model,
             tokenizer=tokenizer,
-            model=model_orig)
+            model=model_orig,
+            val_loss_const=VAL_LOSS,
+            train_loss_const=TRAIN_LOSS
+        )
         model.eval()
 
         dataset = load_dataset('csv', data_files={'test': f"{OUTPUTS_DIR}/datasets/test/{args.ds}.csv"})
