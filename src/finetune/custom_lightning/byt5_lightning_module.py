@@ -1,12 +1,11 @@
 import json
-from statistics import mean
 
 import torch
-import torchmetrics
 from lightning.pytorch import LightningModule
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, DistributedSampler
 from transformers import PreTrainedModel, PreTrainedTokenizer
+import torch.distributed as dist
 
 from finetune.model.finetuner_model import FinetunerModel
 from validation.mbtcp_validator import Validator
@@ -24,8 +23,8 @@ class Byt5LightningModule(LightningModule):
         self._tokenizer = tokenizer
         self._model = model
 
-        self._accuracy = []
-        self._accuracy_exactly = []
+        self._accuracy: [float] = []
+        self._accuracy_exactly: [float] = []
 
     def forward(self, input_ids, attention_mask, decoder_attention_mask, labels=None):
         output = self.model(
@@ -66,16 +65,25 @@ class Byt5LightningModule(LightningModule):
         self._accuracy.append(micro)
         self._accuracy_exactly.append(exactly)
 
-        self.log("accuracy_micro", micro, batch_size=1, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
-        self.log("accuracy_none", exactly, batch_size=1, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
+        self.log("accuracy/micro", micro, batch_size=10, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
+        self.log("accuracy/none", exactly, batch_size=10, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
 
     def on_test_end(self) -> None:
-        self.logger.experiment.add_scalars('accuracy_test', {'micro': mean(self._accuracy), 'none': mean(self._accuracy_exactly)}, self.current_epoch)
-        self._accuracy = []
-        self._accuracy_exactly = []
+        self.on_test_end_custom()
 
     def on_test_end_custom(self) -> None:
-        self.logger.experiment.add_scalars('accuracy_epoch', {'micro': mean(self._accuracy), 'none': mean(self._accuracy_exactly)}, self.current_epoch)
+        micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
+        none = torch.tensor(self._accuracy_exactly, dtype=torch.float, device=self.device)
+        dist.all_reduce(micro, op=dist.ReduceOp.SUM)
+        dist.all_reduce(none, op=dist.ReduceOp.SUM)
+        micro = torch.mean(micro)
+        none = torch.mean(none)
+        micro /= dist.get_world_size()
+        none /= dist.get_world_size()
+
+        if self.global_rank == 0:
+            self.logger.experiment.add_scalars('accuracy_test', {'micro': micro, 'none': none}, self.current_epoch)
+
         self._accuracy = []
         self._accuracy_exactly = []
 
@@ -84,16 +92,18 @@ class Byt5LightningModule(LightningModule):
 
     def _custom_test_dataloader(self) -> DataLoader:
         sampler = DistributedSampler(self._dataset["test"])
-        return DataLoader(self._dataset["test"], batch_size=10, shuffle=False, num_workers=8, sampler=sampler)
+        return DataLoader(self._dataset["test"], batch_size=10, shuffle=False, num_workers=2, sampler=sampler)
 
     def on_train_epoch_end(self) -> None:
-        test_set = self._custom_test_dataloader()
+        test_set: DataLoader = self._custom_test_dataloader()
+        print(f"Test set size: {len(test_set)} - {len(self._dataset['test'])}")
         self.model.eval()
-        with torch.no_grad():
-            for batch in test_set:
-                self.test_step(batch, 10)
 
-            self.on_test_end_custom()
+        for batch in test_set:
+            self.test_step(batch, 10)
+
+        self.on_test_end_custom()
+
         self.model.train()
 
     @property
@@ -164,7 +174,7 @@ class Byt5LightningModule(LightningModule):
                     to_save.expected_response = expected_response
                     result_file.write(json.dumps(to_save.__dict__) + "\n")
 
-        return round(valid / batch_size, 5)
+        return valid / batch_size
 
     @staticmethod
     def validate_choice(validation_type: str, question: str, response: str, expected_response: str):
