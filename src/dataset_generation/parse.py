@@ -58,6 +58,15 @@ def parse(capture_layer: str, port: int, pcap: str, context: bool, context_lengt
                                       f"{dataset_df['source_text'][i + 2]}:{dataset_df['target_text'][i + 2]}|"
                                       f"{dataset_df['source_text'][i + 3]}:{dataset_df['target_text'][i + 3]}|"
                                       f"{dataset_df['source_text'][i + 4]}:,{dataset_df['target_text'][i + 4]}" + "\n")
+                if context_length == 6:
+                    csv_context.write(f"{dataset_df['source_text'][i]}:{dataset_df['target_text'][i]}|"
+                                      f"{dataset_df['source_text'][i + 1]}:{dataset_df['target_text'][i + 1]}|"
+                                      f"{dataset_df['source_text'][i + 2]}:{dataset_df['target_text'][i + 2]}|"
+                                      f"{dataset_df['source_text'][i + 3]}:{dataset_df['target_text'][i + 3]}|"
+                                      f"{dataset_df['source_text'][i + 4]}:{dataset_df['target_text'][i + 4]}|"
+                                      f"{dataset_df['source_text'][i + 5]}:{dataset_df['target_text'][i + 5]}|"
+                                      f"{dataset_df['source_text'][i + 6]},{dataset_df['target_text'][i + 6]}" + "\n")
+
 
 
                 
