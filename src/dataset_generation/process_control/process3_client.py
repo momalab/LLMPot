@@ -121,7 +121,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
     parser.add_argument('-p', default=502, required=False)
-    parser.add_argument('-num', default=1200, required=False)
+    parser.add_argument('-num', default=2400, required=False)
     args = parser.parse_args()
 
     server_address = args.ip
