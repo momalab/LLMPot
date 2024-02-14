@@ -56,19 +56,13 @@ def update_control_logic():
 
             if current_ratio != desired_ratio:
                 store.setValues(0x02, 0, [True])
-                print(f"current_ratio = {current_ratio}")
                 flow_rate_adjustment = pid.update(current_ratio, dt)
-                print(f"flow_rate_adjustment = {flow_rate_adjustment}")
 
                 new_flow_rate_a, new_flow_rate_b = adjust_flow_rates(flow_rate_a, flow_rate_b, flow_rate_adjustment)
-                print(f"new_flow_rate_a: {int(new_flow_rate_a)}")
-                print(f"new_flow_rate_b: {int(new_flow_rate_b)}")
                 store.setValues(0x03, 0, [int(new_flow_rate_a)])
                 store.setValues(0x03, 1, [int(new_flow_rate_b)])
 
                 new_valve_position_a, new_valve_position_b = adjust_valve_positions(valve_position_a, valve_position_b, flow_rate_adjustment)
-                print(f"new_valve_position_a: {int(new_valve_position_a)}")
-                print(f"new_valve_position_b: {int(new_valve_position_b)}")
                 store.setValues(0x04, 0, [int(new_valve_position_a)])
                 store.setValues(0x04, 1, [int(new_valve_position_b)])
             else:

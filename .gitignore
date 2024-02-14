@@ -16,3 +16,4 @@ ENV/
 
 models/
 outputs/datasets/dumps
+outputs/validation_data

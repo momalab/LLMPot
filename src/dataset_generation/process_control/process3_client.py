@@ -3,6 +3,7 @@ import sys
 import time
 import random
 import argparse
+from tqdm import tqdm
 from pymodbus.client import ModbusTcpClient
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -12,54 +13,54 @@ from invalid_function import CustomInvalidFunctionRequest
 
 def read_input_register(client: ModbusTcpClient, address):
     current_valve_position = client.read_input_registers(address, count=1, unit=0x01)
-    print(f"Current valve_position at {address} is: {current_valve_position.registers}, {current_valve_position}")
-    print("--------------------------------")
+    # print(f"Current valve_position at {address} is: {current_valve_position.registers}, {current_valve_position}")
+    # print("--------------------------------")
     return current_valve_position
 
 def read_holding_register(client: ModbusTcpClient, address):
     current_flow_rate = client.read_holding_registers(address, count=1, unit=0x01)
-    print(f"Current flow_rate at {address} is: {current_flow_rate.registers}L/min, {current_flow_rate}")
-    print("--------------------------------")
+    # print(f"Current flow_rate at {address} is: {current_flow_rate.registers}L/min, {current_flow_rate}")
+    # print("--------------------------------")
     return current_flow_rate
 
 
 def write_holding_register(client: ModbusTcpClient, new_value, address):
     new_value_update = client.write_register(address, value=new_value, unit=0x01)
     # if (address == 0) or (address == 1):
-    print(f"Setting flow_rate to {new_value}L/min")
-    print(f"Flow_rate at {address} updated to: {new_value_update}")
+    # print(f"Setting flow_rate to {new_value}L/min")
+    # print(f"Flow_rate at {address} updated to: {new_value_update}")
     # if (address == 2) or (address == 3):
     #     print(f"Setting valve_position to {new_value}")
     #     print(f"Valve_position at {address} updated to: {new_value_update}")
-    print("--------------------------------")
+    # print("--------------------------------")
     return new_value_update
 
 
 def read_discrete_input(client: ModbusTcpClient, address):
     mixing_status = client.read_discrete_inputs(address, count=1, unit=0x01)
-    if mixing_status.isError():
-        print(f"Current mixing_status at {address} is: {mixing_status}")
-    else:
-        print(f"Current mixing_status at {address} is: {mixing_status.bits[0]}")
-    print("--------------------------------")
+    # if mixing_status.isError():
+    #     print(f"Current mixing_status at {address} is: {mixing_status}")
+    # else:
+    #     print(f"Current mixing_status at {address} is: {mixing_status.bits[0]}")
+    # print("--------------------------------")
     return mixing_status
 
 
 def write_coil(client: ModbusTcpClient, mixing_status, address):
-    print(f"Switching mixing_status to: {mixing_status}")
+    # print(f"Switching mixing_status to: {mixing_status}")
     mixing_status_update = client.write_coil(address, value=mixing_status, unit=0x01)
-    if mixing_status_update.isError():
-        print(f"mixing_status at {address} updated to: {mixing_status_update}")
-    else:
-        print(f"mixing_status at {address} updated to: {mixing_status_update.bits[0]}")
-    print("--------------------------------")
+    # if mixing_status_update.isError():
+    #     print(f"mixing_status at {address} updated to: {mixing_status_update}")
+    # else:
+    #     print(f"mixing_status at {address} updated to: {mixing_status_update.bits[0]}")
+    # print("--------------------------------")
     return mixing_status_update
 
 
 def illegal_function(client):
     valid_function_code = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
     false_function_code = random.choice([x for x in range(0, 254) if x not in valid_function_code])
-    print(f"False FC is: {false_function_code}")
+    # print(f"False FC is: {false_function_code}")
     request = CustomInvalidFunctionRequest(false_function_code)
     return client.execute(request)
 
@@ -71,7 +72,7 @@ def start_client(server_address, server_port, samples_num):
 
     try:
 
-        for i in range(int(samples_num/10)):
+        for i in tqdm(range(int(samples_num/10))):
 
             flow_rate_a = random.randrange(0, 100)
             flow_rate_b = random.randrange(0, 100)
@@ -121,7 +122,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
     parser.add_argument('-p', default=502, required=False)
-    parser.add_argument('-num', default=2400, required=False)
+    parser.add_argument('-num', default=10000, required=False)
     args = parser.parse_args()
 
     server_address = args.ip
