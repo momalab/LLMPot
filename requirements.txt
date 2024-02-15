@@ -10,10 +10,13 @@ peft~=0.5.0
 datasets~=2.14.6
 scipy~=1.11.3
 pyarrow~=13.0.0
-lightning[extra]==2.1.0
+lightning[extra]~=2.1.0
 numpy~=1.26.1
 bitsandbytes~=0.41.1
 
 plotly~=5.18.0
 kaleido~=0.2.1
-torch==2.1.1
+torch~=2.1.0
+torchtext~=0.17.0
+scikit-learn~=1.4.0
+python-snap7~=1.3

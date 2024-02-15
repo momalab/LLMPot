@@ -22,10 +22,10 @@ def start_server():
     PAdata = (wordlen_to_ctypes[WordLen.Byte.value] * size)()
     TMdata = (wordlen_to_ctypes[WordLen.Byte.value] * size)()
     CTdata = (wordlen_to_ctypes[WordLen.Byte.value] * size)()
-    server.register_area(srvAreaDB, 1, DBdata) #(5) area_code, index, userdata
-    server.register_area(srvAreaPA, 1, PAdata) #(1)
-    server.register_area(srvAreaTM, 1, TMdata) #(4)
-    server.register_area(srvAreaCT, 1, CTdata) #(3)
+    server.register_area(srvAreaDB, 0, DBdata) #(5) area_code, index, userdata
+    server.register_area(srvAreaPA, 0, PAdata) #(1)
+    server.register_area(srvAreaTM, 0, TMdata) #(4)
+    server.register_area(srvAreaCT, 0, CTdata) #(3)
 
     try:
         server.start_to("127.0.0.1", 102)

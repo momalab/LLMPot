@@ -9,12 +9,15 @@ def start_client(server_address, server_port):
 
     try:
 
-        data = client.read_area(Areas.DB, 0, 0, 1) #ID of Areas.DB = 0x84
+        data = client.read_area(Areas.DB, 0, 1, 1) #ID of Areas.DB = 0x84
         print(f"data read: {data}")
 
         buffer = bytearray([0b00000001])
         data = client.write_area(Areas.DB, 0, 1, buffer)
         print(f"data written: {data}")
+
+        data = client.read_area(Areas.DB, 0, 1, 1) #ID of Areas.DB = 0x84
+        print(f"data read: {data}")
 
     except KeyboardInterrupt:
         print("Client stopped by user.")
@@ -25,7 +28,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="127.0.0.1", required=False)
-    parser.add_argument('-p', default=1020, required=False)
+    parser.add_argument('-p', default=102, required=False)
     args = parser.parse_args()
 
     server_address = args.ip
