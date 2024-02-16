@@ -5,11 +5,11 @@ import random
 import argparse
 from tqdm import tqdm
 from pymodbus.client import ModbusTcpClient
-from dataset_generation.invalid_function import CustomInvalidFunctionRequest
-
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
+
+from invalid_function import CustomInvalidFunctionRequest
 
 
 def read_input_register(client: ModbusTcpClient, address):

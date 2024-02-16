@@ -2,20 +2,21 @@ import time
 import random
 import argparse
 import snap7
-from snap7.types import Areas, wordlen_to_ctypes, S7WLReal
+from snap7.types import Areas
+from snap7.util import get_real, set_real
 
 
 def read_temperature_register(client, address):
-    temperature_status = client.read_area(Areas.DB, 1, address, wordlen_to_ctypes(S7WLReal))
-    temperature_sensor_value = snap7.util.get_real(temperature_status, 0)
+    temperature_status = client.read_area(Areas.DB, 0, address, 4)
+    temperature_sensor_value = get_real(temperature_status, 0)
     print(f"Temp at {address} is: {temperature_sensor_value}, {temperature_status}")
     return temperature_status
 
 
 def write_temperature_register(client, temp, address):
-    new_temp = snap7.util.set_real(temp)
-    temperature_update = client.write_area(Areas.DB, 1, address, new_temp)
-    print(f"Temp at {address} updated to: {temperature_update}")
+    new_temp = set_real(bytearray(4), 0, temp)
+    temperature_update = client.write_area(Areas.DB, 0, address, new_temp)
+    print(f"Temp at {address} updated to: {get_real(new_temp, 0)}")
     return temperature_update
 
 

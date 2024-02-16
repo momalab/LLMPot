@@ -14,7 +14,7 @@ def setup_logging():
 def start_server():
 
     setup_logging()
-    logging.info("Starting S7comm Server")
+    logging.info("Starting S7comm Server..")
     server = Server()
 
     size = 100
@@ -33,9 +33,6 @@ def start_server():
     except Exception as e:
         logging.error(f"Failed to start server: {e}")
         raise
-
-    # server.start_to("127.0.0.1", 102)
-    # server.get_status()
 
     try:
         while True:
