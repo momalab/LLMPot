@@ -5,11 +5,12 @@ import random
 import argparse
 from tqdm import tqdm
 from pymodbus.client import ModbusTcpClient
+from dataset_generation.invalid_function import CustomInvalidFunctionRequest
+
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from invalid_function import CustomInvalidFunctionRequest
 
 def read_input_register(client: ModbusTcpClient, address):
     current_valve_position = client.read_input_registers(address, count=1, unit=0x01)
@@ -72,19 +73,17 @@ def start_client(server_address, server_port, samples_num):
 
     try:
 
-        for i in tqdm(range(int(samples_num/10))):
+        for _ in tqdm(range(int(samples_num/10))):
 
-            flow_rate_a = random.randrange(0, 100)
-            flow_rate_b = random.randrange(0, 100)
             mixing_status = random.choice([True, False])
 
-            functions = [(read_discrete_input, [client, 0]), # mixing process
-                         (read_holding_register, [client, 0]), # read flow_rate_a
-                         (read_holding_register, [client, 1]), # read flow_rate_b
-                         (read_input_register, [client, 0]), # read valve_a
-                         (read_input_register, [client, 1]), # read valve_b
-                         (write_holding_register, [client, flow_rate_a, 0]),
-                         (write_holding_register, [client, flow_rate_b, 1]),
+            functions = [(read_discrete_input, [client, 0]),  # mixing process
+                         (read_holding_register, [client, 0]),
+                         (read_holding_register, [client, 1]),
+                         (read_input_register, [client, 0]),  # read flow_rate_a
+                         (read_input_register, [client, 1]),  # read flow_rate_b
+                         (read_input_register, [client, 2]),  # read valve_a
+                         (read_input_register, [client, 3]),  # read valve_b
                          (write_coil, [client, mixing_status, 0])]
 
             flow_rate = random.randrange(0, 100)
@@ -108,8 +107,7 @@ def start_client(server_address, server_port, samples_num):
 
             for function, args in functions:
                 function(*args)
-                if function.__name__ == write_holding_register.__name__:
-                    time.sleep(0.3)
+                time.sleep(0.05)
 
     except KeyboardInterrupt:
         print("Client stopped by user.")
