@@ -9,4 +9,6 @@ else:
     ROOT_DIR = "ICSPot"
 
 PROJECT_ROOT_DIR = [p for p in current_dir.parents if p.parts[-1] == ROOT_DIR][0]
-OUTPUTS_DIR = f"{PROJECT_ROOT_DIR}/outputs"
+OUTPUTS_DIR = f"{PROJECT_ROOT_DIR}/outputs/"
+EXPERIMENTS = f"{PROJECT_ROOT_DIR}/experiments/"
+CHECKPOINTS = f"{PROJECT_ROOT_DIR}/checkpoints/"
