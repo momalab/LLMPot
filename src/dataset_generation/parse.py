@@ -36,7 +36,7 @@ def parse(capture_layer: str, port: int, pcap: str, context_length: int, enc_typ
     dataset_df = pd.DataFrame(dataset_dict)
 
     if context_length > 0:
-        with open(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}-lala.csv", "a+") as csv_context:
+        with open(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv", "a+") as csv_context:
             csv_context.write("source_text,target_text\n")
             for i in range(0, len(dataset_df) - context_length):
                 for j in range(0, context_length):
@@ -44,7 +44,7 @@ def parse(capture_layer: str, port: int, pcap: str, context_length: int, enc_typ
                 csv_context.write(f"{dataset_df['source_text'][i + context_length]}:,{dataset_df['target_text'][i + context_length]}")
                 csv_context.write("\n")
     else:
-        dataset_df.to_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}-lala.csv", index=False)
+        dataset_df.to_csv(f"{OUTPUTS_DIR}/datasets/parsed/{pcap}.csv", index=False)
 
 
 def main():
