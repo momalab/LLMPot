@@ -30,7 +30,6 @@ class FinetunerModel:
     def __str__(self):
         return f"{self.the_name}_{self.start_datetime}"
 
-    @property
     def base_model_id(self):
         return f"{self.model_type}/{self.model_name}"
 
