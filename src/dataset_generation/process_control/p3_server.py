@@ -38,15 +38,12 @@ def update_control_logic(store):
         flow_rate_a_int, flow_rate_a_decimal, flow_rate_b_int, flow_rate_b_decimal = store.getValues(0x04, 0, count=4)
         flow_rate_a = float(f"{flow_rate_a_int}.{flow_rate_a_decimal}")
         flow_rate_b = float(f"{flow_rate_b_int}.{flow_rate_b_decimal}")
-        print(f"Adjusted Flow A: {flow_rate_a}, Adjusted Flow B: {flow_rate_b}")
         flow_rate_a, flow_rate_b = adjust_flows(flow_rate_a, flow_rate_b, 3, 0.01, 0.5)
 
         if is_ratio_within_tolerance(flow_rate_a, flow_rate_b, 3, 0.05):
-            print("Target ratio achieved within tolerance. Stopping adjustments.")
 
             random_num = random.randint(0, 10)
             if random_num > 7:
-                print("Restart mixing process.")
                 flow_rate_a = random.randint(1, 10)
                 flow_rate_b = random.randint(1, 10)
 
@@ -69,7 +66,7 @@ def main():
     logic_thread = threading.Thread(target=update_control_logic, args=[store], daemon=True)
     logic_thread.start()
 
-    StartTcpServer(context=context, address=("localhost", 502))
+    StartTcpServer(context=context, address=("localhost", 5020))
 
 
 if __name__ == '__main__':

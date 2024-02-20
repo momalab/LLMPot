@@ -5,7 +5,7 @@ import traceback
 
 from lightning.pytorch.loggers import TensorBoardLogger
 
-from cfg import OUTPUTS_DIR, CHECKPOINTS
+from cfg import CHECKPOINTS
 from finetune.byt5 import Byt5
 from finetune.llama2 import Llama2
 from finetune.model.finetuner_model import FinetunerModel
@@ -16,7 +16,7 @@ VAL_LOSS = "val_loss"
 TRAIN_LOSS = "train_loss"
 
 
-def main(model_type: str, model_name: str, csv: str, precision: int = 32, workers: int = 2, lora: bool = False, quantization: bool = False):
+def main(model_type: str, model_name: str, csv: str, experiment: str, precision: int = 32, workers: int = 2, lora: bool = False, quantization: bool = False):
     start_time = time.time()
     finetuner_model = FinetunerModel(model_type=model_type, model_name=model_name, dataset_filename=csv,
                                      precision=precision, workers=workers, start_time=start_time)
@@ -26,7 +26,7 @@ def main(model_type: str, model_name: str, csv: str, precision: int = 32, worker
         log.info(f"Start time: {start_time} - {datetime.datetime.fromtimestamp(start_time)}")
         log.info(f"Start time: {finetuner_model.start_datetime}")
 
-        logger = TensorBoardLogger(f"{CHECKPOINTS}", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
+        logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
 
         if finetuner_model.model_type == "meta-llama":
             llama2 = Llama2(finetuner_model, use_lora=lora, use_quantization=quantization)
@@ -34,9 +34,6 @@ def main(model_type: str, model_name: str, csv: str, precision: int = 32, worker
         elif finetuner_model.model_type == "google":
             byt5 = Byt5(finetuner_model, VAL_LOSS, TRAIN_LOSS, use_lora=lora, use_quantization=quantization)
             byt5.train(logger, finetuner_model)
-        else:
-            custom = SimpleModel(finetuner_model, VAL_LOSS, TRAIN_LOSS, use_lora=lora, use_quantization=quantization)
-            custom.train(logger, finetuner_model)
 
         end_time = time.time()
         log.info(f"End time: {end_time} - {datetime.datetime.fromtimestamp(end_time)}")

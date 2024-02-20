@@ -10,7 +10,7 @@ def main(model_type, model_name, experiment):
     with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
         config = cfg.read().splitlines()
         for dataset in tqdm(config):
-            trainer.main(args.mt, args.mn, dataset)
+            trainer.main(model_type, model_name, dataset, experiment)
 
 
 if __name__ == '__main__':

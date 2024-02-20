@@ -1,7 +1,7 @@
 import datetime
 import os
 
-import cfg
+from cfg import CHECKPOINTS, LOGS, VALIDATION
 
 
 class FinetunerModel:
@@ -24,8 +24,8 @@ class FinetunerModel:
                 self.start_time = value
                 self.start_datetime = datetime.datetime.fromtimestamp(value).strftime('%Y%m%dT%H%M')
             setattr(self, key, value)
-        self.checkpoints_dir = f"{cfg.OUTPUTS_DIR}/checkpoints"
-        self.log_output_dir = f"{cfg.OUTPUTS_DIR}/logs"
+        self.checkpoints_dir = f"{CHECKPOINTS}"
+        self.log_output_dir = f"{LOGS}"
 
     def __str__(self):
         return f"{self.the_name}_{self.start_datetime}"
@@ -38,7 +38,7 @@ class FinetunerModel:
         return f"{self.model_type}_{self.model_name}_{self.dataset_filename}"
 
     def get_validation_filename(self, epoch, validation_type):
-        os.makedirs(os.path.dirname(f"{cfg.OUTPUTS_DIR}/validation_data/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"), exist_ok=True)
-        return f"{cfg.OUTPUTS_DIR}/validation_data/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"
+        os.makedirs(os.path.dirname(f"{VALIDATION}/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"), exist_ok=True)
+        return f"{VALIDATION}/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"
 
 
