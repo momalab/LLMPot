@@ -5,11 +5,7 @@ import random
 import argparse
 from tqdm import tqdm
 from pymodbus.client import ModbusTcpClient
-
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(parent_dir)
-
-from invalid_function import CustomInvalidFunctionRequest
+from dataset_generation.invalid_function import CustomInvalidFunctionRequest
 
 
 def read_input_register(client: ModbusTcpClient, address):
@@ -120,7 +116,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
     parser.add_argument('-p', default=502, required=False)
-    parser.add_argument('-num', default=10000, required=False)
+    parser.add_argument('-num', default=5, required=False)
     args = parser.parse_args()
 
     server_address = args.ip
