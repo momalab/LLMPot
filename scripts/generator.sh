@@ -66,9 +66,13 @@ while IFS= read -r line; do
   wait $parse_pid
   parser_status=$?
 
-    if [ $parser_status -eq 0 ]; then
+  if [ $parser_status -eq 0 ]; then
     echo "File: $line successfully generated."
   fi
+
+  python $DATASET_GENERATION/split.py -csv "$line" &
+  split_pid=$!
+  wait $split_pid
 done < "$EXPERIMENT_FILE"
 
 echo "Generation Complete."
