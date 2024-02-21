@@ -55,6 +55,7 @@ done <<< "$SIZES"
 
 while IFS= read -r line; do
   IFS='-' read -r -a part <<< "$line"
+  echo "Processing file: $line ..."
 
   if [ -f "$PARSED/$line".csv ]; then
     echo "File: $line exists, continuing to next iteration."
