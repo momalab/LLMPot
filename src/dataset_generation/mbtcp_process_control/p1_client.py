@@ -2,7 +2,7 @@ import time
 import random
 import argparse
 from pymodbus.client import ModbusTcpClient
-from invalid_function import CustomInvalidFunctionRequest
+from invalid_function import Mbtcp_CustomInvalidFunctionRequest
 
 
 def read_holding_register(client: ModbusTcpClient, address):
@@ -35,7 +35,7 @@ def illegal_function(client):
     valid_function_code = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
     false_function_code = random.choice([x for x in range(0, 254) if x not in valid_function_code])
     print(f"False FC is: {false_function_code}")
-    request = CustomInvalidFunctionRequest(false_function_code)
+    request = Mbtcp_CustomInvalidFunctionRequest(false_function_code)
     return client.execute(request)
 
 

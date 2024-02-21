@@ -3,12 +3,9 @@ import random
 import time
 
 from pymodbus.client import ModbusTcpClient
-<<<<<<< HEAD:src/dataset_generation/process_control/process3_client.py
-=======
 from tqdm import tqdm
 
->>>>>>> 3c1de48f8e3e4713eac32584c1a3b2444f594bac:src/dataset_generation/process_control/p3_client.py
-from dataset_generation.invalid_function import CustomInvalidFunctionRequest
+from dataset_generation.invalid_function import Mbtcp_CustomInvalidFunctionRequest
 
 
 def read_input_register(client: ModbusTcpClient, address):
@@ -34,7 +31,7 @@ def write_coil(client: ModbusTcpClient, mixing_status, address):
 def illegal_function(client):
     valid_function_code = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
     false_function_code = random.choice([x for x in range(0, 254) if x not in valid_function_code])
-    request = CustomInvalidFunctionRequest(false_function_code)
+    request = Mbtcp_CustomInvalidFunctionRequest(false_function_code)
     return client.execute(request)
 
 

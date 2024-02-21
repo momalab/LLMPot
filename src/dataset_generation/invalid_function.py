@@ -2,7 +2,7 @@ import random
 from pymodbus.pdu import ModbusRequest
 
 
-class CustomInvalidFunctionRequest(ModbusRequest):
+class Mbtcp_CustomInvalidFunctionRequest(ModbusRequest):
     def __init__(self, custom_function_code, **kwargs):
         ModbusRequest.__init__(self, **kwargs)
         self.function_code = custom_function_code
