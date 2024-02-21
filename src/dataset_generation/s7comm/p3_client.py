@@ -7,39 +7,39 @@ from snap7.util import get_word, set_word, get_bool
 from s7_invalid_function import S7_CustomInvalidFunctionRequest
 
 
-def read_temperature(client: Client, data_block, address, num_bytes):
+def read_flow_rate(client: Client, data_block, address, num_bytes):
     try:
-        temperature_status = client.db_read(data_block, address, num_bytes)
-        print(f"Temp at {address} is: {get_word(temperature_status, 0)}")
-        return temperature_status
+        flow_rate = client.db_read(data_block, address, num_bytes)
+        print(f"flow_rate at {data_block}, {address} is: {get_word(flow_rate, 0)}")
+        return flow_rate
     except RuntimeError:
         print("----- Exception -----")
 
 
-def write_temperature(client: Client, data_block, temp, address):
+def write_flow_rate(client: Client, data_block, temp, address):
     try:
-        new_temp = set_word(bytearray(2), 0, temp)
-        temperature_update = client.db_write(data_block, address, new_temp)
-        print(f"Temp at {address} updated to: {get_word(new_temp, 0)}")
-        return temperature_update
+        new_flow = set_word(bytearray(2), 0, temp)
+        flow_rate_update = client.db_write(data_block, address, new_flow)
+        print(f"flow_rate at {address} updated to: {get_word(new_flow, 0)}")
+        return flow_rate_update
     except RuntimeError:
         print("----- Exception -----")
 
 
-def read_cooling(client: Client, data_block, address, num_bytes):
+def read_mixing_status(client: Client, data_block, address, num_bytes):
     try:
-        cooling_system_status = client.read_area(Areas.MK, data_block, address, num_bytes)
-        print(f"Cooling at {address} is: {get_bool(cooling_system_status, 0, 0)}")
-        return cooling_system_status
+        mixing_status = client.read_area(Areas.MK, data_block, address, num_bytes)
+        print(f"Cooling at {address} is: {get_bool(mixing_status, 0, 0)}")
+        return mixing_status
     except RuntimeError:
         print("----- Exception -----")
 
 
-def write_cooling(client: Client, data_block, cool, address):
+def write_mixing_status(client: Client, data_block, cool, address):
     try:
-        cooling_system_update = client.write_area(Areas.MK, data_block, address, cool)
+        mixing_update = client.write_area(Areas.MK, data_block, address, cool)
         print(f"Cooling at {address} updated to: {get_bool(cool, 0, 0)}")
-        return cooling_system_update
+        return mixing_update
     except RuntimeError:
         print("----- Exception -----")
 
@@ -59,30 +59,30 @@ def start_client(server_address, server_port, samples_num):
     client.get_connected()
 
     try:
-        for _ in range(samples_num):
+        for _ in range(int(samples_num/5)):
 
-            temp = random.randrange(0, 50)
-            cool = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
+            mixing_status = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
 
-            functions = [(read_temperature, [client, 0, 0, 2]),
-                         (write_temperature, [client, 0, temp, 0]),
-                         (read_cooling, [client, 0, 0, 2]),
-                         (write_cooling, [client, 0, cool, 0])]
+            functions = [(read_flow_rate, [client, 0, 0, 2]), #db_num, start, length
+                         (read_flow_rate, [client, 1, 0, 2]),
+                         (read_flow_rate, [client, 2, 0, 2]),
+                         (read_flow_rate, [client, 3, 0, 2])]
 
-            temp = random.randrange(0, 50)
-            cool = random.choice([True, False])
+            # flow_rate = random.randrange(0, 50)
+            mixing_status = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
 
-            data_block = random.randint(1, 50)
-            merkers_block = random.randint(1, 50)
-
-            db_addresses = random.randint(1, 50)
+            data_block = random.randint(4, 50)
+            db_addresses = random.randint(0, 50)
             db_bytes = random.randint(3, 10)
-            mk_addresses = random.randint(1, 50)
+
+            merkers_block = random.randint(0, 50)
+            mk_addresses = random.randint(0, 50)
             mk_bytes = random.randint(3, 10)
-            exception_function = [(read_temperature, [client, data_block, db_addresses, db_bytes]),
-                                  (write_temperature, [client, data_block, temp, db_addresses]),
-                                  (read_cooling, [client, merkers_block, mk_addresses, mk_bytes]),
-                                  (write_cooling, [client, merkers_block, cool, mk_addresses])]
+
+            exception_function = [(read_flow_rate, [client, data_block, db_addresses, db_bytes]),
+                                #   (write_flow_rate, [client, data_block, flow_rate, db_addresses]),
+                                  (read_mixing_status, [client, merkers_block, mk_addresses, mk_bytes]),
+                                  (write_mixing_status, [client, merkers_block, mixing_status, mk_addresses])]
 
             function, args = random.choice(exception_function)
             exceptions = [(function, [*args])] # (illegal_function, [server_address, server_port])
@@ -91,8 +91,7 @@ def start_client(server_address, server_port, samples_num):
 
             for function, args in functions:
                 function(*args)
-                if function.__name__ == write_temperature.__name__:
-                    time.sleep(0.3)
+                time.sleep(0.05)
 
     except KeyboardInterrupt:
         print("Client stopped by user.")
