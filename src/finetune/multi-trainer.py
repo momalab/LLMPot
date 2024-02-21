@@ -12,7 +12,7 @@ def main(model_type, model_name, experiment):
         config = cfg.read().splitlines()
 
         for dataset in tqdm(config):
-            if os.path.exists(f"{EXPERIMENTS}/{experiment}/{dataset}"):
+            if os.path.exists(f"{EXPERIMENTS}/{experiment}/{model_type}_{model_name}_{dataset}"):
                 print(f'Experiment {dataset} already exists. Skipping...')
                 continue
             trainer.main(model_type, model_name, dataset, experiment)
