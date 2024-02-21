@@ -9,8 +9,8 @@ class CustomInvalidFunctionRequest(ModbusRequest):
 
     def encode(self):
         hex_chars = '0123456789abcdef'
-        length = random.choice([16,32,48]) #max 2024  bits
-        hex_request= ''.join(random.choice(hex_chars) for _ in range(length))
+        length = random.choice([16, 32, 48]) #max 2024  bits
+        hex_request = ''.join(random.choice(hex_chars) for _ in range(length))
         return bytes.fromhex(hex_request)
 
     def decode(self, data):

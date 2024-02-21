@@ -1,4 +1,5 @@
 import argparse
+import os
 
 from tqdm import tqdm
 
@@ -9,7 +10,11 @@ from finetune import trainer
 def main(model_type, model_name, experiment):
     with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
         config = cfg.read().splitlines()
+
         for dataset in tqdm(config):
+            if os.path.exists(f"{EXPERIMENTS}/{experiment}/{dataset}"):
+                print(f'Experiment {dataset} already exists. Skipping...')
+                continue
             trainer.main(model_type, model_name, dataset, experiment)
 
 
