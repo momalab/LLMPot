@@ -9,7 +9,7 @@ EXPERIMENT_FILE=../experiments/$1
 DUMPS=../outputs/datasets/dumps
 PARSED=../outputs/datasets/parsed
 DATASET_GENERATION=../src/dataset_generation
-PROCESS_CONTROL=$DATASET_GENERATION/process_control
+PROCESS_CONTROL=$DATASET_GENERATION/mbtcp_process_control
 
 cleanup() {
   echo "Caught Ctrl+C, stopping all spawned processes..."

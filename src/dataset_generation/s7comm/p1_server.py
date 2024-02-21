@@ -1,5 +1,7 @@
 import time
 import logging
+
+import snap7.server
 from snap7.server import Server
 from snap7.types import wordlen_to_ctypes, WordLen, srvAreaDB, srvAreaMK
 
@@ -23,7 +25,8 @@ def start_server():
     server.register_area(srvAreaMK, 0, MKData)
 
     try:
-        server.start_to('127.0.0.1', 102)
+        server.start_to('127.0.0.1', 10200)
+        print("Server started")
         server.get_status()
     except Exception as e:
         logging.error(f"Failed to start server: {e}")
@@ -48,6 +51,7 @@ def start_server():
         print("Server is stopping...")
         server.stop()
         server.destroy()
+
 
 if __name__ == '__main__':
     start_server()
