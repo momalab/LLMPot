@@ -15,6 +15,7 @@ def main(model_type, model_name, experiment):
             if os.path.exists(f"{EXPERIMENTS}/{experiment}/{model_type}_{model_name}_{dataset}"):
                 print(f'Experiment {dataset} already exists. Skipping...')
                 continue
+            print(f'Fine tuning {dataset} ...')
             trainer.main(model_type, model_name, dataset, experiment)
 
 
