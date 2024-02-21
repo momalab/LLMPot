@@ -46,7 +46,7 @@ def start_client(server_address, server_port, samples_num):
 
     try:
 
-        for i in range(int(samples_num/6)):
+        for _ in range(int(samples_num/6)):
             temp = random.randrange(0, 50)
             cool = random.choice([True, False])
             functions = [(read_holding_register, [client, 0]),
@@ -67,7 +67,6 @@ def start_client(server_address, server_port, samples_num):
             function, args = random.choice(exception_function)
             exceptions = [(illegal_function, [client]), (function, [*args])]
             functions.extend(exceptions)
-
             random.shuffle(functions)
 
             for function, args in functions:

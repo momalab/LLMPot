@@ -1,14 +1,10 @@
 import time
 import logging
-import threading
 from snap7.server import Server
 from snap7.types import wordlen_to_ctypes, WordLen, srvAreaDB, srvAreaMK
 
 
 def setup_logging():
-    """
-    Set up and configure logging.
-    """
     logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
                         level=logging.DEBUG,
                         datefmt='%Y-%m-%d %H:%M:%S')
@@ -20,20 +16,18 @@ def start_server():
     logging.info("Starting S7comm Server..")
     server = Server()
 
-    try:
-        # logic_thread = threading.Thread(target=update_control_logic)
-        # logic_thread.start()
-        server.start_to('127.0.0.1', 102)
-        server.get_status()
-    except Exception as e:
-        logging.error(f"Failed to start server: {e}")
-        raise
-
     size = 2
     DBdata = (wordlen_to_ctypes[WordLen.Byte.value] * size)()
     MKData = (wordlen_to_ctypes[WordLen.Byte.value] * size)()
     server.register_area(srvAreaDB, 0, DBdata)
     server.register_area(srvAreaMK, 0, MKData)
+
+    try:
+        server.start_to('127.0.0.1', 102)
+        server.get_status()
+    except Exception as e:
+        logging.error(f"Failed to start server: {e}")
+        raise
 
     try:
         while True:
