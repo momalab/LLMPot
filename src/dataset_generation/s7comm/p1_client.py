@@ -103,7 +103,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="127.0.0.1", required=False)
-    parser.add_argument('-p', default=102, required=False)
+    parser.add_argument('-p', default=10200, required=False)
     parser.add_argument('-num', default=1, required=False)
     args = parser.parse_args()
 
