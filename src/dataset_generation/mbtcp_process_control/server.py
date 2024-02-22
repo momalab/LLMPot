@@ -25,7 +25,7 @@ class MbtcpServer:
     def start(self):
         update_logic_thread = multiprocessing.Process(target=self._update_control_logic)
         try:
-            update_logic_thread .start()
+            update_logic_thread.start()
 
             StartTcpServer(context=self._context, address=(self._ip, self._port))
         except KeyboardInterrupt:

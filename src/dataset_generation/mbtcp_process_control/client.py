@@ -4,39 +4,21 @@ from typing import Tuple
 
 from pymodbus.client import ModbusTcpClient
 
-from dataset_generation.invalid_function import Mbtcp_CustomInvalidFunctionRequest
+from dataset_generation.mbtcp_process_control.invalid_function import MbtcpCustomInvalidFunctionRequest
 
 
-class MbtcpClient:
+class MbtcpClient(ModbusTcpClient):
     def __init__(self, ip: str, port: int, samples_num: int):
+        super().__init__(ip, port)
         self._samples_num = samples_num
         self.ip = ip
         self.port = port
-        self._client = ModbusTcpClient(self.ip, self.port)
-
-    def connect(self):
-        self._client.connect()
-
-    def read_holding_registers(self, address, count=1):
-        return self._client.read_holding_registers(address, count)
-
-    def write_register(self, address, value):
-        return self._client.write_register(address, value)
-
-    def read_discrete_inputs(self, address, count=1):
-        return self._client.read_discrete_inputs(address, count)
-
-    def write_coil(self, address, value):
-        return self._client.write_coil(address, value)
 
     def illegal_function(self):
         valid_function_code = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
         false_function_code = random.choice([x for x in range(0, 254) if x not in valid_function_code])
-        request = Mbtcp_CustomInvalidFunctionRequest(false_function_code)
-        return self._client.execute(request)
-
-    def close(self):
-        self._client.close()
+        request = MbtcpCustomInvalidFunctionRequest(false_function_code)
+        return self.execute(request)
 
     def start_client(self):
         pass

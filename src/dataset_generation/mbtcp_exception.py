@@ -2,7 +2,7 @@ import argparse
 import random
 import traceback
 from mbtcp_requests import Mbtcp_Requests
-from invalid_function import CustomInvalidFunctionRequest
+from dataset_generation.mbtcp_process_control.invalid_function import CustomInvalidFunctionRequest
 
 
 class MbtcpClient:

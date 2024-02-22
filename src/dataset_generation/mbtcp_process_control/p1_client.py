@@ -1,6 +1,6 @@
-import argparse
-import time
 import random
+import time
+
 from dataset_generation.mbtcp_process_control.client import MbtcpClient, retrieve_args
 
 
@@ -31,7 +31,7 @@ class P1Client(MbtcpClient):
 
             for function, args in functions:
                 function(*args)
-                if function.__name__ == self._client.write_register.__name__:
+                if function.__name__ == self.write_register.__name__:
                     time.sleep(0.3)
 
 
@@ -39,8 +39,6 @@ def main():
     ip, port, samples_num = retrieve_args()
     client = P1Client(ip, port, samples_num)
     try:
-        client.connect()
-
         client.start_client()
     except KeyboardInterrupt:
         print("Client stopped by user.")
