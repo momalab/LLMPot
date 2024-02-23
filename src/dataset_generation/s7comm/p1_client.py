@@ -1,5 +1,6 @@
 import time
 import random
+from snap7.util import set_word
 from snap7.types import Areas
 
 from dataset_generation.s7comm.client import S7Client, retrieve_args
@@ -10,14 +11,16 @@ class P1Client(S7Client):
         for _ in range(self.samples_num):
 
             temp = random.randrange(0, 50)
+            temp_value = set_word(bytearray(2), 0, temp)
             cool = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
 
             functions = [(self.read_area, [Areas.DB, 0, 0, 2]),
-                         (self.write_area, [Areas.DB, 0, temp, 0]),
+                         (self.write_area, [Areas.DB, 0, 0, temp_value]),
                          (self.read_area, [Areas.MK, 0, 0, 2]),
-                         (self.write_area, [Areas.MK, 0, cool, 0])]
+                         (self.write_area, [Areas.MK, 0, 0, cool])]
 
             temp = random.randrange(0, 50)
+            temp_value = set_word(bytearray(2), 0, temp)
             cool = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
 
             data_block = random.randint(1, 50)
@@ -30,8 +33,8 @@ class P1Client(S7Client):
             exception_function = [(self.read_area, [Areas.DB, data_block, 0, 2]),
                                   (self.read_area, [Areas.DB, random.randint(0, 3), 0, db_bytes]),
                                   (self.read_area, [Areas.DB, random.randint(0, 3), db_addresses, 2]),
-                                  (self.write_area, [Areas.DB, data_block, 0, temp]),
-                                  (self.write_area, [Areas.DB, random.randint(0, 3), db_addresses, temp]),
+                                  (self.write_area, [Areas.DB, data_block, 0, temp_value]),
+                                  (self.write_area, [Areas.DB, random.randint(0, 3), db_addresses, temp_value]),
 
                                   (self.read_area, [Areas.MK, merkers_block, 0, 2]),
                                   (self.read_area, [Areas.MK, random.randint(0, 3), 0, mk_bytes]),
