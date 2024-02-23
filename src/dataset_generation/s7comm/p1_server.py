@@ -10,11 +10,11 @@ class P1Server(S7Comm):
 
     def _update_control_logic(self):
         while True:
-            temp = int.from_bytes(self.DBdata_0, byteorder='big')
+            temp = int.from_bytes(self._DBdata_0, byteorder='big')
             if temp > 25:
-                self.MKData_0[0] = 1
+                self._MKdata_0[0] = 1
             else:
-                self.MKData_0[0] = 0
+                self._MKdata_0[0] = 0
             time.sleep(0.1)
 
 

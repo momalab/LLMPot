@@ -4,7 +4,6 @@ from dataset_generation.mbtcp_process_control.server import MbtcpServer, retriev
 
 
 class P1Server(MbtcpServer):
-
     def __init__(self, ip: str, port: int):
         super().__init__(ip, port, {1: [0, 0]}, {1: [0, 0]}, {0: 0}, {})
 

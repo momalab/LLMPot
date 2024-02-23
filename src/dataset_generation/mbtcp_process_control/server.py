@@ -44,7 +44,3 @@ def retrieve_args() -> Tuple[str, int]:
     args = parser.parse_args()
 
     return args.ip, int(args.p)
-
-
-
-

@@ -8,12 +8,10 @@ from dataset_generation.s7comm.client import S7Client, retrieve_args
 
 class P1Client(S7Client):
     def start_client(self):
-        for _ in range(self.samples_num):
-
+        for _ in range(self._samples_num):
             temp = random.randrange(0, 50)
             temp_value = set_word(bytearray(2), 0, temp)
             cool = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
-
             functions = [(self.read_area, [Areas.DB, 0, 0, 2]),
                          (self.write_area, [Areas.DB, 0, 0, temp_value]),
                          (self.read_area, [Areas.MK, 0, 0, 2]),
