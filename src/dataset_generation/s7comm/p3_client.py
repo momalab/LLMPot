@@ -27,7 +27,8 @@ class P3Client(S7Client):
             random.shuffle(functions)
 
             for function, args in functions:
-                self.func_wrapper(function(*args))
+                # self.func_wrapper(function(*args))
+                self.func_wrapper(function, *args)
                 time.sleep(0.05)
 
 

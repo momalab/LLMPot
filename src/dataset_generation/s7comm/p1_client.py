@@ -45,7 +45,8 @@ class P1Client(S7Client):
             random.shuffle(functions)
 
             for function, args in functions:
-                self.func_wrapper(function(*args))
+                # self.func_wrapper(function(*args))
+                self.func_wrapper(function, *args)
                 if function.__name__ == self.write_area.__name__:
                     time.sleep(0.3)
 

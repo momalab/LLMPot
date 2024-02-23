@@ -1,11 +1,12 @@
 import time
+from snap7.types import srvAreaDB, srvAreaMK
 
 from dataset_generation.s7comm.server import S7Comm, retrieve_args
 
 
 class P1Server(S7Comm):
     def __init__(self, ip: str, port: int):
-        super().__init__(ip, port, {self._srvAreaDB: 1, self._srvAreaMK: 1})
+        super().__init__(ip, port, {srvAreaDB: 1, srvAreaMK: 1})
 
     def _update_control_logic(self):
         while True:

@@ -2,12 +2,13 @@ import argparse
 import random
 from typing import Tuple
 from snap7.client import Client
+from snap7.types import Areas
+from snap7.util import get_word, set_word, get_bool
 
 from dataset_generation.s7comm.invalid_function import S7_CustomInvalidFunctionRequest
 
 
 class S7Client(Client):
-
     def __init__(self, ip: str, port: int, samples_num: int):
         super().__init__()
         self._samples_num = samples_num
@@ -23,17 +24,24 @@ class S7Client(Client):
 
     def func_wrapper(self, func: callable, *args):
         try:
-            func(args)
-            # if func == self.read_area:
-            #     if Areas.MK:
-            #         print(f"Data at {data_block} is: {get_bool(cooling_system_status, 0, 0)}")
-            #     else:
-            #         print(f"Data at {data_block} is: {get_word(temperature_status, 0)}")
-            # if func == self.write_area:
-            #     if Areas.MK:
-            #         print(f"Data at {data_block} updated to: {get_bool(cool, 0, 0)}")
-            #     else:
-            #         print(f"Data at {data_block} updated to: {get_word(new_temp, 0)}")
+            func(*args)
+            if func.__name__ == self.read_area.__name__:
+                for read_items in args:
+                    block_name, block_num, address, num_bytes = read_items
+                response = self.read_area(block_name, block_num, address, num_bytes)
+                if block_name == Areas.MK:
+                    print(f"Data at {block_num} is: {get_bool(response, 0, 0)}")
+                if block_name == Areas.DB:
+                    print(f"Data at {block_num} is: {get_word(response, 0)}")
+
+            if func.__name__ == self.write_area.__name__:
+                for write_items in args:
+                    block_name, block_num, address, value = write_items
+                response = self.write_area(block_name, block_num, address, value)
+                if block_name == Areas.MK:
+                    print(f"Data at {block_num} is: {get_bool(value, 0, 0)}")
+                if block_name == Areas.DB:
+                    print(f"Data at {block_num} is: {get_word(value, 0)}")
         except RuntimeError:
             print("----- Exception -----")
         except IndexError:

@@ -1,12 +1,13 @@
 import random
 import time
+from snap7.types import srvAreaDB, srvAreaMK
 
 from dataset_generation.s7comm.server import S7Comm, retrieve_args
 
 
 class P3Server(S7Comm):
     def __init__(self, ip: str, port: int):
-        super().__init__(ip, port, {self._srvAreaDB: 4, self._srvAreaMK: 0}) #??
+        super().__init__(ip, port, {srvAreaDB: 4, srvAreaMK: 0})
 
     def _update_control_logic(self):
         while True:
