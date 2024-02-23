@@ -3,7 +3,7 @@ import random
 from typing import Tuple
 from snap7.client import Client
 from snap7.types import Areas
-from snap7.util import get_word, set_word, get_bool
+from snap7.util import get_word, get_bool
 
 from dataset_generation.s7comm.invalid_function import S7_CustomInvalidFunctionRequest
 
