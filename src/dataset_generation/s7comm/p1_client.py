@@ -1,5 +1,6 @@
 import time
 import random
+from snap7.types import Areas
 
 from dataset_generation.s7comm.client import S7Client, retrieve_args
 
@@ -11,10 +12,10 @@ class P1Client(S7Client):
             temp = random.randrange(0, 50)
             cool = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
 
-            functions = [(self.read_area, [self.Areas.DB, 0, 0, 2]),
-                         (self.write_area, [self.Areas.DB, 0, temp, 0]),
-                         (self.read_area, [self.Areas.MK, 0, 0, 2]),
-                         (self.write_area, [self.Areas.MK, 0, cool, 0])]
+            functions = [(self.read_area, [Areas.DB, 0, 0, 2]),
+                         (self.write_area, [Areas.DB, 0, temp, 0]),
+                         (self.read_area, [Areas.MK, 0, 0, 2]),
+                         (self.write_area, [Areas.MK, 0, cool, 0])]
 
             temp = random.randrange(0, 50)
             cool = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
@@ -26,10 +27,17 @@ class P1Client(S7Client):
             merkers_block = random.randint(1, 50)
             mk_addresses = random.randint(1, 50)
             mk_bytes = random.randint(0, 10)
-            exception_function = [(self.read_area, [self.Areas.DB, data_block, db_addresses, db_bytes]),
-                                  (self.write_area, [self.Areas.DB, data_block, temp, db_addresses]),
-                                  (self.read_area, [self.Areas.MK, merkers_block, mk_addresses, mk_bytes]),
-                                  (self.write_area, [self.Areas.MK, merkers_block, cool, mk_addresses])]
+            exception_function = [(self.read_area, [Areas.DB, data_block, 0, 2]),
+                                  (self.read_area, [Areas.DB, random.randint(0, 3), 0, db_bytes]),
+                                  (self.read_area, [Areas.DB, random.randint(0, 3), db_addresses, 2]),
+                                  (self.write_area, [Areas.DB, data_block, 0, temp]),
+                                  (self.write_area, [Areas.DB, random.randint(0, 3), db_addresses, temp]),
+
+                                  (self.read_area, [Areas.MK, merkers_block, 0, 2]),
+                                  (self.read_area, [Areas.MK, random.randint(0, 3), 0, mk_bytes]),
+                                  (self.read_area, [Areas.MK, random.randint(0, 3), mk_addresses, 2]),
+                                  (self.write_area, [Areas.MK, merkers_block, 0, cool]),
+                                  (self.write_area, [Areas.MK, random.randint(0, 3), mk_addresses, cool])]
 
             function, args = random.choice(exception_function)
             exceptions = [(function, [*args])]
@@ -37,7 +45,7 @@ class P1Client(S7Client):
             random.shuffle(functions)
 
             for function, args in functions:
-                function(*args)
+                self.func_wrapper(function(*args))
                 if function.__name__ == self.write_area.__name__:
                     time.sleep(0.3)
 

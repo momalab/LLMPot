@@ -1,5 +1,6 @@
 import time
 import random
+from snap7.types import Areas
 
 from dataset_generation.s7comm.client import S7Client, retrieve_args
 
@@ -8,16 +9,17 @@ class P3Client(S7Client):
     def start_client(self):
         for _ in range(self.samples_num):
 
-            functions = [(self.read_area, [self.Areas.DB, 0, 0, 2]),
-                         (self.read_area, [self.Areas.DB, 1, 0, 2]),
-                         (self.read_area, [self.Areas.DB, 2, 0, 2]),
-                         (self.read_area, [self.Areas.DB, 3, 0, 2])]
+            functions = [(self.read_area, [Areas.DB, 0, 0, 2]),
+                         (self.read_area, [Areas.DB, 1, 0, 2]),
+                         (self.read_area, [Areas.DB, 2, 0, 2]),
+                         (self.read_area, [Areas.DB, 3, 0, 2])]
 
+            data_block = random.randint(4, 50)
             db_addresses = random.randint(1, 50)
             db_bytes = random.randint(0, 10)
-            exception_function = [(self.read_area, [self.Areas.DB, random.randint(4, 50), 0, 2]), #item not available
-                                  (self.read_area, [self.Areas.DB, random.randint(0, 3), db_addresses, 2]), #address out of range
-                                  (self.read_area, [self.Areas.DB, random.randint(0, 3), 0, db_bytes])] #address out of range
+            exception_function = [(self.read_area, [Areas.DB, data_block, 0, 2]),
+                                  (self.read_area, [Areas.DB, random.randint(0, 3), 0, db_bytes]),
+                                  (self.read_area, [Areas.DB, random.randint(0, 3), db_addresses, 2])]
 
             function, args = random.choice(exception_function)
             exceptions = [(function, [*args])]
@@ -25,7 +27,7 @@ class P3Client(S7Client):
             random.shuffle(functions)
 
             for function, args in functions:
-                function(*args)
+                self.func_wrapper(function(*args))
                 time.sleep(0.05)
 
 

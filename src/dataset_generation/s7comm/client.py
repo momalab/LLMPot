@@ -21,7 +21,7 @@ class S7Client(Client):
         request = S7_CustomInvalidFunctionRequest(false_function_code, self.ip, self.port)
         return request.send_custom_s7_command()
 
-    def func_wrapper(self, func, *args):
+    def func_wrapper(self, func: callable, *args):
         try:
             func(args)
             # if func == self.read_area:
@@ -31,9 +31,9 @@ class S7Client(Client):
             #         print(f"Data at {data_block} is: {get_word(temperature_status, 0)}")
             # if func == self.write_area:
             #     if Areas.MK:
-            #         print(f"Cooling at {data_block} updated to: {get_bool(cool, 0, 0)}")
+            #         print(f"Data at {data_block} updated to: {get_bool(cool, 0, 0)}")
             #     else:
-            #         print(f"Temp at {data_block} updated to: {get_word(new_temp, 0)}")
+            #         print(f"Data at {data_block} updated to: {get_word(new_temp, 0)}")
         except RuntimeError:
             print("----- Exception -----")
         except IndexError:
