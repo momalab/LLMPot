@@ -14,11 +14,8 @@ class MbtcpServer:
                  discrete_block: dict, coil_block: dict):
         self._ip = ip
         self._port = port
-        self._input_reg_block = ModbusSparseDataBlock(input_reg_block)
-        self._holding_reg_block = ModbusSparseDataBlock(holding_reg_block)
-        self._discrete_block = ModbusSparseDataBlock(discrete_block)
-        self._coil_block = ModbusSparseDataBlock(coil_block)
-        self._store = ModbusSlaveContext(ir=input_reg_block, hr=holding_reg_block, di=discrete_block, co=coil_block)
+        self._store = ModbusSlaveContext(ir=ModbusSparseDataBlock(input_reg_block), hr=ModbusSparseDataBlock(holding_reg_block),
+                                         di=ModbusSparseDataBlock(discrete_block), co=ModbusSparseDataBlock(coil_block))
 
         self._context = ModbusServerContext(slaves=self._store, single=True)
 

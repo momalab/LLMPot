@@ -9,6 +9,7 @@ from dataset_generation.s7comm.client import S7Client, retrieve_args
 class P1Client(S7Client):
     def start_client(self):
         for _ in range(self._samples_num):
+
             temp = random.randrange(0, 50)
             temp_value = set_word(bytearray(2), 0, temp)
             cool = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
@@ -46,7 +47,6 @@ class P1Client(S7Client):
             random.shuffle(functions)
 
             for function, args in functions:
-                # self.func_wrapper(function(*args))
                 self.func_wrapper(function, *args)
                 if function.__name__ == self.write_area.__name__:
                     time.sleep(0.3)

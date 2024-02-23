@@ -14,6 +14,8 @@ class S7Client(Client):
         self._samples_num = samples_num
         self.ip = ip
         self.port = port
+        self.connect(self.ip, 0, 0, self.port)
+        self.get_connected()
 
     def illegal_function(self):
         valid_function_code = [240, 241, 242, 243, 244, 245, 246] # Read = 0x04 and Write = 0x05 - must be altered
@@ -26,8 +28,7 @@ class S7Client(Client):
         try:
             func(*args)
             if func.__name__ == self.read_area.__name__:
-                for read_items in args:
-                    block_name, block_num, address, num_bytes = read_items
+                block_name, block_num, address, num_bytes = args[0], args[1], args[2], args[3]
                 response = self.read_area(block_name, block_num, address, num_bytes)
                 if block_name == Areas.MK:
                     print(f"Data at {block_num} is: {get_bool(response, 0, 0)}")
@@ -35,8 +36,7 @@ class S7Client(Client):
                     print(f"Data at {block_num} is: {get_word(response, 0)}")
 
             if func.__name__ == self.write_area.__name__:
-                for write_items in args:
-                    block_name, block_num, address, value = write_items
+                block_name, block_num, address, value = args[0], args[1], args[2], args[3]
                 response = self.write_area(block_name, block_num, address, value)
                 if block_name == Areas.MK:
                     print(f"Data at {block_num} is: {get_bool(value, 0, 0)}")
@@ -48,15 +48,13 @@ class S7Client(Client):
             print("----- Exception -----")
 
     def start_client(self):
-        # self.connect(self.ip, 0, 0, self.port)
-        # self.get_connected()
         pass
 
 
 def retrieve_args() -> Tuple[str, int, int]:
     parser = argparse.ArgumentParser()
-    parser.add_argument('-ip', default="localhost", required=False)
-    parser.add_argument('-p', default=5020, required=False)
+    parser.add_argument('-ip', default="127.0.0.1", required=False)
+    parser.add_argument('-p', default=10200, required=False)
     parser.add_argument('-num', default=1000, required=False)
     args = parser.parse_args()
 

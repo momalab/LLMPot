@@ -8,7 +8,7 @@ from dataset_generation.s7comm.client import S7Client, retrieve_args
 
 class P3Client(S7Client):
     def start_client(self):
-        for _ in tqdm(range(self.samples_num)):
+        for _ in tqdm(range(self._samples_num)):
 
             functions = [(self.read_area, [Areas.DB, 0, 0, 2]),
                          (self.read_area, [Areas.DB, 1, 0, 2]),
@@ -28,7 +28,6 @@ class P3Client(S7Client):
             random.shuffle(functions)
 
             for function, args in functions:
-                # self.func_wrapper(function(*args))
                 self.func_wrapper(function, *args)
                 time.sleep(0.05)
 
