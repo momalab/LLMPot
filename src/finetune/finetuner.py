@@ -108,7 +108,7 @@ class Finetuner:
 
             checkpoint_callback = ModelCheckpoint(
                 monitor=self._val_loss_const,
-                filename=finetuner_model.dataset_filename,
+                filename=finetuner_model.dataset_filename + '-{epoch}',
                 save_top_k=2,
                 save_last=True,
                 mode='min',
