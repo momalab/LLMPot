@@ -9,7 +9,7 @@ EXPERIMENT_FILE=../experiments/$1
 DUMPS=../outputs/datasets/dumps
 PARSED=../outputs/datasets/parsed
 DATASET_GENERATION=../src/dataset_generation
-PROCESS_CONTROL=$DATASET_GENERATION/mbtcp_process_control
+PROCESS_CONTROL=$DATASET_GENERATION/$5
 
 cleanup() {
   echo "Caught Ctrl+C, stopping all spawned processes..."
@@ -34,11 +34,11 @@ while IFS= read -r size; do
   tcp_dump_pid=$!
   sleep 1
 
-  python $PROCESS_CONTROL/"$PROCESS"_server.py > /dev/null 2>&1 &
+  python "$PROCESS_CONTROL"/"$PROCESS"_server.py > /dev/null 2>&1 &
   server_pid=$!
   sleep 1
 
-  python $PROCESS_CONTROL/"$PROCESS"_client.py -num "$size" &
+  python "$PROCESS_CONTROL"/"$PROCESS"_client.py -num "$size" &
   client_pid=$!
   wait $client_pid
 
@@ -62,7 +62,7 @@ while IFS= read -r line; do
     continue
   fi
 
-  python $DATASET_GENERATION/parse.py -p 5020 -pcap "${part[0]}"-"${part[1]}"-"${part[3]}" -csv "$line" -clen "${part[2]:1:1}" &
+  python $DATASET_GENERATION/parse.py -pr "$2" -layer "$3" -p "$4" -pcap "${part[0]}"-"${part[1]}"-"${part[3]}" -csv "$line" -clen "${part[2]:1:1}" &
   parse_pid=$!
   wait $parse_pid
   parser_status=$?

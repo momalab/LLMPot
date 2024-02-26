@@ -154,10 +154,7 @@ class Byt5LightningModule(LightningModule):
 
                     if "|" in request:
                         question = request[request.rindex("|") + 1:len(request)]
-                        context = request[:request.rindex("|") - 1]
-                        # inputs = self.model.base_model.tokenizer([(question, context)], return_tensors="pt")
-                        # output = self.model.base_model.tokenizer.decode(inputs['input_ids'][0])
-                        # response = self.generate(output)
+                        context = request[:request.rindex("|")]
 
                     self.validate_choice(validation_type, question, response, expected_response)
 
@@ -169,7 +166,6 @@ class Byt5LightningModule(LightningModule):
                 finally:
                     if to_save.valid:
                         valid = valid + 1
-                    # to_save.index = index
                     to_save.context = context
                     to_save.request = question
                     to_save.response = response

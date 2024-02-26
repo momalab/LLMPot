@@ -11,7 +11,7 @@ class P3Server(S7Comm):
 
     def _update_control_logic(self):
         while True:
-            time.sleep(0.5)
+            time.sleep(0.05)
             flow_rate_a_int, flow_rate_a_decimal = self._DBdata_0[0], self._DBdata_1[0]
             flow_rate_b_int, flow_rate_b_decimal = self._DBdata_2[0], self._DBdata_3[0]
 
