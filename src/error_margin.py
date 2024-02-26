@@ -15,14 +15,23 @@ def calculate_error_margin(file_name):
         invalid_df = invalid.copy()
     print(f"Total invalids = {len(invalid_df)}")
 
+    results_data = []
     for i, row in invalid_df.iterrows():
         response = row['response']
         expected_response = row['expected_response']
-
+        hex_distance = 0
         if len(response) == len(expected_response):
             differences = sum(1 for resp, exp_resp in zip(response, expected_response) if resp != exp_resp)
-            print(f"Response: {response}, Expected Response: {expected_response}, Digits Different: {differences}")
+            hex_distance += abs(int(response, 16) - int(expected_response, 16))
+            print(f"Response: {response}, Expected Response: {expected_response}, Digits Different: {differences}, Hex Distance: {hex_distance}")
 
+            results_data.append({'Response': response,
+                            'Expected Response': expected_response,
+                            'Digits Different': differences,
+                            'Hex Distance': hex_distance})
+
+    results = pd.DataFrame(results_data)
+    results.to_json(f"{VALIDATION}/result_file-{file_name}.jsonl", orient='records', lines=True)
 
 def main():
     parser = argparse.ArgumentParser()
