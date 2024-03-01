@@ -15,7 +15,7 @@ class P1Server(S7Comm):
                 self._MKdata_0[0] = 1
             else:
                 self._MKdata_0[0] = 0
-            time.sleep(0.01)
+            time.sleep(0.1)
 
 
 def main():

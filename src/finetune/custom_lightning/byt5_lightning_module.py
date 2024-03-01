@@ -69,7 +69,7 @@ class Byt5LightningModule(LightningModule):
         self._accuracy_exactly.append(exactly)
 
         # self.log("accuracy/micro", micro, batch_size=10, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
-        self.log("accuracy/none", exactly, batch_size=10, prog_bar=True, logger=True, sync_dist=True)
+        self.log("accuracy/none", exactly, batch_size=2, prog_bar=True, logger=True, sync_dist=True)
 
     def on_test_end(self) -> None:
         self.on_test_end_custom()
@@ -95,14 +95,14 @@ class Byt5LightningModule(LightningModule):
 
     def _custom_test_dataloader(self) -> DataLoader:
         sampler = DistributedSampler(self._dataset["test"])
-        return DataLoader(self._dataset["test"], batch_size=10, shuffle=False, num_workers=2, sampler=sampler)
+        return DataLoader(self._dataset["test"], batch_size=2, shuffle=False, num_workers=2, sampler=sampler)
 
     def on_train_epoch_end(self) -> None:
         test_set: DataLoader = self._custom_test_dataloader()
         self.model.eval()
 
         for batch in test_set:
-            self.test_step(batch, 10)
+            self.test_step(batch, 2)
 
         self.on_test_end_custom()
 
@@ -123,7 +123,7 @@ class Byt5LightningModule(LightningModule):
         with torch.no_grad():
             output = self.model.generate(input_ids,
                                          num_beams=2,
-                                         max_length=4192,
+                                         max_length=1024,
                                          repetition_penalty=2.5,
                                          length_penalty=1.0,
                                          early_stopping=True,

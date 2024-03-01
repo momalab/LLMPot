@@ -32,7 +32,7 @@ class P1Client(MbtcpClient):
             for function, args in functions:
                 function(*args)
                 if function.__name__ == self.write_register.__name__:
-                    time.sleep(0.3)
+                    time.sleep(0.05)
 
 
 def main():

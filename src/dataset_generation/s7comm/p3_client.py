@@ -29,7 +29,7 @@ class P3Client(S7Client):
 
             for function, args in functions:
                 self.func_wrapper(function, *args)
-                time.sleep(0.1)
+                time.sleep(0.05)
 
 
 def main():

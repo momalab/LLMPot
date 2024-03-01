@@ -10,7 +10,7 @@ class P3Server(MbtcpServer):
 
     def update_control_logic(self):
         while True:
-            time.sleep(0.5)
+            time.sleep(0.1)
             flow_rate_a_int, flow_rate_a_decimal, flow_rate_b_int, flow_rate_b_decimal = self._store.getValues(0x04, 0, count=4)
             flow_rate_a = float(f"{flow_rate_a_int}.{flow_rate_a_decimal}")
             flow_rate_b = float(f"{flow_rate_b_int}.{flow_rate_b_decimal}")

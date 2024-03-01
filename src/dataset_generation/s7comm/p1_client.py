@@ -12,7 +12,7 @@ class P1Client(S7Client):
 
             temp = random.randrange(0, 50)
             temp_value = set_word(bytearray(2), 0, temp)
-            cool = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
+            cool = random.choice([bytearray([0b00000001]), bytearray([0b00000000])])
             functions = [(self.read_area, [Areas.DB, 0, 0, 2]),
                          (self.write_area, [Areas.DB, 0, 0, temp_value]),
                          (self.read_area, [Areas.MK, 0, 0, 2]),
@@ -20,7 +20,7 @@ class P1Client(S7Client):
 
             temp = random.randrange(0, 50)
             temp_value = set_word(bytearray(2), 0, temp)
-            cool = random.choice([bytearray([0b00000001]) , bytearray([0b00000000])])
+            cool = random.choice([bytearray([0b00000001]), bytearray([0b00000000])])
 
             data_block = random.randint(1, 50)
             db_addresses = random.randint(1, 50)
@@ -49,7 +49,7 @@ class P1Client(S7Client):
             for function, args in functions:
                 self.func_wrapper(function, *args)
                 if function.__name__ == self.write_area.__name__:
-                    time.sleep(0.1)
+                    time.sleep(0.05)
 
 
 def main():
