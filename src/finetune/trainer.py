@@ -56,4 +56,4 @@ if __name__ == '__main__':
     parser.add_argument('-q', default="False", required=False)
     args = parser.parse_args()
 
-    main(args.mt, args.mn, args.csv, args.p, args.w, eval(args.l), eval(args.q))
+    main(args.mt, args.mn, args.csv, args.csv, args.p, args.w, eval(args.l), eval(args.q))
