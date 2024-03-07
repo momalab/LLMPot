@@ -35,10 +35,10 @@ class Byt5LightningDataModule(pl.LightningDataModule):
         )
 
     def train_dataloader(self):
-        return DataLoader(self._train_dataset, batch_size=self._batch_size, shuffle=False, num_workers=self._num_workers)
+        return DataLoader(self._train_dataset, batch_size=self._batch_size, shuffle=True, num_workers=self._num_workers)
 
     def test_dataloader(self):
-        return DataLoader(self._test_dataset, batch_size=self._batch_size, shuffle=False, num_workers=self._num_workers)
+        return DataLoader(self._test_dataset, batch_size=self._batch_size, shuffle=True, num_workers=self._num_workers)
 
     def val_dataloader(self):
-        return DataLoader(self._val_dataset, batch_size=self._batch_size, shuffle=False, num_workers=self._num_workers)
+        return DataLoader(self._val_dataset, batch_size=self._batch_size, shuffle=True, num_workers=self._num_workers)
