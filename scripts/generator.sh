@@ -19,9 +19,9 @@ cleanup() {
 
 trap cleanup SIGINT
 
-SIZES=$(cat "$EXPERIMENT_FILE" | cut -d"-" -f4 | sort -u)
-PROTOCOL=$(cat "$EXPERIMENT_FILE" | cut -d"-" -f1 | sort -u)
-PROCESS=$(cat "$EXPERIMENT_FILE" | cut -d"-" -f2 | sort -u)
+SIZES=$(cut -d"-" -f4 < "$EXPERIMENT_FILE" | sort -u)
+PROTOCOL=$(cut -d"-" -f1 < "$EXPERIMENT_FILE" | sort -u)
+PROCESS=$(cut -d"-" -f2 < "$EXPERIMENT_FILE" | sort -u)
 
 while IFS= read -r size; do
 
@@ -30,7 +30,13 @@ while IFS= read -r size; do
     continue
   fi
 
+<<<<<<< HEAD
   sudo tcpdump -s 0 -i lo -w $DUMPS/"$PROTOCOL"-"$PROCESS"-"$size".pcap > /dev/null 2>&1 &
+=======
+  echo "Running for: $PROTOCOL-$PROCESS-$size.pcap .."
+
+  sudo tcpdump -s 0 -i lo0 -w $DUMPS/"$PROTOCOL"-"$PROCESS"-"$size".pcap > /dev/null 2>&1 &
+>>>>>>> e531ce39429960b7b6358f75963acaf27369a993
   tcp_dump_pid=$!
   sleep 1
 
