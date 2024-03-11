@@ -9,7 +9,6 @@ from cfg import CHECKPOINTS
 from finetune.byt5 import Byt5
 from finetune.llama2 import Llama2
 from finetune.model.finetuner_model import FinetunerModel
-from finetune.simple_model import SimpleModel
 from utilities.logger import TheLogger
 
 VAL_LOSS = "val_loss"
