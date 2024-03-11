@@ -16,5 +16,9 @@ ENV/
 .ics-pot/
 
 models/
-outputs/datasets/dumps
-outputs/validation_data
+checkpoints/
+experiments/
+outputs/
+# outputs/logs
+# outputs/datasets/dumps
+# outputs/validation_data

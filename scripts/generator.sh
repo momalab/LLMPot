@@ -1,8 +1,8 @@
 #!/bin/bash
 
 sudo -v
-export PYTHONPATH=~/nyuad/source/ICSPot/src
-pyenv local icspot-venv
+export PYTHONPATH=~/ICSPot/src
+source ../.ics-pot/bin/activate
 
 EXPERIMENT_FILE=../experiments/$1
 
@@ -30,7 +30,7 @@ while IFS= read -r size; do
     continue
   fi
 
-  sudo tcpdump -s 0 -i lo0 -w $DUMPS/"$PROTOCOL"-"$PROCESS"-"$size".pcap > /dev/null 2>&1 &
+  sudo tcpdump -s 0 -i lo -w $DUMPS/"$PROTOCOL"-"$PROCESS"-"$size".pcap > /dev/null 2>&1 &
   tcp_dump_pid=$!
   sleep 1
 
