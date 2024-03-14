@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index 6b9c76a..38a94f6 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -123,7 +123,7 @@ honeydctl_LDADD = @LIBOBJS@ @EDITLIB@ @LIBCURSES@
+ honeydctl_CPPFLAGS = @EDITINC@
+ honeydctl_CFLAGS = -O2 -Wall
+
+-CFLAGS	= -O2 -Wall -g \
++CFLAGS	= -O2 -Wall -g -fcommon\
+ 	-DPATH_HONEYDINCLUDE="\"$(honeydincludedir)\"" \
+ 	-DPATH_HONEYDDATA="\"$(honeyddatadir)\"" \
+ 	-DPATH_HONEYDLIB="\"$(honeydlibdir)\"" \

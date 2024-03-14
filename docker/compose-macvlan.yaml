@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  my_service:
+    image: honeyd/base:v1
+    privileged: true
+    command: tail -f /dev/null
+    deploy:
+      mode: replicated
+      replicas: 2
+    networks:
+      - my_macvlan_net
+
+
+networks:
+  my_macvlan_net:
+    driver: macvlan
+    driver_opts:
+      parent: enp0s31f6
+    ipam:
+      config:
+        - subnet: 10.224.32.0/24
+          gateway: 10.224.32.1
