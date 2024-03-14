@@ -32,10 +32,17 @@ def calculate_error_margin(file_name):
 
     results = pd.DataFrame(results_data)
     results.to_json(f"{VALIDATION}/result_file-{file_name}.jsonl", orient='records', lines=True)
+    mae_value = results['Hex Distance'].mean()
+    std_dev = results['Hex Distance'].std()
+    print(f"MAE:{mae_value}, Std: {std_dev}")
+
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-name', default="mbtcp-process2-1.2k_20240208T1631_epoch-55", required=False)
+    parser.add_argument('-name', default="mbtcp-process3-2.4k_20240209T1204_epoch-50", required=False)
+    # mbtcp-processContextException-1.2k_20240214T1232_epoch-89
+    # mbtcp-process2-1.2k_20240208T1631_epoch-55
+    # mbtcp-process3-2.4k_20240209T1204_epoch-50
     args = parser.parse_args()
 
     file_name = args.name

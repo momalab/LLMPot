@@ -16,5 +16,11 @@ ENV/
 .ics-pot/
 
 models/
-outputs/datasets/dumps
-outputs/validation_data
+checkpoints/
+experiments/
+outputs/
+1
+nohup.out
+# outputs/logs
+# outputs/datasets/dumps
+# outputs/validation_data
