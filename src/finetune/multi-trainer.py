@@ -23,6 +23,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-mt', default="google", required=False)
     parser.add_argument('-mn', default="byt5-small", required=False)
-    parser.add_argument('-cfg', default="mbtcp-p1_2-dataset_size-context_length", required=False)
+    parser.add_argument('-cfg', default="mbtcp_s7comm-p1-dataset_size-context_length", required=True)
     args = parser.parse_args()
     main(args.mt, args.mn, args.cfg)
