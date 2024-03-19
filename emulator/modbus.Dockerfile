@@ -1,8 +1,8 @@
 FROM modbus:1.0
 WORKDIR /app
 
-COPY ./src /app
-COPY ./emulator /app
+COPY ./src /app/src
+COPY ./emulator /app/emulator
 
 EXPOSE 5020
 

@@ -16,10 +16,17 @@ from utils.the_logger import TheLogger
 
 logger = TheLogger("modbus_server", f"{DIR}/app/logs")
 
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    logger.info("CUDA is available. Using GPU.")
+else:
+    device = torch.device("cpu")
+    logger.info("CUDA is not available. Using CPU.")
+
 
 def load_model(finetuner_model: FinetunerModel):
     tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
-    model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
+    model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id()).to(device)
     model = Byt5LightningModule.load_from_checkpoint(
         checkpoint_path=f"{DIR}/../checkpoints/last.ckpt",
         finetuner_model=finetuner_model,
@@ -27,15 +34,15 @@ def load_model(finetuner_model: FinetunerModel):
         model=model,
         val_loss_const="val_loss",
         train_loss_const="train_loss",
-        device="cuda"
+        map_location="cuda:0"
     )
+    model = model.to("cuda:0")
     model.eval()
-    model = model.to("cuda")
     return model, tokenizer
 
 
 def predict(request: str, model, tokenizer):
-    input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True).to("cuda")
+    input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True).to(device)
     with torch.no_grad():
         logits = model.model.generate(input_ids,
                                       num_beams=2,
@@ -47,7 +54,7 @@ def predict(request: str, model, tokenizer):
                                       top_k=50,
                                       num_return_sequences=1,
                                       do_sample=True
-                                      ).to("cuda")
+                                      )
         return tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
 
