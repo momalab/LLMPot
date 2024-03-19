@@ -27,15 +27,15 @@ def load_model(finetuner_model: FinetunerModel):
         model=model,
         val_loss_const="val_loss",
         train_loss_const="train_loss",
+        device="cuda"
     )
     model.eval()
-    # model = model.to("cpu")
+    model = model.to("cuda")
     return model, tokenizer
 
 
 def predict(request: str, model, tokenizer):
-    input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True)
-                 # .to("cpu"))
+    input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True).to("cuda")
     with torch.no_grad():
         logits = model.model.generate(input_ids,
                                       num_beams=2,
@@ -47,8 +47,7 @@ def predict(request: str, model, tokenizer):
                                       top_k=50,
                                       num_return_sequences=1,
                                       do_sample=True
-                                      # ).to("cpu")
-                                      )
+                                      ).to("cuda")
         return tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
 
