@@ -34,9 +34,8 @@ def load_model(finetuner_model: FinetunerModel):
         model=model,
         val_loss_const="val_loss",
         train_loss_const="train_loss",
-        map_location="cuda:0"
+        map_location=device
     )
-    model = model.to("cuda:0")
     model.eval()
     return model, tokenizer
 
