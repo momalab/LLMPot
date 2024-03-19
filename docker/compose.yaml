@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+
+#  honeyd:
+#    image: honeyd/base:v1
+#    privileged: true
+#    command: tail -f /dev/null
+#    deploy:
+#      mode: replicated
+#      replicas: 2
+
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - /Users/cv43/mongo/data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"

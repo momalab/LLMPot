@@ -1,0 +1,1 @@
+{"error":{"group":"1","code":"2","text":"Wrong request data format"}}

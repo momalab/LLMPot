@@ -1,0 +1,16 @@
+{
+    "name": "@wago/wbm-pfc",
+    "version": "2.11.0",
+    "license": "WAGO Software License Agreement",
+    "base": "7.0.0",
+    "core": "3.0.0",
+    "description": "This is the platform specific WBM implementation for Linux-based devices with a PHP/Configtool backend",
+    "provides": [
+        "base-area",
+        "status-area",
+        "fieldbus-area"
+    ],
+    "platform": [
+        "pfc"
+    ]
+}

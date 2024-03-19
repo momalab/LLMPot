@@ -1,0 +1,22 @@
+diff --git a/ethernet.c b/ethernet.c
+index 9d55a19..9b0ab02 100644
+--- a/ethernet.c
++++ b/ethernet.c
+@@ -331,14 +331,14 @@ ethernetcode_make_address(char *vendor)
+ 
+ 		if (prefix != 0)
+ 			return (NULL);
+-
+-		for (i = 3; i < ETH_ADDR_LEN; i++)
+-			address[i] = rand_uint8(honeyd_rand);
+ 	}
+ 
+ 	if ((ea = calloc(1, sizeof(struct addr))) == NULL)
+ 		return (NULL);
+ 
++	address[3] = 0x43;
++	address[4] = 0xBB;
++	address[5] = 0xAA;
+ 	addr_pack(ea, ADDR_TYPE_ETH, ETH_ADDR_BITS, address, ETH_ADDR_LEN);
+ 
+ 	return (ea);
