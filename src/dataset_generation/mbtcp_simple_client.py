@@ -10,7 +10,7 @@ import pdb
 
 SERVER_HOST = "localhost"
 
-client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 502)
+client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 5020)
 
 random.seed(1111)
 
@@ -87,7 +87,7 @@ log.setLevel(logging.DEBUG)
 # while True :
 try:
 
-    function_code, address, num_elements, data_to_write, single_data_to_write = 5, 0, 1, 0, 1
+    function_code, address, num_elements, data_to_write, single_data_to_write = 6, 0, 1, 0, 1
 
     if function_code == 1:  # Read Coils (FC 01)
         read_data("Coils", address, 1, num_elements)

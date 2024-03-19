@@ -1,14 +1,26 @@
 from os import environ
 from pathlib import Path
+import os
 
 current_dir = Path(__file__)
 
-if environ.get("GAE_SERVICE"):
-    ROOT_DIR = "workspace"
+if environ.get("DOCKER_ENV"):
+    ROOT_DIR = "/app/src/"
 else:
     ROOT_DIR = "ICSPot"
 
-PROJECT_ROOT_DIR = [p for p in current_dir.parents if p.parts[-1] == ROOT_DIR][0]
+
+def find_project_root(current_file):
+    root_dir = os.path.dirname(os.path.abspath(current_file))
+    while not os.path.exists(os.path.join(root_dir, 'requirements.txt')):
+        root_dir = os.path.dirname(root_dir)
+        if root_dir == '/':
+            raise FileNotFoundError("Could not find the project root.")
+    return root_dir
+
+
+PROJECT_ROOT_DIR = find_project_root(__file__)
+print(PROJECT_ROOT_DIR)
 
 OUTPUTS_DIR = f"{PROJECT_ROOT_DIR}/outputs"
 EXPERIMENTS = f"{PROJECT_ROOT_DIR}/experiments"

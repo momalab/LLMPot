@@ -1,38 +1,34 @@
-import argparse
-import time
-
 import torch
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
-from finetune.byt5 import Byt5
+from cfg import CHECKPOINTS
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
 
 
-def _load_model():
-    finetune_model = FinetunerModel(model_type="google", model_name="byt5-small",
-                                    dataset_filename="mbtcp-deterministic-2k_fc-3-16",
-                                    epochs=1, precision=32, workers=2, start_datetime="20231213T1449")
-    tokenizer = ByT5Tokenizer.from_pretrained("google/byt5-small")
-    model = T5ForConditionalGeneration.from_pretrained("google/byt5-small")
+def load_model(finetuner_model: FinetunerModel):
+    tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
+    model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
     model = Byt5LightningModule.load_from_checkpoint(
-        checkpoint_path="/media/shared/ICSPot/outputs/checkpoints/google_byt5-small_mbtcp-deterministicContext-2k_fc-3-6_epochs-100_precision-32/20231214T1600/checkpoints/39-0.0000.ckpt",
-        finetuner_model=finetune_model,
+        checkpoint_path=f"{CHECKPOINTS}/mbtcp-p1-dataset_size-context_length/"
+                        f"{finetuner_model.the_name}/"
+                        f"{finetuner_model.start_datetime}/checkpoints/mbtcp-p1-c2-1200-v1.ckpt",
+        finetuner_model=finetuner_model,
         tokenizer=tokenizer,
-        model=model
+        model=model,
+        val_loss_const="val_loss",
+        train_loss_const="train_loss",
+        device_map="cpu"
     )
     model.eval()
-    model = model.to("cuda:0")
+    model = model.to("cpu")
     return model, tokenizer
 
 
 def predict(request: str, model, tokenizer):
     input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True)
-    print(input_ids)
-    input_ids = input_ids.to("cuda:0")
+    input_ids = input_ids.to("cpu")
     with torch.no_grad():
-        # loss, logits = model(input_ids)
-        # print(tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0])
         logits = model.model.generate(input_ids,
                                       num_beams=2,
                                       max_length=512,
@@ -43,12 +39,12 @@ def predict(request: str, model, tokenizer):
                                       top_k=50,
                                       num_return_sequences=1,
                                       do_sample=True
-                                      )
-        print(tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0])
+                                      ).to("cpu")
+        return tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
 
 def main():
-    model, tokenizer = _load_model()
+    model, tokenizer = load_model()
     predict("081b00000006000300620001", model, tokenizer)
     print("Ground truth: 081b000000050003020007")
     predict("031a00000006000300250001", model, tokenizer)
