@@ -123,7 +123,7 @@ class Byt5LightningModule(LightningModule):
         with torch.no_grad():
             output = self.model.generate(input_ids,
                                          num_beams=2,
-                                         max_length=2048,
+                                         max_length=4096,
                                          repetition_penalty=2.5,
                                          length_penalty=1.0,
                                          early_stopping=True,

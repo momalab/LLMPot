@@ -16,8 +16,8 @@ class Byt5(Finetuner):
         self._data_module = Byt5LightningDataModule(dataset=dataset,
                                                     tokenizer=self._tokenizer,
                                                     batch_size=2,
-                                                    source_max_token_len=2048,
-                                                    target_max_token_len=2048,
+                                                    source_max_token_len=4096,
+                                                    target_max_token_len=4096,
                                                     num_workers=16)
 
         self._custom_module = Byt5LightningModule(tokenizer=self._tokenizer,
