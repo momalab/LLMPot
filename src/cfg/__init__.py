@@ -20,7 +20,6 @@ def find_project_root(current_file):
 
 
 PROJECT_ROOT_DIR = find_project_root(__file__)
-print(PROJECT_ROOT_DIR)
 
 OUTPUTS_DIR = f"{PROJECT_ROOT_DIR}/outputs"
 EXPERIMENTS = f"{PROJECT_ROOT_DIR}/experiments"
