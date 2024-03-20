@@ -1,7 +1,7 @@
 import random
 import time
 
-from dataset_generation.mbtcp_process_control.client import MbtcpClient, retrieve_args
+from client import MbtcpClient, retrieve_args
 
 
 class P5Client(MbtcpClient):

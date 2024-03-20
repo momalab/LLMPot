@@ -1,7 +1,7 @@
 import random
 import time
 
-from dataset_generation.mbtcp_process_control.client import MbtcpClient, retrieve_args
+from client import MbtcpClient, retrieve_args
 
 
 class P3Client(MbtcpClient):
@@ -30,7 +30,7 @@ class P3Client(MbtcpClient):
             hr_addresses = random.randint(4, 50)
             ir_addresses = random.randint(4, 50)
             exception_function = [(self.read_holding_registers, [hr_addresses]),
-                                  (self.write_register, [hr_addresses, inputs_value]),
+                                  (self.write_registers, [hr_addresses, inputs_value]),
                                   (self.read_input_registers, [ir_addresses]),
                                   (self.read_coils, [coil_addresses]),
                                   (self.write_coil, [coil_addresses, ss_method_type])]
@@ -38,6 +38,7 @@ class P3Client(MbtcpClient):
             function, args = random.choice(exception_function)
             exceptions = [(self.illegal_function, []), (function, [*args])]
             functions.extend(exceptions)
+            print(f"size: {functions}")
             random.shuffle(functions)
 
             for function, args in functions:
