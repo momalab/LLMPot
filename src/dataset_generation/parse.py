@@ -33,16 +33,18 @@ def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: in
     else:
         eval_str = [f"packet.{protocol}_raw.value"]
 
+    i = 0
     for packet in tqdm(cap):
+        i += 1
         fragments = []
         for item in eval_str:
             fragments.append(eval(item))
         the_value = ''.join(fragments).__str__()
 
         if int(packet.tcp.dstport) == port:
-            request_packets[int(packet.tcp.ack)] = the_value
+            request_packets[int(packet.tcp.ack_raw[-1])] = the_value
         else:
-            response_packets[int(packet.tcp.seq)] = the_value
+            response_packets[int(packet.tcp.seq_raw[-1])] = the_value
 
     for tid, entry in tqdm(request_packets.items()):
         dataset_dict[SOURCE_TEXT].append(entry)
@@ -64,7 +66,7 @@ def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: in
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-pcap', default="s7comm-p1-1200", required=False)
+    parser.add_argument('-pcap', default="lala", required=False)
     parser.add_argument('-csv', default="lala", required=False)
     parser.add_argument('-p', default="502", required=False)
     parser.add_argument('-layer', default="mbtcp", required=False)
