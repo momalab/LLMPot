@@ -12,7 +12,7 @@ class MbtcpClient:
         address = random.randint(0, 64)
         num_elements = random.randint(1, 10)
         data_to_write = [random.randint(0, 65535) for _ in range(num_elements)]
-        single_data_to_write = [random.randint(0, 65535)]
+        single_data_to_write = random.randint(0, 65535)
         return address, num_elements, data_to_write, single_data_to_write
 
     def start_client(self, samples_num: int, has_context: bool, initial_function_code: int):
@@ -49,7 +49,7 @@ class MbtcpClient:
                 else:
                     address = random.randint(0, 64)
                     num_elements = random.randint(1, 10)
-                    data_to_write = [random.randint(0, 65535) for _ in range(num_elements)]
+                    data_to_write = [random.randint(0, 15) for _ in range(num_elements)]
 
                     self.mbtcp_requests.read_data("Read holding Registers", address, 3, num_elements)
                     self.mbtcp_requests.write_multiple_data("Write Multiple Registers", address, data_to_write, 16)
@@ -62,11 +62,11 @@ class MbtcpClient:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-ip', default="localhost", required=True)
-    parser.add_argument('-p', default=502, required=True)
-    parser.add_argument('-num', required=True)
-    parser.add_argument('-c', default=True, required=False)
-    parser.add_argument('-fun', default=0, required=False)
+    parser.add_argument('-ip', default="localhost", required=False)
+    parser.add_argument('-p', default=5020, required=False)
+    parser.add_argument('-num', default=2, required=False)
+    parser.add_argument('-c', default="False", required=False)
+    parser.add_argument('-fun', default=6, required=False)
     args = parser.parse_args()
 
     server_address = args.ip

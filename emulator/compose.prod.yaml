@@ -1,0 +1,22 @@
+services:
+
+  mongo:
+    volumes:
+      - /home/chris/mongo:/data/db
+
+  modbus_app:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+
+  proxy:
+    build:
+      context: .
+      dockerfile: haproxy.Dockerfile
+    restart: always
+    ports:
+      - "502:502"

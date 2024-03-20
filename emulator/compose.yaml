@@ -1,0 +1,42 @@
+services:
+
+  modbus_app:
+    build:
+      context: ..
+      dockerfile: emulator/modbus.Dockerfile
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - "5020:5020"
+
+  web_app:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - "8443:8443"
+
+  mongo:
+    hostname: mongo
+    image: mongo
+    restart: always
+    volumes:
+      - /Users/cv43/mongo/data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+  proxy:
+    build:
+      context: .
+      dockerfile: haproxy.Dockerfile
+    restart: always
+    depends_on:
+      - modbus_app
+    ports:
+      - "5021:5021"

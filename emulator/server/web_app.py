@@ -6,37 +6,40 @@ from beanie import init_beanie
 from flask import Flask, request, render_template, redirect
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from honeypot.client import Client
-from honeypot.request import Request
-from honeypot.session import Session
-from server.persistence_decorator import log_transport
+from utils import DIR
+from model.web.client import Client
+from model.web.request import Request
+from server.persistence_decorator_web import log_transport
+from utils.the_logger import TheLogger
+
+logger = TheLogger("web_server", f"{DIR}/logs")
 
 app = Flask(__name__,
             static_url_path='',
             static_folder='',
-            template_folder='templates',
+            template_folder='templates'
             )
 
 
 @app.route('/wbm/plugins/wbm-legal-information/platform/pfcXXX/licenses.php', methods=['POST'])
 def post_licenses_php():
-    return open('./json_files/licenses.php', 'r').read()
+    return open(f'{DIR}/server/json_files/licenses.php', 'r').read()
 
 
 @app.route('/wbm/php/plugins/load.php', methods=['POST'])
 @log_transport
 def post_load_php():
-    return open('./json_files/load.php', 'r').read()
+    return open(f'{DIR}/server/json_files/load.php', 'r').read()
 
 
 @app.route('/wbm/php/parameter/mappings.php', methods=['POST'])
 def post_mappings_php():
-    return open('./json_files/mappings.php', 'r').read()
+    return open(f'{DIR}/server/json_files/mappings.php', 'r').read()
 
 
 @app.route('/wbm/php/parameter/infos.php', methods=['POST'])
 def post_info_php():
-    return open('./json_files/infos.php', 'r').read()
+    return open(f'{DIR}/server/json_files/infos.php', 'r').read()
 
 
 @app.route('/wbm/php/parameter/configtools.php', methods=['POST'])
@@ -46,43 +49,43 @@ def post_configtools_php():
     parameter = json.loads(request.data)["aDeviceParams"][0]["parameter"]
     if name == "detect_feature":
         if parameter[0] == "--list":
-            return open('./json_files/detect_feature_list.json', 'r').read()
+            return open(f'{DIR}/server/json_files/detect_feature_list.json', 'r').read()
         elif len(name) == 2:
-            return open('./json_files/detect_feature_2.json', 'r').read()
+            return open(f'{DIR}/server/json_files/detect_feature_2.json', 'r').read()
     elif name == "network_config":
         if len(device_params) == 2:
             if device_params[0]["parameter"][0] == "--mac-address" and device_params[1]["parameter"][0] == "--ip-config":
-                return open('./json_files/network_config_ip_mac.json', 'r').read()
+                return open(f'{DIR}/server/json_files/network_config_ip_mac.json', 'r').read()
             else:
-                return open('./json_files/network_config_2.json', 'r').read()
+                return open(f'{DIR}/server/json_files/network_config_2.json', 'r').read()
         elif parameter[0] == "--ip-config":
-            return open('./json_files/network_config_ip.json', 'r').read()
+            return open(f'{DIR}/server/json_files/network_config_ip.json', 'r').read()
         elif parameter[0] == "--network-config":
-            return open('./json_files/network_config_network.json', 'r').read()
+            return open(f'{DIR}/server/json_files/network_config_network.json', 'r').read()
         elif len(device_params) == 3:
-            return open('./json_files/network_config_3.json', 'r').read()
+            return open(f'{DIR}/server/json_files/network_config_3.json', 'r').read()
     elif name == "get_clock_data" and parameter[0] == "time-local":
-        template = open('./json_files/get_clock_data_time_local.json', 'r').read()
+        template = open(f'{DIR}/server/json_files/get_clock_data_time_local.json', 'r').read()
         data = json.loads(template)
         data["aDeviceResponse"][0]["resultString"] = datetime.now().strftime('%H:%M:%S')
         data["aDeviceResponse"][1]["resultString"] = datetime.now().strftime('%d.%m.%Y')
         return json.dumps(data)
     elif name == "get_clock_data" and parameter[0] == "date-local":
-        return open('./json_files/get_clock_data_date_local.json', 'r').read()
+        return open(f'{DIR}/server/json_files/get_clock_data_date_local.json', 'r').read()
     elif name == "get_run_stop_switch_value":
-        return open('./json_files/get_run_stop_switch_value.json', 'r').read()
+        return open(f'{DIR}/server/json_files/get_run_stop_switch_value.json', 'r').read()
     elif name == "get_led_config":
-        return open('./json_files/led.json', 'r').read()
+        return open(f'{DIR}/server/json_files/led.json', 'r').read()
     elif name == "get_wbm_diaglist":
-        return open('./json_files/get_wbm_diaglist.json', 'r').read()
+        return open(f'{DIR}/server/json_files/get_wbm_diaglist.json', 'r').read()
     elif name == "get_typelabel_value" and parameter[0] == "SYSDESC":
-        return open('./json_files/product_description.json', 'r').read()
+        return open(f'{DIR}/server/json_files/product_description.json', 'r').read()
     elif name == "get_typelabel_value" and parameter[0] == "ORDER":
-        return open('./json_files/get_type_label_value.json', 'r').read()
+        return open(f'{DIR}/server/json_files/get_type_label_value.json', 'r').read()
     elif name == "get_coupler_details":
-        return open('./json_files/get_coupler_details.json', 'r').read()
+        return open(f'{DIR}/server/json_files/get_coupler_details.json', 'r').read()
     elif name == "get_codesyscontrol_config":
-        return open('./json_files/get_codesyscontrol_config.json', 'r').read()
+        return open(f'{DIR}/server/json_files/get_codesyscontrol_config.json', 'r').read()
     return '{}', 404, {'Content-Type': 'text/html; charset=UTF-8'}
 
 
@@ -105,12 +108,13 @@ def get_login():
     return render_template('login.html')
 
 
-async def web_app():
-    client = AsyncIOMotorClient('localhost', 27017, username='root', password='root', authSource='admin')
-    await init_beanie(database=client.web, document_models=[Client, Session, Request], multiprocessing_mode=True)
+async def init_mongo_connection():
+    logger.info(f"Server initializing..")
+    client = AsyncIOMotorClient('mongo', 27017, username='root', password='root', authSource='admin')
+    await init_beanie(database=client.web, document_models=[Client, Request], multiprocessing_mode=True)
+    logger.info(f"Server connected to mongo server..")
 
-    app.run(debug=True, ssl_context=('ca.crt', 'ca.key'))
-
-
+asyncio.run(init_mongo_connection())
 if __name__ == '__main__':
-    asyncio.run(web_app())
+    app.run()
+    # app.run(debug=False, ssl_context=(f'{DIR}/server/ca.crt', f'{DIR}/server/ca.key'))

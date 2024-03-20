@@ -4,6 +4,7 @@ import time
 import traceback
 
 from lightning.pytorch.loggers import TensorBoardLogger
+from pytorch_lightning.loggers import CSVLogger
 
 from cfg import CHECKPOINTS
 from finetune.byt5 import Byt5
@@ -25,14 +26,15 @@ def main(model_type: str, model_name: str, csv: str, experiment: str, precision:
         log.info(f"Start time: {start_time} - {datetime.datetime.fromtimestamp(start_time)}")
         log.info(f"Start time: {finetuner_model.start_datetime}")
 
-        logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
+        tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
+        csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime, prefix="csv")
 
         if finetuner_model.model_type == "meta-llama":
             llama2 = Llama2(finetuner_model, use_lora=lora, use_quantization=quantization)
-            llama2.train(logger, finetuner_model)
+            # llama2.train(logger, finetuner_model)
         elif finetuner_model.model_type == "google":
             byt5 = Byt5(finetuner_model, VAL_LOSS, TRAIN_LOSS, use_lora=lora, use_quantization=quantization)
-            byt5.train(logger, finetuner_model)
+            byt5.train([tensor_logger, csv_logger], finetuner_model)
 
         end_time = time.time()
         log.info(f"End time: {end_time} - {datetime.datetime.fromtimestamp(end_time)}")
