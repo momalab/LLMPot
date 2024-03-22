@@ -38,11 +38,11 @@ class P3Client(MbtcpClient):
             function, args = random.choice(exception_function)
             exceptions = [(self.illegal_function, []), (function, [*args])]
             functions.extend(exceptions)
-            print(f"size: {functions}")
             random.shuffle(functions)
 
             for function, args in functions:
-                function(*args)
+                response = function(*args)
+                print(response)
                 if function.__name__ == self.write_register.__name__:
                     time.sleep(0.05)
 

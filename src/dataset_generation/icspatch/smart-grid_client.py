@@ -6,7 +6,7 @@ from client import MbtcpClient, retrieve_args
 
 class P4Client(MbtcpClient):
     def start_client(self):
-        for _ in range(int(self._samples_num/11)):
+        for _ in range(int(self._samples_num/7)):
             ss_method_type = random.choice([True, False])
             input_1 = random.randrange(0, 50)
             functions = [(self.read_holding_registers, [0]), #read_input_1
@@ -32,7 +32,8 @@ class P4Client(MbtcpClient):
             random.shuffle(functions)
 
             for function, args in functions:
-                function(*args)
+                response = function(*args)
+                print(response)
                 if function.__name__ == self.write_register.__name__:
                     time.sleep(0.05)
 

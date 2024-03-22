@@ -41,7 +41,8 @@ class P1Client(MbtcpClient):
             random.shuffle(functions)
 
             for function, args in functions:
-                function(*args)
+                response = function(*args)
+                print(response)
                 if function.__name__ == self.write_register.__name__:
                     time.sleep(0.05)
 

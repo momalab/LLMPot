@@ -6,7 +6,7 @@ from client import MbtcpClient, retrieve_args
 
 class P2Client(MbtcpClient):
     def start_client(self):
-        for _ in range(int(self._samples_num/10)):
+        for _ in range(int(self._samples_num/9)):
             ss_method_type = random.choice([True, False])
             input_1 = random.randrange(0, 50)
             input_2 = random.randrange(0, 50)
@@ -37,7 +37,8 @@ class P2Client(MbtcpClient):
             random.shuffle(functions)
 
             for function, args in functions:
-                function(*args)
+                response = function(*args)
+                print(response)
                 if function.__name__ == self.write_register.__name__:
                     time.sleep(0.05)
 
