@@ -44,15 +44,15 @@ def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: in
         if int(packet.tcp.dstport) == port:
             request_packets[int(packet.tcp.ack_raw[-1])] = the_value
         else:
-            try:
-                response_packets[int(packet.tcp.seq_raw[-1])] = the_value
-            except:
-                print("Error: ", packet.tcp.seq_raw)
-                response_packets.pop(int(packet.tcp.seq_raw))
+            response_packets[int(packet.tcp.seq_raw[-1])] = the_value
+
 
     for tid, entry in tqdm(request_packets.items()):
-        dataset_dict[SOURCE_TEXT].append(entry)
-        dataset_dict[TARGET_TEXT].append(response_packets[tid])
+        try:
+            dataset_dict[TARGET_TEXT].append(response_packets[tid])
+            dataset_dict[SOURCE_TEXT].append(entry)
+        except:
+            print(f"Ignored: {tid}")
 
     dataset_df = pd.DataFrame(dataset_dict)
 
