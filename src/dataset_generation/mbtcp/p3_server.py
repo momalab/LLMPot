@@ -1,7 +1,7 @@
 import random
 import time
 
-from dataset_generation.mbtcp_process_control.server import MbtcpServer, retrieve_args
+from dataset_generation.mbtcp.server import MbtcpServer, retrieve_args
 
 
 class P3Server(MbtcpServer):
