@@ -7,8 +7,8 @@ from finetune.custom_lightning.byt5_dataset import Byt5Dataset
 
 class Byt5LightningDataModule(pl.LightningDataModule):
 
-    def __init__(self, dataset: Dataset, tokenizer: PreTrainedTokenizer, batch_size: int = 4,
-                 source_max_token_len: int = 512, target_max_token_len: int = 512, num_workers: int = 2):
+    def __init__(self, dataset: Dataset, tokenizer: PreTrainedTokenizer, batch_size: int,
+                 source_max_token_len: int, target_max_token_len: int, num_workers: int):
         super().__init__()
 
         self._batch_size = batch_size

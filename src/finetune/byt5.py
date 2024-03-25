@@ -10,25 +10,23 @@ from finetune.finetuner import Finetuner
 
 class Byt5(Finetuner):
 
-    def __init__(self, finetuner_model: FinetunerModel, val_loss_const: str, train_loss_const: str, use_lora: bool = True, use_quantization: bool = True):
-        super().__init__(finetuner_model, val_loss_const, train_loss_const, use_lora, use_quantization)
+    def __init__(self, finetuner_model: FinetunerModel):
+        super().__init__(finetuner_model)
         dataset = self._load_dataset()
         self._data_module = Byt5LightningDataModule(dataset=dataset,
                                                     tokenizer=self._tokenizer,
-                                                    batch_size=2,
-                                                    source_max_token_len=4096,
-                                                    target_max_token_len=4096,
-                                                    num_workers=16)
+                                                    batch_size=finetuner_model.batch_size,
+                                                    source_max_token_len=finetuner_model.source_max_token_len,
+                                                    target_max_token_len=finetuner_model.target_max_token_len,
+                                                    num_workers=finetuner_model.workers)
 
         self._custom_module = Byt5LightningModule(tokenizer=self._tokenizer,
                                                   model=self._model,
                                                   dataset=dataset,
-                                                  finetuner_model=finetuner_model,
-                                                  val_loss_const=val_loss_const,
-                                                  train_loss_const=train_loss_const)
+                                                  finetuner_model=finetuner_model)
 
     def _load_dataset(self) -> Dataset:
-        return utilities.load_dataset.load_dataset_from_file(dataset_filename=self._finetuner_model.dataset_filename)
+        return utilities.load_dataset.load_dataset_from_file(dataset_filename=self._finetuner_model.current_dataset)
 
     def _init_tokenizer(self) -> PreTrainedTokenizer:
         return ByT5Tokenizer.from_pretrained(self._finetuner_model.base_model_id())

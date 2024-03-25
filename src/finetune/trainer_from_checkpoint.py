@@ -13,7 +13,6 @@ from finetune.callbacks.metrics_logger import MetricsLogger
 from finetune.custom_lightning.byt5_lightning_data_module import Byt5LightningDataModule
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
-from finetune.my_early_stopping import MyEarlyStopping
 from utilities import load_dataset
 from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 

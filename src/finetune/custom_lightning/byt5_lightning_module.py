@@ -15,7 +15,7 @@ from validation.model.result import Result
 
 class Byt5LightningModule(LightningModule):
 
-    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, val_loss_const: str, train_loss_const: str, dataset=None):
+    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, dataset=None):
         super().__init__()
         self._finetuner_model = finetuner_model
         self._dataset = dataset
@@ -23,8 +23,8 @@ class Byt5LightningModule(LightningModule):
         self._tokenizer = tokenizer
         self._model = model
 
-        self._val_loss_const = val_loss_const
-        self._train_loss_const = train_loss_const
+        self._val_loss_const = finetuner_model.val_loss_const
+        self._train_loss_const = finetuner_model.train_loss_const
 
         self._accuracy: [float] = []
         self._accuracy_exactly: [float] = []

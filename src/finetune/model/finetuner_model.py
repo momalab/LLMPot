@@ -1,5 +1,6 @@
 import datetime
 import os
+import time
 
 from cfg import CHECKPOINTS, LOGS, VALIDATION
 
@@ -7,25 +8,40 @@ from cfg import CHECKPOINTS, LOGS, VALIDATION
 class FinetunerModel:
     model_type: str
     model_name: str
-    dataset_filename: str
-    precision: int
+
+    experiment: str
+    current_dataset: str
+    datasets: [str]
+
+    max_epochs: int = 30
+    patience: int = 10
+    batch_size: int = 8
+    target_max_token_len = 512
+    source_max_token_len = 512
+    precision: int = 32
     workers: int = 2
+
     start_time: float
     start_datetime: str
+
     checkpoints_dir: str
     log_output_dir: str
 
+    accelerator = "cpu"
+
+    lora: bool = False
+    quantization: bool = False
+
+    val_loss_const: str = "val_loss"
+    train_loss_const: str = "train_loss"
+
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
-            if key == "start_datetime":
-                self.start_datetime = value
-                self.start_time = datetime.datetime.strptime(value, '%Y%m%dT%H%M').timestamp()
-            elif key == "start_time":
-                self.start_time = value
-                self.start_datetime = datetime.datetime.fromtimestamp(value).strftime('%Y%m%dT%H%M')
             setattr(self, key, value)
-        self.checkpoints_dir = f"{CHECKPOINTS}"
-        self.log_output_dir = f"{LOGS}"
+        self.checkpoints_dir = CHECKPOINTS
+        self.log_output_dir = LOGS
+        self.start_time = time.time()
+        self.start_datetime = datetime.datetime.fromtimestamp(self.start_time).strftime('%Y%m%dT%H%M')
 
     def __str__(self):
         return f"{self.the_name}_{self.start_datetime}"
@@ -35,7 +51,7 @@ class FinetunerModel:
 
     @property
     def the_name(self):
-        return f"{self.model_type}_{self.model_name}_{self.dataset_filename}"
+        return f"{self.model_type}_{self.model_name}_{self.current_dataset}"
 
     def get_validation_filename(self, epoch, validation_type):
         os.makedirs(os.path.dirname(f"{VALIDATION}/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"), exist_ok=True)

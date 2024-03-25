@@ -1,0 +1,12 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 30,
+  "patience": 10,
+  "datasets": [
+    "mbtcp-p1-c1-1200",
+    "mbtcp-p1-c2-1200",
+    "mbtcp-p1-c4-1200"
+  ]
+}
+

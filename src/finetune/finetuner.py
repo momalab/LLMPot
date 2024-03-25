@@ -39,21 +39,18 @@ class Finetuner:
 
     _logger: TheLogger
 
-    def __init__(self, finetuner_model: FinetunerModel, val_loss_const: str, train_loss_const: str, use_lora: bool = False, use_quantization: bool = False):
+    def __init__(self, finetuner_model: FinetunerModel):
         self._finetuner_model = finetuner_model
         self._logger = TheLogger(self._finetuner_model.__str__(), f"{OUTPUTS_DIR}/logs")
 
-        self._use_quantization = use_quantization
+        self._use_quantization = finetuner_model.quantization
         self._quantization_config = self._init_quantization()
 
-        self._use_lora = use_lora
+        self._use_lora = finetuner_model.lora
         self._lora_config = self._init_lora_config()
 
         self._tokenizer = self._init_tokenizer()
         self._model = self._init_model()
-
-        self._val_loss_const = val_loss_const
-        self._train_loss_const = train_loss_const
 
         self.print_trainable_parameters()
 
@@ -104,12 +101,12 @@ class Finetuner:
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
 
-    def train(self, loggers: [Logger], finetuner_model: FinetunerModel, early_stopping_patience_epochs: int = 15):
-        with open(f"{finetuner_model.log_output_dir}/{finetuner_model.__str__()}", "a") as f:
+    def train(self, loggers: [Logger]):
+        with open(f"{self._finetuner_model.log_output_dir}/{self._finetuner_model.__str__()}", "a") as f:
 
             checkpoint_callback = ModelCheckpoint(
-                monitor=self._val_loss_const,
-                filename=finetuner_model.dataset_filename + '-{epoch}',
+                monitor=self._finetuner_model.val_loss_const,
+                filename=self._finetuner_model.current_dataset + '-{epoch}',
                 save_top_k=2,
                 save_last=True,
                 mode='min',
@@ -117,17 +114,17 @@ class Finetuner:
             )
             callbacks = [FileTQDMProgressBar(f, refresh_rate=3), checkpoint_callback, MetricsLogger()]
 
-            if early_stopping_patience_epochs > 0:
-                early_stop_callback = EarlyStopping(monitor=self._val_loss_const, min_delta=0.00,
-                                                    patience=early_stopping_patience_epochs, verbose=True, mode="min")
+            if self._finetuner_model.patience > 0:
+                early_stop_callback = EarlyStopping(monitor=self._finetuner_model.val_loss_const, min_delta=0.00,
+                                                    patience=self._finetuner_model.patience, verbose=True, mode="min")
                 callbacks.append(early_stop_callback)
 
             trainer = Trainer(logger=loggers,
                               callbacks=callbacks,
-                              max_epochs=100,
+                              max_epochs=self._finetuner_model.max_epochs,
                               precision=self._finetuner_model.precision,
                               log_every_n_steps=1,
-                              accelerator="gpu",
+                              accelerator=self._finetuner_model.accelerator,
                               devices=len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")),
                               strategy="ddp",
                               )
