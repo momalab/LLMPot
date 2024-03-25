@@ -2,7 +2,7 @@ import time
 import random
 import argparse
 from pymodbus.client import ModbusTcpClient
-from invalid_function import CustomInvalidFunctionRequest
+from invalid_function import MbtcpCustomInvalidFunctionRequest
 
 
 def read_holding_register(client: ModbusTcpClient, address):
@@ -56,7 +56,7 @@ def select_unused_element():
 
 
 def illegal_function(client):
-    request = CustomInvalidFunctionRequest(select_unused_element())
+    request = MbtcpCustomInvalidFunctionRequest(select_unused_element())
     return client.execute(request)
 
 

@@ -3,7 +3,7 @@ import time
 
 from tqdm import tqdm
 
-from dataset_generation.mbtcp_process_control.client import MbtcpClient, retrieve_args
+from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
 
 
 class P3Client(MbtcpClient):
