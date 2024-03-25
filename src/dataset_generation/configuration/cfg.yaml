@@ -1,0 +1,4 @@
+holding_registers:
+  range:
+    start: 0
+    end: 10

@@ -1,0 +1,70 @@
+import yaml
+from dacite import from_dict
+
+from cfg import PROJECT_ROOT_DIR
+from dataset_generation.configuration.client_configuration import Root
+
+import random
+import time
+
+from dataset_generation.mbtcp_process_control.client import MbtcpClient, retrieve_args
+
+
+class P1Client(MbtcpClient):
+
+    def __init__(self):
+        super().__init__()
+        with open(f"{PROJECT_ROOT_DIR}/src/dataset_generation/configuration/cfg.yaml", 'r') as f:
+            config = yaml.safe_load(f)
+
+        root: Root = from_dict(data_class=Root, data=config)
+
+    def start_client(self):
+        for _ in range(int(self._samples_num/6)):
+            temp = random.randrange(0, 50)
+            cool = random.choice([True, False])
+            functions = [(self.read_holding_registers, [0]),
+                         (self.write_register, [temp, 0]),
+                         (self.read_discrete_inputs, [0]),
+                         (self.write_coil, [0, cool])]
+
+            temp = random.randrange(0, 50)
+            cool = random.choice([True, False])
+            coil_addresses = random.randint(0, 50)
+            di_addresses = random.randint(1, 50)
+            hr_addresses = random.randint(2, 50)
+            exception_function = [(self.read_holding_registers, [hr_addresses]),
+                                  (self.write_register, [hr_addresses, temp]),
+                                  (self.read_discrete_inputs, [di_addresses]),
+                                  (self.write_coil, [coil_addresses, cool])]
+
+            function, args = random.choice(exception_function)
+            exceptions = [(self.illegal_function, []), (function, [*args])]
+            functions.extend(exceptions)
+            random.shuffle(functions)
+
+            for function, args in functions:
+                function(*args)
+                if function.__name__ == self.write_register.__name__:
+                    time.sleep(0.3)
+
+
+def main():
+    ip, port, samples_num = retrieve_args()
+    client = P1Client(ip, port, samples_num)
+    try:
+        client.start_client()
+    except KeyboardInterrupt:
+        print("Client stopped by user.")
+    finally:
+        client.close()
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+print(root.holding_registers)
+
+
