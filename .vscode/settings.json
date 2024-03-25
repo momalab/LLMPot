@@ -1,0 +1,7 @@
+{
+    "python.terminal.launchArgs": [],
+    "sarif-viewer.connectToGithubCodeScanning": "off",
+    "cSpell.words": [
+        "mbtcp"
+    ]
+}
