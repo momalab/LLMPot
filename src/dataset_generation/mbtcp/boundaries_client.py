@@ -123,10 +123,11 @@ class BoundariesClient(MbtcpClient):
                     ])
 
             functions = coil_functions + coils_functions_multiple + \
-                        coil_functions_exceptions + coils_functions_multiple_exceptions + \
-                        register_functions + register_functions_multiple + \
-                        register_functions_exceptions + register_functions_multiple_exceptions
+                        register_functions + register_functions_multiple
+                        # coil_functions_exceptions + coils_functions_multiple_exceptions + \
+                        # register_functions_exceptions + register_functions_multiple_exceptions
 
+            print(f"Executing {len(functions)} functions.")
             self.execute_functions(functions)
 
 
