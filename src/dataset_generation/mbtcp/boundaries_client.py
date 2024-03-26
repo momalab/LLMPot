@@ -36,7 +36,8 @@ class BoundariesClient(MbtcpClient):
         return {i: list(t) for i, t in enumerate(combinations)}
 
     def start_client(self):
-        for _ in range(int(self._samples_num / ((12 * self._num_addresses) + 9))):
+        counter = 0
+        while counter < self._samples_num:
 
             functions = []
             for address in tqdm(range(self._num_addresses)):
@@ -96,6 +97,8 @@ class BoundariesClient(MbtcpClient):
                     functions.append((self.read_coils, [starting_address, 1]))
 
             self.execute_functions(functions)
+
+            counter += len(functions)
 
 
 def main():
