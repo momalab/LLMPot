@@ -46,7 +46,6 @@ def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: in
         else:
             response_packets[int(packet.tcp.seq_raw[-1])] = the_value
 
-
     for tid, entry in tqdm(request_packets.items()):
         try:
             dataset_dict[TARGET_TEXT].append(response_packets[tid])

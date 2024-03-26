@@ -4,9 +4,9 @@
   "max_epochs": 30,
   "patience": 5,
   "datasets": [
-    "mbtcp-no_logic-c1-300",
-    "mbtcp-no_logic-c1-600",
-    "mbtcp-no_logic-c1-1200"
+    "mbtcp-no_logic-c0-1",
+    "mbtcp-no_logic-c0-2",
+    "mbtcp-no_logic-c0-3"
   ]
 }
 

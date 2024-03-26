@@ -1,8 +1,7 @@
 import argparse
 import itertools
 import random
-
-from tqdm import tqdm
+from typing import List, Callable, Any
 
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
 
@@ -29,94 +28,106 @@ class BoundariesClient(MbtcpClient):
     def generate_multiple_coil_requests(elements):
         return itertools.product(range(2), repeat=elements + 1)
 
-    def generate_combinations(self, max_value, elements):
+    @staticmethod
+    def generate_combinations(max_value, elements):
         nums = [0, random.randrange(1, max_value - 2), max_value - 1]
 
         combinations = itertools.product(nums, repeat=elements + 1)
         return {i: list(t) for i, t in enumerate(combinations)}
 
     def start_client(self):
-        counter = 0
-        while counter < self._samples_num:
+        for _ in range(self._samples_num):
 
-            functions = []
-            for address in tqdm(range(self._num_addresses)):
+            coil_functions: List[tuple[Callable[..., Any], List[Any]]] = []
+            for address in range(self._num_addresses):
                 # address_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
-                functions.extend([
-                    (self.read_coils, [address, 1]), # address_range[address]
+                coil_functions.extend([
+                    (self.read_coils, [address, 1]),  # address_range[address]
                     (self.write_coil, [address, True]),
                     (self.read_coils, [address, 1]),
                     (self.write_coil, [address, False]),
                     (self.read_coils, [address, 1])
                 ])
 
-            for address in tqdm(range(3)):
+            coil_functions_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
+            for address in range(3):
                 exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
-                functions.extend([
+                coil_functions_exceptions.extend([
                     (self.read_coils, [exception_range[address], 1]),
                     (self.write_coil, [exception_range[address], True]),
                     (self.write_coil, [exception_range[address], False])
                 ])
 
-            for address in tqdm(range(self._num_addresses)):
+            register_functions: List[tuple[Callable[..., Any], List[Any]]] = []
+            for address in range(self._num_addresses):
                 single_data_to_write = self.generate_single_request(self._max_value)
                 for data in single_data_to_write:
                     # address_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
-                    functions.extend([
-                        (self.read_holding_registers, [address, 1]), # address_range[address]
+                    register_functions.extend([
+                        (self.read_holding_registers, [address, 1]),  # address_range[address]
                         (self.write_register, [address, data]),
                     ])
-                functions.append((self.read_holding_registers, [address, 1]))
+                register_functions.append((self.read_holding_registers, [address, 1]))
 
-            for address in tqdm(range(3)):
+            register_functions_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
+            for address in range(3):
                 exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
                 random_value = random.randrange(0, MAX_REG_VALUE)
-                functions.extend([
+                register_functions_exceptions.extend([
                     (self.read_holding_registers, [exception_range[address], 1]),
                     (self.write_register, [exception_range[address], random_value]),
                 ])
-############
+
+            register_functions_multiple: List[tuple[Callable[..., Any], List[Any]]] = []
             for elements in range(self._max_elements):
-                for starting_address in tqdm(range(self._num_addresses)):
+                for address in range(self._num_addresses):
                     combinations = self.generate_combinations(self._max_value, elements)
                     for combination in combinations.values():
-                        functions.extend([
-                            (self.read_holding_registers, [starting_address, elements + 1]),
-                            (self.write_registers, [starting_address, combination])
+                        register_functions_multiple.extend([
+                            (self.read_holding_registers, [address, elements + 1]),
+                            (self.write_registers, [address, combination])
                         ])
-                    functions.append((self.read_holding_registers, [starting_address, elements + 1]))
+                    register_functions_multiple.append((self.read_holding_registers, [address, elements + 1]))
 
-            # for address in tqdm(range(3)):
-            #     exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
-            #     combinations = self.generate_combinations(self._max_value, elements)
-            #     for combination in combinations.values():
-            #         functions.extend([
-            #             (self.read_holding_registers, [exception_range[address], 1]),
-            #             (self.write_register, [exception_range[address], combination]),
-            #         ])
+            register_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
+            for elements in range(self._max_elements):
+                for address in range(self._num_addresses):
+                    exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
+                    combinations = self.generate_combinations(self._max_value, self._max_elements)
+                    for combination in combinations.values():
+                        register_functions_multiple.extend([
+                            (self.read_holding_registers, [exception_range[address], elements + 1]),
+                            (self.write_registers, [exception_range[address], combination])
+                        ])
+                    register_functions_multiple.append((self.read_holding_registers, [address, elements + 1]))
 
+            coils_functions_multiple: List[tuple[Callable[..., Any], List[Any]]] = []
             for elements in range(self._max_elements):
                 for starting_address in range(self._num_addresses):
                     coils_combinations = self.generate_multiple_coil_requests(elements)
                     for coil_values in coils_combinations:
-                        functions.extend([
+                        coils_functions_multiple.extend([
                             (self.read_coils, [starting_address, 1]),
                             (self.write_coils, [starting_address, coil_values])
                         ])
-                    functions.append((self.read_coils, [starting_address, 1]))
+                    coils_functions_multiple.append((self.read_coils, [starting_address, 1]))
 
-            # for address in tqdm(range(3)):
-            #     exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
-            #     coils_combinations = self.generate_multiple_coil_requests(elements)
-            #     for coil_values in coils_combinations:
-            #         functions.extend([
-            #             (self.read_coils, [exception_range[address], 1]),
-            #             (self.write_coil, [exception_range[address], coil_values])
-            #         ])
+            coils_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
+            for address in range(3):
+                exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
+                coils_combinations = self.generate_multiple_coil_requests(self._max_elements)
+                for coil_values in coils_combinations:
+                    coils_functions_multiple_exceptions.extend([
+                        (self.read_coils, [exception_range[address], 1]),
+                        (self.write_coil, [exception_range[address], coil_values])
+                    ])
+
+            functions = coil_functions + coils_functions_multiple + \
+                        coil_functions_exceptions + coils_functions_multiple_exceptions + \
+                        register_functions + register_functions_multiple + \
+                        register_functions_exceptions + register_functions_multiple_exceptions
 
             self.execute_functions(functions)
-
-            counter += len(functions)
 
 
 def main():

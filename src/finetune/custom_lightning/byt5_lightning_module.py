@@ -62,26 +62,26 @@ class Byt5LightningModule(LightningModule):
         return loss
 
     def test_step(self, batch, batch_size):
-        # micro = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro")
-        exactly = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"),"exactly")
+        micro = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro")
+        exactly = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"), "exactly")
 
-        # self._accuracy.append(micro)
+        self._accuracy.append(micro)
         self._accuracy_exactly.append(exactly)
 
-        # self.log("accuracy/micro", micro, batch_size=10, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
+        self.log("accuracy/micro", micro, batch_size=10, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
         self.log("accuracy/none", exactly, batch_size=2, prog_bar=True, logger=True, sync_dist=True)
 
     def on_test_end(self) -> None:
         self.on_test_end_custom()
 
     def on_test_end_custom(self) -> None:
-        # micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
+        micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
         none = torch.tensor(self._accuracy_exactly, dtype=torch.float, device=self.device)
-        # dist.all_reduce(micro, op=dist.ReduceOp.SUM)
+        dist.all_reduce(micro, op=dist.ReduceOp.SUM)
         dist.all_reduce(none, op=dist.ReduceOp.SUM)
-        # micro = torch.mean(micro)
+        micro = torch.mean(micro)
         none = torch.mean(none)
-        # micro /= dist.get_world_size()
+        micro /= dist.get_world_size()
         none /= dist.get_world_size()
 
         if self.global_rank == 0:
@@ -117,8 +117,7 @@ class Byt5LightningModule(LightningModule):
         return self._tokenizer
 
     def generate(self, input_str: str):
-        input_ids = self._tokenizer.encode(input_str, return_tensors="pt", add_special_tokens=True)
-        input_ids = input_ids.to(self.model.device)
+        input_ids = self._tokenizer.encode(input_str, return_tensors="pt", add_special_tokens=True).to(self.model.device)
         self._model.eval()
         with torch.no_grad():
             output = self.model.generate(input_ids,
