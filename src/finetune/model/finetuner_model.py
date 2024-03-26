@@ -27,7 +27,9 @@ class FinetunerModel:
     checkpoints_dir: str
     log_output_dir: str
 
-    accelerator = "cpu"
+    accelerator = "gpu"
+
+    validation = "both"
 
     lora: bool = False
     quantization: bool = False
