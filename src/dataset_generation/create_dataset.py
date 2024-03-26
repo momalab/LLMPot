@@ -1,15 +1,14 @@
 import argparse
 import asyncio
 import json
+import os
 import time
-from functools import partial
-from multiprocessing import Process, Event
+from multiprocessing import Process
 
 import pyshark
 from pymodbus.server import StartTcpServer
-from pyshark.packet.packet import Packet
 
-from cfg import EXPERIMENTS
+from cfg import EXPERIMENTS, CHECKPOINTS, DATASET_PARSED
 from dataset_generation.mbtcp.boundaries_client import BoundariesClient
 from dataset_generation.mbtcp.no_logic_server import NoLogicServer
 from dataset_generation.mbtcp.server import MbtcpServer
@@ -47,6 +46,9 @@ async def main(ip: str, port: int, interface: str, experiment: str):
         finetuner_model.experiment = experiment
 
     for dataset in finetuner_model.datasets:
+        if os.path.exists(f"{DATASET_PARSED}/{dataset}.csv"):
+            print(f'Experiment {dataset} already exists. Skipping...')
+            continue
         fields = dataset.split("-")
         protocol = fields[0]
         context_length = int(fields[2].split("c")[1])
