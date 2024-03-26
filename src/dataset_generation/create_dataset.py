@@ -23,7 +23,7 @@ def capture_packets(interface: str, port: int, protocol: str, context_length: in
                                   decode_as={f'tcp.port=={port}': f'{protocol}'}
                                   )
     packets = []
-    for packet in capture.sniff_continuously(packet_count=324*samples_num):
+    for packet in capture.sniff_continuously(packet_count=104*samples_num):
         packets.append(packet)
 
     capture.close()
