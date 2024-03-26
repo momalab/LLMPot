@@ -1,5 +1,4 @@
 import random
-import time
 
 from tqdm import tqdm
 
@@ -39,9 +38,7 @@ class P3Client(MbtcpClient):
 
             random.shuffle(functions)
 
-            for function, args in functions:
-                function(*args)
-                time.sleep(0.05)
+            self.execute_functions(functions)
 
 
 def main():

@@ -1,10 +1,11 @@
 import argparse
 import random
+import time
 from typing import Tuple
 
 from pymodbus.client import ModbusTcpClient
 
-from dataset_generation.mbtcp_process_control.invalid_function import MbtcpCustomInvalidFunctionRequest
+from dataset_generation.mbtcp.invalid_function import MbtcpCustomInvalidFunctionRequest
 
 
 class MbtcpClient(ModbusTcpClient):
@@ -23,6 +24,14 @@ class MbtcpClient(ModbusTcpClient):
 
     def start_client(self):
         pass
+
+    def execute_functions(self, functions):
+        for function, args in functions:
+            response = function(*args)
+            if not response:
+                print(f"Not received response to request: {function.__name__} and {args}")
+            if function.__name__ == self.write_register.__name__:
+                time.sleep(0.05)
 
 
 def retrieve_args() -> Tuple[str, int, int]:

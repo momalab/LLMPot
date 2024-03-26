@@ -2,11 +2,11 @@
   "model_type": "google",
   "model_name": "byt5-small",
   "max_epochs": 30,
-  "patience": 10,
+  "patience": 5,
   "datasets": [
-    "mbtcp-p1-c1-1200",
-    "mbtcp-p1-c2-1200",
-    "mbtcp-p1-c4-1200"
+    "mbtcp-no_logic-c1-300",
+    "mbtcp-no_logic-c1-600",
+    "mbtcp-no_logic-c1-1200"
   ]
 }
 

@@ -1,5 +1,4 @@
 import random
-import time
 
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
 
@@ -29,10 +28,7 @@ class P1Client(MbtcpClient):
             functions.extend(exceptions)
             random.shuffle(functions)
 
-            for function, args in functions:
-                function(*args)
-                if function.__name__ == self.write_register.__name__:
-                    time.sleep(0.05)
+            self.execute_functions(functions)
 
 
 def main():
