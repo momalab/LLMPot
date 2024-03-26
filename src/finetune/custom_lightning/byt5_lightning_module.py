@@ -176,9 +176,10 @@ class Byt5LightningModule(LightningModule):
     @staticmethod
     def validate_choice(validation_type: str, question: str, response: str, expected_response: str):
         if validation_type == "micro":
-            validation = Validator(question, response)
-            validation.check_header_ids()
-            validation.check_payload()
+            if response != expected_response:
+                validation = Validator(question, response)
+                validation.check_header_ids()
+                validation.check_payload()
         else:
             if response != expected_response:
                 raise ValueError("Not same as expected.")
