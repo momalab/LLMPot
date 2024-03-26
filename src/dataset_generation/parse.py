@@ -75,7 +75,7 @@ def main():
     parser.add_argument('-p', default="502", required=False)
     parser.add_argument('-layer', default="mbtcp", required=False)
     parser.add_argument('-pr', default="mbtcp", required=False)
-    parser.add_argument('-clen', default=2, required=False)
+    parser.add_argument('-clen', default=8, required=False)
     args = parser.parse_args()
 
     pcap = args.pcap

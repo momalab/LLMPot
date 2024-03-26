@@ -41,8 +41,9 @@ class BoundariesClient(MbtcpClient):
 
             functions = []
             for address in tqdm(range(self._num_addresses)):
+                # address_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
                 functions.extend([
-                    (self.read_coils, [address, 1]),
+                    (self.read_coils, [address, 1]), # address_range[address]
                     (self.write_coil, [address, True]),
                     (self.read_coils, [address, 1]),
                     (self.write_coil, [address, False]),
@@ -60,8 +61,9 @@ class BoundariesClient(MbtcpClient):
             for address in tqdm(range(self._num_addresses)):
                 single_data_to_write = self.generate_single_request(self._max_value)
                 for data in single_data_to_write:
+                    # address_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
                     functions.extend([
-                        (self.read_holding_registers, [address, 1]),
+                        (self.read_holding_registers, [address, 1]), # address_range[address]
                         (self.write_register, [address, data]),
                     ])
                 functions.append((self.read_holding_registers, [address, 1]))
@@ -73,18 +75,25 @@ class BoundariesClient(MbtcpClient):
                     (self.read_holding_registers, [exception_range[address], 1]),
                     (self.write_register, [exception_range[address], random_value]),
                 ])
-
+############
             for elements in range(self._max_elements):
                 for starting_address in tqdm(range(self._num_addresses)):
                     combinations = self.generate_combinations(self._max_value, elements)
-
                     for combination in combinations.values():
                         functions.extend([
                             (self.read_holding_registers, [starting_address, elements + 1]),
                             (self.write_registers, [starting_address, combination])
                         ])
-
                     functions.append((self.read_holding_registers, [starting_address, elements + 1]))
+
+            # for address in tqdm(range(3)):
+            #     exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
+            #     combinations = self.generate_combinations(self._max_value, elements)
+            #     for combination in combinations.values():
+            #         functions.extend([
+            #             (self.read_holding_registers, [exception_range[address], 1]),
+            #             (self.write_register, [exception_range[address], combination]),
+            #         ])
 
             for elements in range(self._max_elements):
                 for starting_address in range(self._num_addresses):
@@ -95,6 +104,15 @@ class BoundariesClient(MbtcpClient):
                             (self.write_coils, [starting_address, coil_values])
                         ])
                     functions.append((self.read_coils, [starting_address, 1]))
+
+            # for address in tqdm(range(3)):
+            #     exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
+            #     coils_combinations = self.generate_multiple_coil_requests(elements)
+            #     for coil_values in coils_combinations:
+            #         functions.extend([
+            #             (self.read_coils, [exception_range[address], 1]),
+            #             (self.write_coil, [exception_range[address], coil_values])
+            #         ])
 
             self.execute_functions(functions)
 

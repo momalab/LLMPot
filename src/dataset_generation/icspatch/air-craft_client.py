@@ -1,17 +1,41 @@
 import random
 import time
+import random
+import math 
 
 from client import MbtcpClient, retrieve_args
 
+def generate_nested_affine_transformations(x1):
+    """
+    Generate nested affine transformations where each output depends on the previous ones.
 
+    Args:
+    - x1 (int): Input variable.
+
+    Returns:
+    - x2, x3, x4, x5 (int): Output variables.
+    """
+    # Generate random coefficients and biases for each transformation
+    coef1, bias1 = random.uniform(-2, 2), random.uniform(-2, 2)
+    coef2, bias2 = random.uniform(-2, 2), random.uniform(-2, 2)
+    coef3, bias3 = random.uniform(-2, 2), random.uniform(-2, 2)
+    coef4, bias4 =random.uniform(-2, 2), random.uniform(-2, 2)
+    
+    # Apply nested affine transformations
+    x2 = coef1 * x1 + bias1
+    x3 = coef2 * x2 + coef1 * x1 + bias2
+    x4 = coef3 * x3 + coef2 * x2 + coef1 * x1 + bias3
+    x5 = coef4 * x4 + coef3 * x3 + coef2 * x2 + coef1 * x1 + bias4
+    return abs(int(x2)), abs(int(x3)), abs(int(x4)), abs(int(x5))
 class P1Client(MbtcpClient):
     def start_client(self):
         for _ in range(int(self._samples_num/13)):
             ss_method_type = random.choice([True, False])
-            input_1 = random.randrange(0, 50)
-            input_2 = random.randrange(0, 50)
-            input_3 = random.randrange(0, 50)
-            input_4 = random.randrange(0, 50)
+            input_0 = random.randrange(0, 50)
+            input_1,input_2, input_3, input_4 =generate_nested_affine_transformations(input_0)
+            # input_2 = random.randrange(0, 50)
+            # input_3 = random.randrange(0, 50)
+            # input_4 = random.randrange(0, 50)
             functions = [(self.read_holding_registers, [0]), #read_input_1
                          (self.read_holding_registers, [1]), #read_input_2
                          (self.read_holding_registers, [2]), #read_input_3

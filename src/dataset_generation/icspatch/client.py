@@ -4,7 +4,7 @@ from typing import Tuple
 
 from pymodbus.client import ModbusTcpClient
 
-from dataset_generation.mbtcp_process_control.invalid_function import MbtcpCustomInvalidFunctionRequest
+from dataset_generation.mbtcp.invalid_function import MbtcpCustomInvalidFunctionRequest
 
 
 class MbtcpClient(ModbusTcpClient):
