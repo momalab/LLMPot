@@ -85,8 +85,7 @@ class Byt5LightningModule(LightningModule):
         none /= dist.get_world_size()
 
         if self.global_rank == 0:
-            self.logger.experiment.add_scalars('accuracy', {'none': none}, self.current_epoch)
-            self.logger.experiment.add_scalars('accuracy', {'micro': none}, self.current_epoch)
+            self.logger.experiment.add_scalars('accuracy', {'none': none, 'micro': micro}, self.current_epoch)
 
         self._accuracy = []
         self._accuracy_exactly = []
