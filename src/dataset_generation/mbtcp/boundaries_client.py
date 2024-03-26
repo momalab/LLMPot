@@ -95,22 +95,22 @@ class BoundariesClient(MbtcpClient):
                     exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
                     combinations = self.generate_combinations(self._max_value, self._max_elements)
                     for combination in combinations.values():
-                        register_functions_multiple.extend([
+                        register_functions_multiple_exceptions.extend([
                             (self.read_holding_registers, [exception_range[address], elements + 1]),
                             (self.write_registers, [exception_range[address], combination])
                         ])
-                    register_functions_multiple.append((self.read_holding_registers, [address, elements + 1]))
+                    register_functions_multiple_exceptions.append((self.read_holding_registers, [address, elements + 1]))
 
             coils_functions_multiple: List[tuple[Callable[..., Any], List[Any]]] = []
             for elements in range(self._max_elements):
-                for starting_address in range(self._num_addresses):
+                for address in range(self._num_addresses):
                     coils_combinations = self.generate_multiple_coil_requests(elements)
                     for coil_values in coils_combinations:
                         coils_functions_multiple.extend([
-                            (self.read_coils, [starting_address, 1]),
-                            (self.write_coils, [starting_address, coil_values])
+                            (self.read_coils, [address, 1]),
+                            (self.write_coils, [address, coil_values])
                         ])
-                    coils_functions_multiple.append((self.read_coils, [starting_address, 1]))
+                    coils_functions_multiple.append((self.read_coils, [address, 1]))
 
             coils_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
             for address in range(3):

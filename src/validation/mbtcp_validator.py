@@ -31,30 +31,27 @@ class Validator:
             raise ValueError(f"length: {length}, expected: {expected_length}")
 
     def check_payload(self):
-        try:
-            fc = self.response_payload[0]
-            q_fc = self.query_payload[0]
-            r_fc = self.response_payload[0]
+        fc = self.response_payload[0]
+        q_fc = self.query_payload[0]
+        r_fc = self.response_payload[0]
 
-            if r_fc != q_fc:
-                raise ValueError(f"FC: {r_fc}, expected: {q_fc}")
+        if r_fc != q_fc:
+            raise ValueError(f"FC: {r_fc}, expected: {q_fc}")
 
-            if fc == "01":
-                self._read_single_coil()
+        if fc == "01":
+            self._read_single_coil()
 
-            if fc == "03":
-                self._read_holding_registers()
+        if fc == "03":
+            self._read_holding_registers()
 
-            if fc == "05":
-                self._write_single_coil()
+        if fc == "05":
+            self._write_single_coil()
 
-            if fc == "15":
-                self._write_multiple_coils()
+        if fc == "15":
+            self._write_multiple_coils()
 
-            if fc == "16":
-                self._read_multiple_registers()
-        except Exception as e:
-            raise ValueError(f"Request: {self.request} - Response: {self.response} - Unknown error: {e}")
+        if fc == "16":
+            self._read_multiple_registers()
 
     def _read_single_coil(self):
         bit_count = int(self.query_payload[-1], base=16)
@@ -111,3 +108,8 @@ class Validator:
         bytes_registers = len(self.query_payload[6:])
         if bytes_registers != byte_count:
             raise ValueError(f"bytes_registers: {bytes_registers}, expected: {byte_count}")
+
+
+if __name__ == '__main__':
+    val = Validator("00c50000000d0010a149000306000900000000", "00c500000003009002")
+    val.check_payload()
