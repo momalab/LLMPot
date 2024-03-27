@@ -182,6 +182,6 @@ class Byt5LightningModule(LightningModule):
                     validation.check_header_ids()
                     validation.check_payload()
                 except IndexError:
-                    print(f"Error in line: {question} with error: {response} and request: {question} and response: {response}")
+                    raise ValueError("Invalid packet.")
             else:
                 raise ValueError("Not same as expected.")
