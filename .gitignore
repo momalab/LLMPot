@@ -17,10 +17,10 @@ ENV/
 
 models/
 checkpoints/
-outputs/
-1
+
 nohup.out
-# outputs/logs
-# outputs/datasets/dumps
-# outputs/validation_data
+outputs/datasets/dumps_old
+outputs/logs
+outputs/datasets/dumps
+outputs/validation_data
 experiments/

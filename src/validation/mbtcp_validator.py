@@ -148,3 +148,8 @@ class Validator:
         bytes_registers = len(self.query_payload[6:])
         if bytes_registers != byte_count:
             raise ValueError(f"bytes_registers: {bytes_registers}, expected: {byte_count}")
+
+
+if __name__ == '__main__':
+    val = Validator("00c50000000d0010a149000306000900000000", "00c500000003009002")
+    val.check_payload()
