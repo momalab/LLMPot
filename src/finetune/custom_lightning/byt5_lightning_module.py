@@ -181,7 +181,7 @@ class Byt5LightningModule(LightningModule):
                     validation = Validator(question, response)
                     validation.check_header_ids()
                     validation.check_payload()
-                except:
+                except IndexError:
                     print(f"Error in line: {question} with error: {response} and request: {question} and response: {response}")
             else:
                 raise ValueError("Not same as expected.")
