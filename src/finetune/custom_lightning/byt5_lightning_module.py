@@ -180,5 +180,5 @@ class Byt5LightningModule(LightningModule):
                 validation = Validator(question, response)
                 validation.check_header_ids()
                 validation.check_payload()
-        else:
-            raise ValueError("Not same as expected.")
+            else:
+                raise ValueError("Not same as expected.")
