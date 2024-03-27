@@ -38,38 +38,39 @@ class Validator:
         if r_fc != q_fc:
             # EXCEPTIONS
             if (q_fc == "01") and (r_fc == "81"):
-                pass
-            if (q_fc == "03") and (r_fc == "83"):
-                pass
-            if (q_fc == "05") and (r_fc == "85"):
-                pass
-            if (q_fc == "06") and (r_fc == "86"):
-                pass
-            if (q_fc == "15") and (r_fc == "8f"):
-                pass
-            if (q_fc == "16") and (r_fc == "90"):
-                pass
+                return
+            elif (q_fc == "03") and (r_fc == "83"):
+                return
+            elif (q_fc == "05") and (r_fc == "85"):
+                return
+            elif (q_fc == "06") and (r_fc == "86"):
+                return
+            elif (q_fc == "0f") and (r_fc == "8f"):
+                return
+            elif (q_fc == "10") and (r_fc == "90"):
+                return
             else:
                 raise ValueError(f"FC: {r_fc}, expected: {q_fc}")
 
         elif r_fc == q_fc:
             if fc == "01":
                 self._read_coils()
-            if fc == "02":
+            elif fc == "02":
                 self._read_discrete_inputs()
-            if fc == "03":
+            elif fc == "03":
                 self._read_holding_registers()
-            if fc == "04":
+            elif fc == "04":
                 self._read_input_registers()
-            if fc == "05":
+            elif fc == "05":
                 self._write_single_coil()
-            if fc == "06":
+            elif fc == "06":
                 self._write_single_register()
-            if fc == "0f": # 15
+            elif fc == "0f":  # 15
                 self._write_multiple_coils()
-            if fc == "10": # 16
+            elif fc == "10":  # 16
                 self._write_multiple_registers()
-
+        else:
+            raise ValueError(f"Unexpected condition! {fc} - {q_fc} - {r_fc}")
 
     def _read_coils(self):
         bit_count = int(self.query_payload[-1], base=16)
@@ -81,13 +82,7 @@ class Validator:
             raise ValueError(f"byte_count: {byte_count}, expected: {expected_byte_count}")
 
     def _read_discrete_inputs(self):
-        bit_count = int(self.query_payload[-1], base=16)
-        byte_count = int(self.response_payload[1], base=16)
-        expected_byte_count = int(bit_count / 8)
-        if bit_count < 8:
-            expected_byte_count = int(bit_count / 8) + 1
-        if byte_count != expected_byte_count:
-            raise ValueError(f"byte_count: {byte_count}, expected: {expected_byte_count}")
+        self._read_coils()
 
     def _read_holding_registers(self):
         word_count = int(self.query_payload[-1], base=16)
@@ -100,14 +95,7 @@ class Validator:
             raise ValueError(f"byte_count: {byte_count}, expected: {length_registers}")
 
     def _read_input_registers(self):
-        word_count = int(self.query_payload[-1], base=16)
-        num_registers = int(len(self.response_payload[2:]) / 2)
-        if num_registers != word_count:
-            raise ValueError(f"num_registers: {num_registers}, expected: {word_count}")
-        byte_count = int(self.response_payload[1], base=16)
-        length_registers = len(self.response_payload[2:])
-        if byte_count != length_registers:
-            raise ValueError(f"byte_count: {byte_count}, expected: {length_registers}")
+        self._read_holding_registers()
 
     def _write_single_coil(self):
         if self.response_payload != self.query_payload:
