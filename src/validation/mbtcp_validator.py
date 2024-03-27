@@ -36,34 +36,70 @@ class Validator:
         r_fc = self.response_payload[0]
 
         if r_fc != q_fc:
-            raise ValueError(f"FC: {r_fc}, expected: {q_fc}")
+            # EXCEPTIONS
+            if (q_fc == "01") and (r_fc == "81"):
+                pass
+            if (q_fc == "03") and (r_fc == "83"):
+                pass
+            if (q_fc == "05") and (r_fc == "85"):
+                pass
+            if (q_fc == "06") and (r_fc == "86"):
+                pass
+            if (q_fc == "15") and (r_fc == "8f"):
+                pass
+            if (q_fc == "16") and (r_fc == "90"):
+                pass
+            else:
+                raise ValueError(f"FC: {r_fc}, expected: {q_fc}")
 
-        if fc == "01":
-            self._read_single_coil()
+        elif r_fc == q_fc:
+            if fc == "01":
+                self._read_coils()
+            if fc == "02":
+                self._read_discrete_inputs()
+            if fc == "03":
+                self._read_holding_registers()
+            if fc == "04":
+                self._read_input_registers()
+            if fc == "05":
+                self._write_single_coil()
+            if fc == "06":
+                self._write_single_register()
+            if fc == "0f": # 15
+                self._write_multiple_coils()
+            if fc == "10": # 16
+                self._write_multiple_registers()
 
-        if fc == "03":
-            self._read_holding_registers()
 
-        if fc == "05":
-            self._write_single_coil()
-
-        if fc == "15":
-            self._write_multiple_coils()
-
-        if fc == "16":
-            self._read_multiple_registers()
-
-    def _read_single_coil(self):
+    def _read_coils(self):
         bit_count = int(self.query_payload[-1], base=16)
         byte_count = int(self.response_payload[1], base=16)
         expected_byte_count = int(bit_count / 8)
         if bit_count < 8:
             expected_byte_count = int(bit_count / 8) + 1
+        if byte_count != expected_byte_count:
+            raise ValueError(f"byte_count: {byte_count}, expected: {expected_byte_count}")
 
+    def _read_discrete_inputs(self):
+        bit_count = int(self.query_payload[-1], base=16)
+        byte_count = int(self.response_payload[1], base=16)
+        expected_byte_count = int(bit_count / 8)
+        if bit_count < 8:
+            expected_byte_count = int(bit_count / 8) + 1
         if byte_count != expected_byte_count:
             raise ValueError(f"byte_count: {byte_count}, expected: {expected_byte_count}")
 
     def _read_holding_registers(self):
+        word_count = int(self.query_payload[-1], base=16)
+        num_registers = int(len(self.response_payload[2:]) / 2)
+        if num_registers != word_count:
+            raise ValueError(f"num_registers: {num_registers}, expected: {word_count}")
+        byte_count = int(self.response_payload[1], base=16)
+        length_registers = len(self.response_payload[2:])
+        if byte_count != length_registers:
+            raise ValueError(f"byte_count: {byte_count}, expected: {length_registers}")
+
+    def _read_input_registers(self):
         word_count = int(self.query_payload[-1], base=16)
         num_registers = int(len(self.response_payload[2:]) / 2)
         if num_registers != word_count:
@@ -91,7 +127,11 @@ class Validator:
         if data_length != q_byte_count:
             raise ValueError(f"data_length: {data_length}, expected: {q_byte_count}")
 
-    def _read_multiple_registers(self):
+    def _write_single_register(self):
+        if self.response_payload != self.query_payload:
+            raise ValueError(f"payload: {self.response_payload}, expected: {self.query_payload}")
+
+    def _write_multiple_registers(self):
         q_ref = self.query_payload[1:3]
         r_ref = self.response_payload[1:3]
         if r_ref != q_ref:
