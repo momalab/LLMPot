@@ -1,26 +1,0 @@
-nohup: ignoring input and appending output to 'nohup.out'
-/home/dam10098/ICSPot/.ics-pot/lib/python3.10/site-packages/transformers/utils/generic.py:311: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
-  torch.utils._pytree._register_pytree_node(
-/home/dam10098/ICSPot/.ics-pot/lib/python3.10/site-packages/transformers/utils/generic.py:311: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
-  torch.utils._pytree._register_pytree_node(
-  0%|          | 0/15 [00:00<?, ?it/s]2024-03-11 13:29:51,385 [MainThread  ] [INFO ]  Start time: 1710149391.3845866 - 2024-03-11 13:29:51.384587
-2024-03-11 13:29:51,385 [MainThread  ] [INFO ]  Start time: 20240311T1329
-2024-03-11 13:29:54,720 [MainThread  ] [INFO ]  trainable params: 299637760 || all params: 299637760 || trainable%: 100.0
-
-Downloading data files:   0%|          | 0/3 [00:00<?, ?it/s][ADownloading data files: 100%|██████████| 3/3 [00:00<00:00, 14185.92it/s]
-
-Extracting data files:   0%|          | 0/3 [00:00<?, ?it/s][AExtracting data files: 100%|██████████| 3/3 [00:00<00:00, 1276.80it/s]
-
-Generating train split: 0 examples [00:00, ? examples/s][AGenerating train split: 1912 examples [00:00, 112696.87 examples/s]
-
-Generating val split: 0 examples [00:00, ? examples/s][AGenerating val split: 239 examples [00:00, 68730.80 examples/s]
-
-Generating test split: 0 examples [00:00, ? examples/s][AGenerating test split: 239 examples [00:00, 71424.20 examples/s]
-2024-03-11 13:29:55,684 [MainThread  ] [ERROR]  Traceback (most recent call last):
-  File "/home/dam10098/ICSPot/src/finetune/trainer.py", line 35, in main
-    byt5.train(logger, finetuner_model)
-  File "/home/dam10098/ICSPot/src/finetune/finetuner.py", line 130, in train
-    devices=len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")),
-AttributeError: 'NoneType' object has no attribute 'split'
-
-  0%|          | 0/15 [00:04<?, ?it/s]

@@ -7,8 +7,6 @@ services:
     restart: always
     depends_on:
       - mongo
-    ports:
-      - "5020:5020"
 
   web_app:
     build:
@@ -17,8 +15,6 @@ services:
     restart: always
     depends_on:
       - mongo
-    ports:
-      - "8443:8443"
 
   mongo:
     hostname: mongo
@@ -31,6 +27,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
     ports:
       - "27017:27017"
+
   proxy:
     build:
       context: .
@@ -39,4 +36,6 @@ services:
     depends_on:
       - modbus_app
     ports:
-      - "5021:5021"
+      - "80:80"
+      - "443:443"
+      - "502:502"

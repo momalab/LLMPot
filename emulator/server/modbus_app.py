@@ -32,8 +32,6 @@ def load_model(finetuner_model: FinetunerModel):
         finetuner_model=finetuner_model,
         tokenizer=tokenizer,
         model=model,
-        val_loss_const="val_loss",
-        train_loss_const="train_loss",
         map_location=device
     )
     model.eval()

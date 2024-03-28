@@ -50,12 +50,12 @@ class BoundariesClient(MbtcpClient):
                 ])
 
             coil_functions_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
-            for address in range(3):
+            for point in range(3):
                 exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
                 coil_functions_exceptions.extend([
-                    (self.read_coils, [exception_range[address], 1]),
-                    (self.write_coil, [exception_range[address], True]),
-                    (self.write_coil, [exception_range[address], False])
+                    (self.read_coils, [exception_range[point], 1]),
+                    (self.write_coil, [exception_range[point], True]),
+                    (self.write_coil, [exception_range[point], False])
                 ])
 
             register_functions: List[tuple[Callable[..., Any], List[Any]]] = []
@@ -70,12 +70,12 @@ class BoundariesClient(MbtcpClient):
                 register_functions.append((self.read_holding_registers, [address, 1]))
 
             register_functions_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
-            for address in range(3):
+            for point in range(3):
                 exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
                 random_value = random.randrange(0, MAX_REG_VALUE)
                 register_functions_exceptions.extend([
-                    (self.read_holding_registers, [exception_range[address], 1]),
-                    (self.write_register, [exception_range[address], random_value]),
+                    (self.read_holding_registers, [exception_range[point], 1]),
+                    (self.write_register, [exception_range[point], random_value]),
                 ])
 
             register_functions_multiple: List[tuple[Callable[..., Any], List[Any]]] = []
@@ -113,13 +113,13 @@ class BoundariesClient(MbtcpClient):
                     coils_functions_multiple.append((self.read_coils, [address, 1]))
 
             coils_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
-            for address in range(3):
+            for point in range(3):
                 exception_range = [self._num_addresses, random.randrange(self._num_addresses + 1, MAX_ADDRESS - 1), MAX_ADDRESS]
                 coils_combinations = self.generate_multiple_coil_requests(self._max_elements)
                 for coil_values in coils_combinations:
                     coils_functions_multiple_exceptions.extend([
-                        (self.read_coils, [exception_range[address], 1]),
-                        (self.write_coil, [exception_range[address], coil_values])
+                        (self.read_coils, [exception_range[point], 1]),
+                        (self.write_coil, [exception_range[point], coil_values])
                     ])
 
             functions = coil_functions + coils_functions_multiple + \
