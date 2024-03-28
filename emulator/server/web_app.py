@@ -6,12 +6,13 @@ from beanie import init_beanie
 from flask import Flask, request, render_template, redirect
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from utils import DIR
+from cfg import PROJECT_ROOT_DIR
 from model.web.client import Client
 from model.web.request import Request
 from server.persistence_decorator_web import log_transport
-from utils.the_logger import TheLogger
+from utilities.logger import TheLogger
 
+DIR = PROJECT_ROOT_DIR
 logger = TheLogger("web_server", f"{DIR}/logs")
 
 app = Flask(__name__,

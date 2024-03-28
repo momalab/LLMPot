@@ -10,7 +10,7 @@ import pdb
 
 SERVER_HOST = "localhost"
 
-client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 5020)
+client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 502)
 
 random.seed(1111)
 

@@ -1,4 +1,5 @@
 import asyncio
+import json
 import socketserver
 from datetime import datetime
 
@@ -7,14 +8,14 @@ from beanie import init_beanie, WriteRules
 from motor.motor_asyncio import AsyncIOMotorClient
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
+from cfg import EXPERIMENTS, PROJECT_ROOT_DIR
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
-from utils import DIR
+from finetune.model.finetuner_model import FinetunerModel
 from model.modbus.client import Client
 from model.modbus.request import Request
-from utils.finetuner_model import FinetunerModel
-from utils.the_logger import TheLogger
+from utilities.logger import TheLogger
 
-logger = TheLogger("modbus_server", f"{DIR}/app/logs")
+logger = TheLogger("modbus_server", f"{PROJECT_ROOT_DIR}/app/logs")
 
 if torch.cuda.is_available():
     device = torch.device("cuda")
@@ -28,31 +29,15 @@ def load_model(finetuner_model: FinetunerModel):
     tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
     model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id()).to(device)
     model = Byt5LightningModule.load_from_checkpoint(
-        checkpoint_path=f"{DIR}/../checkpoints/last.ckpt",
+        checkpoint_path=f"{PROJECT_ROOT_DIR}/checkpoints/last.ckpt",
         finetuner_model=finetuner_model,
         tokenizer=tokenizer,
         model=model,
+        test_dataset=None,
         map_location=device
     )
     model.eval()
     return model, tokenizer
-
-
-def predict(request: str, model, tokenizer):
-    input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True).to(device)
-    with torch.no_grad():
-        logits = model.model.generate(input_ids,
-                                      num_beams=2,
-                                      max_length=512,
-                                      repetition_penalty=2.5,
-                                      length_penalty=1.0,
-                                      early_stopping=True,
-                                      top_p=0.95,
-                                      top_k=50,
-                                      num_return_sequences=1,
-                                      do_sample=True
-                                      )
-        return tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
@@ -60,9 +45,12 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
-    finetune_model = FinetunerModel(model_type="google", model_name="byt5-small",
-                                    dataset_filename="mbtcp-p1-c2-1200", start_datetime="20240226T1739")
-    model, tokenizer = load_model(finetune_model)
+    with open(f"{EXPERIMENTS}/mbtcp-protocol-emulation.json", "r") as cfg:
+        config = cfg.read()
+        config = json.loads(config)
+        finetuner_model = FinetunerModel(**config)
+        finetuner_model.experiment = "mbtcp-protocol-emulation.json"
+    model, tokenizer = load_model(finetuner_model)
 
     def handle(self):
         asyncio.run(self.handle_async())
@@ -87,7 +75,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
         client_request = Request(client=client.id.__str__(), request=incoming_str, client_port=client_port)
 
-        outgoing_str = predict(incoming_str, model=self.model, tokenizer=self.tokenizer)
+        outgoing_str = self.model.generate(incoming_str)
         try:
             outgoing_raw = bytes.fromhex(outgoing_str)
         except:
@@ -110,7 +98,6 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 async def async_server():
     server = ThreadedTCPServer(("0.0.0.0", 5020), ThreadedTCPRequestHandler)
     server.serve_forever()
-    logger.info(f"Server initialized..")
 
 
 async def modbus_app():

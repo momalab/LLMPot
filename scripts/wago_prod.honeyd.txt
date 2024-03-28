@@ -1,0 +1,15 @@
+create Wago
+
+set Wago personality "WAGO"
+
+set Wago default tcp action reset
+set Wago default udp action reset
+set Wago default icmp action reset
+
+add Wago tcp port 22 "su -c /home/chris/source/Honeyd/scripts/linux/ssh.sh root"
+add Wago tcp port 502 open
+
+#add Wago tcp port 443 proxy 127.0.0.1:8443
+
+set Wago ethernet "00:30:DE:43:BB:AA"
+bind 10.230.241.199 Wago

@@ -5,12 +5,12 @@ from functools import wraps
 from beanie import WriteRules
 from flask import request
 
+from cfg import PROJECT_ROOT_DIR
 from model.web.client import Client
 from model.web.request import Request
-from utils import DIR
-from utils.the_logger import TheLogger
+from utilities.logger import TheLogger
 
-logger = TheLogger("web_server_pers", f"{DIR}/logs")
+logger = TheLogger("web_server_pers", f"{PROJECT_ROOT_DIR}/logs")
 
 
 def log_transport(func):
