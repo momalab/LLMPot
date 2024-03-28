@@ -22,7 +22,6 @@ class Byt5(Finetuner):
 
         self._custom_module = Byt5LightningModule(tokenizer=self._tokenizer,
                                                   model=self._model,
-                                                  dataset=dataset,
                                                   finetuner_model=finetuner_model)
 
     def _load_dataset(self) -> Dataset:

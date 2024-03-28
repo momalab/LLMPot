@@ -15,10 +15,9 @@ from validation.model.result import Result
 
 class Byt5LightningModule(LightningModule):
 
-    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, dataset=None):
+    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel):
         super().__init__()
         self._finetuner_model = finetuner_model
-        self._dataset = dataset
 
         self._tokenizer = tokenizer
         self._model = model
@@ -72,9 +71,6 @@ class Byt5LightningModule(LightningModule):
         self.log("accuracy/none", exactly, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True)
 
     def on_test_end(self) -> None:
-        self.on_test_end_custom()
-
-    def on_test_end_custom(self) -> None:
         micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
         none = torch.tensor(self._accuracy_exactly, dtype=torch.float, device=self.device)
         dist.all_reduce(micro, op=dist.ReduceOp.SUM)
@@ -98,7 +94,7 @@ class Byt5LightningModule(LightningModule):
         return DataLoader(self._dataset["test"], batch_size=self._finetuner_model.batch_size, shuffle=False, num_workers=2, sampler=sampler)
 
     def on_train_epoch_end(self) -> None:
-        test_set: DataLoader = self._custom_test_dataloader()
+        test_set: DataLoader = self.test_dataloader()
         self.model.eval()
 
         for batch in test_set:
@@ -122,7 +118,7 @@ class Byt5LightningModule(LightningModule):
         with torch.no_grad():
             output = self.model.generate(input_ids,
                                          num_beams=2,
-                                         max_length=4096,
+                                         max_length=self._finetuner_model.target_max_token_len,
                                          repetition_penalty=2.5,
                                          length_penalty=1.0,
                                          early_stopping=True,
