@@ -95,9 +95,7 @@ class Byt5LightningModule(LightningModule):
                           shuffle=False, num_workers=2, sampler=DistributedSampler(self._dataset))
 
     def on_train_epoch_end(self) -> None:
-        self.trainer.test()
-        self.on_test_end_custom()
-        self.model.train()
+        self.trainer.test(ckpt_path="last")
 
     @property
     def model(self):
