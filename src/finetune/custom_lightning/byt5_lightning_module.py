@@ -72,21 +72,21 @@ class Byt5LightningModule(LightningModule):
         self.log("accuracy/micro", micro, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
         self.log("accuracy/none", exactly, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
 
-    def on_test_end(self) -> None:
-        micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
-        none = torch.tensor(self._accuracy_exactly, dtype=torch.float, device=self.device)
-        dist.all_reduce(micro, op=dist.ReduceOp.SUM)
-        dist.all_reduce(none, op=dist.ReduceOp.SUM)
-        micro = torch.mean(micro)
-        none = torch.mean(none)
-        micro /= dist.get_world_size()
-        none /= dist.get_world_size()
-
-        if self.global_rank == 0:
-            self.logger.experiment.add_scalars('accuracy', {'none': none, 'micro': micro}, self.current_epoch)
-
-        self._accuracy = []
-        self._accuracy_exactly = []
+    # def on_test_end(self) -> None:
+    #     micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
+    #     none = torch.tensor(self._accuracy_exactly, dtype=torch.float, device=self.device)
+    #     dist.all_reduce(micro, op=dist.ReduceOp.SUM)
+    #     dist.all_reduce(none, op=dist.ReduceOp.SUM)
+    #     micro = torch.mean(micro)
+    #     none = torch.mean(none)
+    #     micro /= dist.get_world_size()
+    #     none /= dist.get_world_size()
+    #
+    #     if self.global_rank == 0:
+    #         self.logger.experiment.add_scalars('accuracy', {'none': none, 'micro': micro}, self.current_epoch)
+    #
+    #     self._accuracy = []
+    #     self._accuracy_exactly = []
 
     def configure_optimizers(self):
         return AdamW(self.parameters(), lr=0.0001)
