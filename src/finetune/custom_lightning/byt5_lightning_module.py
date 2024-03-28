@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 import torch
 from lightning.pytorch import LightningModule
@@ -15,7 +16,7 @@ from validation.model.result import Result
 
 class Byt5LightningModule(LightningModule):
 
-    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel):
+    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, test_dataset):
         super().__init__()
         self._finetuner_model = finetuner_model
 
@@ -89,19 +90,13 @@ class Byt5LightningModule(LightningModule):
     def configure_optimizers(self):
         return AdamW(self.parameters(), lr=0.0001)
 
-    def _custom_test_dataloader(self) -> DataLoader:
-        sampler = DistributedSampler(self._dataset["test"])
-        return DataLoader(self._dataset["test"], batch_size=self._finetuner_model.batch_size, shuffle=False, num_workers=2, sampler=sampler)
+    def test_dataloader(self) -> DataLoader:
+        return DataLoader(self._dataset, batch_size=self._finetuner_model.batch_size,
+                          shuffle=False, num_workers=2, sampler=DistributedSampler(self._dataset))
 
     def on_train_epoch_end(self) -> None:
-        test_set: DataLoader = self.test_dataloader()
-        self.model.eval()
-
-        for batch in test_set:
-            self.test_step(batch, self._finetuner_model.batch_size)
-
+        self.trainer.test()
         self.on_test_end_custom()
-
         self.model.train()
 
     @property
@@ -114,7 +109,6 @@ class Byt5LightningModule(LightningModule):
 
     def generate(self, input_str: str):
         input_ids = self._tokenizer.encode(input_str, return_tensors="pt", add_special_tokens=True).to(self.model.device)
-        self._model.eval()
         with torch.no_grad():
             output = self.model.generate(input_ids,
                                          num_beams=2,
