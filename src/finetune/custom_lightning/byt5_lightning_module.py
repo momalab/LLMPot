@@ -1,16 +1,13 @@
 import json
-from typing import Any
 
 import torch
 from lightning.pytorch import LightningModule
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, DistributedSampler
 from transformers import PreTrainedModel, PreTrainedTokenizer
-import torch.distributed as dist
 
 from finetune.model.finetuner_model import FinetunerModel
 from validation.mbtcp_validator import Validator
-
 from validation.model.result import Result
 
 
@@ -69,8 +66,8 @@ class Byt5LightningModule(LightningModule):
         # self._accuracy.append(micro)
         # self._accuracy_exactly.append(exactly)
 
-        self.log("accuracy/micro", micro, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
-        self.log("accuracy/none", exactly, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
+        self.log("accuracy/micro", micro, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
+        self.log("accuracy/none", exactly, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
 
     # def on_test_end(self) -> None:
     #     micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
@@ -96,8 +93,14 @@ class Byt5LightningModule(LightningModule):
                           shuffle=False, num_workers=2, sampler=DistributedSampler(self._test_dataset))
 
     def on_train_epoch_end(self) -> None:
+        test_set: DataLoader = self.test_dataloader()
         self.model.eval()
-        self.trainer.test(ckpt_path="last", dataloaders=self.test_dataloader())
+
+        for batch in test_set:
+            self.test_step(batch, self._finetuner_model.batch_size)
+
+        self.on_test_end_custom()
+
         self.model.train()
 
     @property

@@ -6,14 +6,12 @@ from datasets import Dataset
 from lightning import LightningModule, LightningDataModule
 from lightning.pytorch import Trainer
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
-from lightning.pytorch.loggers import TensorBoardLogger
 from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
 from pytorch_lightning.loggers import Logger
 from transformers import BitsAndBytesConfig, PreTrainedTokenizer, PreTrainedModel
 
 from cfg import OUTPUTS_DIR
 from finetune.callbacks.metrics_logger import MetricsLogger
-from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
 from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 from utilities.logger import TheLogger
