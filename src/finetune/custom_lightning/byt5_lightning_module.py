@@ -19,6 +19,7 @@ class Byt5LightningModule(LightningModule):
     def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, test_dataset):
         super().__init__()
         self._finetuner_model = finetuner_model
+        self._test_dataset = test_dataset
 
         self._tokenizer = tokenizer
         self._model = model
@@ -91,8 +92,8 @@ class Byt5LightningModule(LightningModule):
         return AdamW(self.parameters(), lr=0.0001)
 
     def test_dataloader(self) -> DataLoader:
-        return DataLoader(self._dataset, batch_size=self._finetuner_model.batch_size,
-                          shuffle=False, num_workers=2, sampler=DistributedSampler(self._dataset))
+        return DataLoader(self._test_dataset, batch_size=self._finetuner_model.batch_size,
+                          shuffle=False, num_workers=2, sampler=DistributedSampler(self._test_dataset))
 
     def on_train_epoch_end(self) -> None:
         self.trainer.test(ckpt_path="last")
