@@ -66,11 +66,11 @@ class Byt5LightningModule(LightningModule):
         micro = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro")
         exactly = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"), "exactly")
 
-        self._accuracy.append(micro)
-        self._accuracy_exactly.append(exactly)
+        # self._accuracy.append(micro)
+        # self._accuracy_exactly.append(exactly)
 
-        self.log("accuracy/micro", micro, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True)
-        self.log("accuracy/none", exactly, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True)
+        self.log("accuracy/micro", micro, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
+        self.log("accuracy/none", exactly, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True)
 
     def on_test_end(self) -> None:
         micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
@@ -95,8 +95,8 @@ class Byt5LightningModule(LightningModule):
         return DataLoader(self._test_dataset, batch_size=self._finetuner_model.batch_size,
                           shuffle=False, num_workers=2, sampler=DistributedSampler(self._test_dataset))
 
-    def on_train_epoch_end(self) -> Any:
-        return self.trainer.test(ckpt_path="last")
+    def on_train_epoch_end(self) -> None:
+        self.trainer.test(ckpt_path="last")
 
     @property
     def model(self):
