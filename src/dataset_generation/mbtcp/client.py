@@ -42,7 +42,7 @@ def retrieve_args() -> Tuple[str, int, int]:
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
     parser.add_argument('-p', default=5020, required=False)
-    parser.add_argument('-num', default=1000, required=False)
+    parser.add_argument('-num', default=9, required=False)
     args = parser.parse_args()
 
     return args.ip, int(args.p), int(args.num)

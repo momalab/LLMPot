@@ -6,14 +6,17 @@ from cfg import VALIDATION
 
 def calculate_error_margin(file_name):
 
-    with open(f"{VALIDATION}/{file_name}.jsonl", "r") as file:
+    with open(f"{VALIDATION}/google_byt5-small_mbtcp-p3-c2-1200_20240324T1521/{file_name}.jsonl", "r") as file:
         data = [json.loads(line) for line in file]
 
     df = pd.DataFrame(data)
     invalid = df.query('valid == False')
     if not invalid.empty:
         invalid_df = invalid.copy()
-    print(f"Total invalids = {len(invalid_df)}")
+        print(f"Total invalids = {len(invalid_df)}")
+    else:
+        print("No invalid packets")
+        exit(1)
 
     results_data = []
     for i, row in invalid_df.iterrows():
@@ -23,15 +26,18 @@ def calculate_error_margin(file_name):
         if len(response) == len(expected_response):
             differences = sum(1 for resp, exp_resp in zip(response, expected_response) if resp != exp_resp)
             hex_distance += abs(int(response, 16) - int(expected_response, 16))
-            print(f"Response: {response}, Expected Response: {expected_response}, Digits Different: {differences}, Hex Distance: {hex_distance}")
-
+            # print(f"Response: {response}, Expected Response: {expected_response}, Digits Different: {differences}, Hex Distance: {hex_distance}")
             results_data.append({'Response': response,
                             'Expected Response': expected_response,
                             'Digits Different': differences,
                             'Hex Distance': hex_distance})
+        else:
+            print(f"The length is not the same")
+            return
 
     results = pd.DataFrame(results_data)
-    results.to_json(f"{VALIDATION}/result_file-{file_name}.jsonl", orient='records', lines=True)
+    results.to_json(f"{VALIDATION}/google_byt5-small_mbtcp_s7comm-p1-c1-1200_20240311T1331/result_file-{file_name}.jsonl",
+                    orient='records', lines=True)
     mae_value = results['Hex Distance'].mean()
     std_dev = results['Hex Distance'].std()
     print(f"MAE:{mae_value}, Std: {std_dev}")
@@ -39,7 +45,7 @@ def calculate_error_margin(file_name):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-name', default="mbtcp-process3-2.4k_20240209T1204_epoch-50", required=False)
+    parser.add_argument('-name', default="epoch-48_val_type-exactly", required=False)
     # mbtcp-processContextException-1.2k_20240214T1232_epoch-89
     # mbtcp-process2-1.2k_20240208T1631_epoch-55
     # mbtcp-process3-2.4k_20240209T1204_epoch-50
