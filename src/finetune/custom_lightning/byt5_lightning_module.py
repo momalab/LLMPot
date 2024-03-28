@@ -95,8 +95,8 @@ class Byt5LightningModule(LightningModule):
         return DataLoader(self._test_dataset, batch_size=self._finetuner_model.batch_size,
                           shuffle=False, num_workers=2, sampler=DistributedSampler(self._test_dataset))
 
-    def on_train_epoch_end(self) -> None:
-        self.trainer.test(ckpt_path="last")
+    def on_train_epoch_end(self) -> Any:
+        return self.trainer.test(ckpt_path="last")
 
     @property
     def model(self):
