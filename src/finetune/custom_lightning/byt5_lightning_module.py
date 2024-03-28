@@ -97,7 +97,7 @@ class Byt5LightningModule(LightningModule):
 
     def on_train_epoch_end(self) -> None:
         self.model.eval()
-        self.trainer.test(ckpt_path="last")
+        self.trainer.test(ckpt_path="last", dataloaders=self.test_dataloader())
         self.model.train()
 
     @property
