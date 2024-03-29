@@ -9,13 +9,13 @@ class P3Client(MbtcpClient):
 
     def start_client(self):
         for _ in tqdm(range(int(self._samples_num/9))):
-            functions = [(self.read_discrete_inputs, [0]),
-                         (self.read_holding_registers, [0]),
-                         (self.read_holding_registers, [1]),
-                         (self.read_input_registers, [0]),
-                         (self.read_input_registers, [1]),
-                         (self.read_input_registers, [2]),
-                         (self.read_input_registers, [3])]
+            functions = [(self.read_discrete_inputs, [0], []),
+                         (self.read_holding_registers, [0], []),
+                         (self.read_holding_registers, [1], []),
+                         (self.read_input_registers, [0], []),
+                         (self.read_input_registers, [1], []),
+                         (self.read_input_registers, [2], []),
+                         (self.read_input_registers, [3], [])]
 
             flow_rate = random.randrange(0, 100)
             mixing_status = random.choice([True, False])
@@ -25,16 +25,15 @@ class P3Client(MbtcpClient):
                 coil_addresses = random.randint(0, 50)
                 di_addresses = random.randint(1, 50)
                 hr_addresses = random.randint(2, 50)
-                exception_function = [(self.read_holding_registers, [hr_addresses]),
-                                      (self.read_input_registers, [ir_addresses]),
-                                      (self.write_registers, [hr_addresses, flow_rate]),
-                                      (self.read_discrete_inputs, [di_addresses]),
-                                      (self.write_coil, [coil_addresses, mixing_status])]
+                exception_function = [(self.read_holding_registers, [hr_addresses], []),
+                                      (self.read_input_registers, [ir_addresses], []),
+                                      (self.write_registers, [hr_addresses, flow_rate], []),
+                                      (self.read_discrete_inputs, [di_addresses], []),
+                                      (self.write_coil, [coil_addresses, mixing_status], [])]
 
             selected_functions = random.choices(exception_function, k=2)
-            exceptions = [(self.illegal_function, [])]
-            for function, args in selected_functions:
-                exceptions.extend([(function, args)])
+            exceptions = [(self.illegal_function, [], [])]
+            exceptions.extend(selected_functions)
 
             functions.extend(exceptions)
             random.shuffle(functions)

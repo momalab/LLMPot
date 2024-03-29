@@ -31,7 +31,7 @@ class MbtcpClient(ModbusTcpClient):
             return len(functions)
 
         for function, args, kwargs in functions:
-            response = function(*args, **kwargs)
+            response = function(*args, *kwargs)
             if not response:
                 print(f"Not received response to request: {function.__name__} and {args}")
             if function.__name__ == self.write_register.__name__:
