@@ -28,11 +28,9 @@ def append_to_list(packet):
 def capture_packets(interface: str, port: int, protocol: str, context_length: int, output_filename: str, samples_num: int) -> []:
     capture = pyshark.LiveCapture(interface=interface, use_json=True, include_raw=True)
 
-    print(f"Required size: {samples_num}")
     capture.apply_on_packets(callback=append_to_list, packet_count=(4 * samples_num) + 2)
 
     capture.close()
-    print(f"Packets: {packets} and output: {output_filename}")
     parse_without_file(protocol, port, packets, output_filename, context_length)
     split(output_filename)
 
@@ -68,6 +66,7 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
 
         client_inst: MbtcpClient = ClientClass(ip, port,
                                                finetuner_model.current_dataset.size,
+                                               finetuner_model.current_dataset.functions,
                                                finetuner_model.current_dataset.addresses,
                                                finetuner_model.current_dataset.values, 3)
         client_inst.start_client()

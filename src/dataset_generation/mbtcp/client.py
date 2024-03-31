@@ -9,12 +9,13 @@ from dataset_generation.mbtcp.invalid_function import MbtcpCustomInvalidFunction
 
 
 class MbtcpClient(ModbusTcpClient):
-    def __init__(self, ip: str, port: int, samples_num: int):
+    def __init__(self, ip: str, port: int, samples_num: int, codes: List[int]):
         super().__init__(ip, port)
         self._samples_num = samples_num
         self.ip = ip
         self.port = port
         self._functions = []
+        self._codes = codes
 
     def illegal_function(self):
         valid_function_code = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
