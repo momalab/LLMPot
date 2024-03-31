@@ -21,7 +21,7 @@ def main(experiment: str):
         for dataset in tqdm(finetuner_model.datasets):
             finetuner_model.current_dataset = dataset
             log = TheLogger(finetuner_model.__str__(), finetuner_model.log_output_dir)
-            if os.path.exists(f"{CHECKPOINTS}/{experiment}/{finetuner_model.model_type}_{finetuner_model.model_name}_{dataset}"):
+            if os.path.exists(f"{CHECKPOINTS}/{experiment}/{dataset.__str__()}"):
                 log.warning(f'Experiment {dataset} already exists. Skipping...')
                 continue
             log.info(f'Fine tuning {dataset} ...')

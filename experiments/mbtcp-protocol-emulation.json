@@ -4,14 +4,56 @@
   "max_epochs": 30,
   "patience": 5,
   "datasets": [
-    "mbtcp-no_logic-c0-1",
-    "mbtcp-no_logic-c0-2",
-    "mbtcp-no_logic-c0-3",
-    "mbtcp-no_logic-c0-5",
-    "mbtcp-no_logic-c0-10",
-    "mbtcp-no_logic-c0-20",
-    "mbtcp-no_logic-c0-40",
-    "mbtcp-no_logic-c0-80"
+    {
+      "protocol": "mbtcp",
+      "size": 200,
+      "functions": [1,5,15,3,6,16],
+      "values": {"low": 0, "high": 9},
+      "addresses": {"low": 0, "high": 1},
+      "client": "boundaries_client",
+      "server": "no_logic_server",
+      "context": 0
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 400,
+      "functions": [1,5,15,3,6,16],
+      "values": {"low": 0, "high": 9},
+      "addresses": {"low": 0, "high": 1},
+      "client": "boundaries_client",
+      "server": "no_logic_server",
+      "context": 0
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 800,
+      "functions": [1,5,15,3,6,16],
+      "values": {"low": 0, "high": 9},
+      "addresses": {"low": 0, "high": 1},
+      "client": "boundaries_client",
+      "server": "no_logic_server",
+      "context": 0
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 1600,
+      "functions": [1,5,15,3,6,16],
+      "values": {"low": 0, "high": 9},
+      "addresses": {"low": 0, "high": 1},
+      "client": "boundaries_client",
+      "server": "no_logic_server",
+      "context": 0
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 3200,
+      "functions": [1,5,15,3,6,16],
+      "values": {"low": 0, "high": 9},
+      "addresses": {"low": 0, "high": 1},
+      "client": "boundaries_client",
+      "server": "no_logic_server",
+      "context": 0
+    }
   ]
 }
 

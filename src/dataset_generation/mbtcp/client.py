@@ -1,7 +1,7 @@
 import argparse
 import random
 import time
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Callable, Any, List
 
 from pymodbus.client import ModbusTcpClient
 
@@ -14,8 +14,7 @@ class MbtcpClient(ModbusTcpClient):
         self._samples_num = samples_num
         self.ip = ip
         self.port = port
-        self.dry_run = False
-        self.connect()
+        self._functions = []
 
     def illegal_function(self):
         valid_function_code = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
@@ -26,11 +25,9 @@ class MbtcpClient(ModbusTcpClient):
     def start_client(self):
         pass
 
-    def execute_functions(self, functions) -> Optional[int]:
-        if self.dry_run:
-            return len(functions)
-
-        for function, args, kwargs in functions:
+    def execute_functions(self):
+        self.connect()
+        for function, args, kwargs in self._functions:
             response = function(*args, *kwargs)
             if not response:
                 print(f"Not received response to request: {function.__name__} and {args}")
