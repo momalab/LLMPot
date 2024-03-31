@@ -15,7 +15,7 @@ class RangeModel:
             setattr(self, key, value)
 
     def __str__(self):
-        return f"({self.low}-{self.high})"
+        return f"{self.low}-{self.high}"
 
 
 class DatasetModel:
@@ -36,7 +36,7 @@ class DatasetModel:
                 setattr(self, key, value)
 
     def functions_str(self):
-        return f"({','.join([str(x) for x in self.functions])})"
+        return f"{'-'.join([str(x) for x in self.functions])}"
 
     def __str__(self):
         return f"{self.protocol}_{self.client}_c{self.context}_f{self.functions_str()}_v{self.values}_a{self.addresses}_s{self.size}"
