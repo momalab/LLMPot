@@ -7,6 +7,7 @@ import torch
 from datasets import load_dataset
 from lightning import Trainer
 from lightning.pytorch.loggers import TensorBoardLogger
+from lightning_fabric.loggers import CSVLogger
 from torch.utils.data import DataLoader
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
@@ -28,7 +29,8 @@ def main():
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}")[0]
 
     try:
-        logger = TensorBoardLogger(f"{CHECKPOINTS}/", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
+        tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
+        csv_logger = CSVLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime, prefix="csv")
 
         trainer = Trainer(logger=logger,
                           log_every_n_steps=1,
