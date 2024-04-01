@@ -43,7 +43,8 @@ class DatasetModel:
             if key == "values" or key == "addresses":
                 setattr(self, key, RangeModel(**value))
             elif key == "server":
-                self.server = ServerModel(**value)
+                print(key, value)
+                setattr(self, key, ServerModel(**value))
             else:
                 setattr(self, key, value)
 
@@ -67,6 +68,8 @@ class FinetunerModel:
     experiment: str
     current_dataset: DatasetModel
     datasets: [DatasetModel]
+    test: DatasetModel = None
+    experiment_filename: str = None
 
     max_epochs: int = 30
     patience: int = 10
@@ -96,6 +99,8 @@ class FinetunerModel:
         for key, value in kwargs.items():
             if key == "datasets":
                 self.datasets = [DatasetModel(**x) for x in value]
+            elif key == "test":
+                self.test = DatasetModel(**value)
             else:
                 setattr(self, key, value)
         self.checkpoints_dir = CHECKPOINTS

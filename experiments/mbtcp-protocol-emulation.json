@@ -48,7 +48,7 @@
       "protocol": "mbtcp",
       "size": 3200,
       "functions": [1,5,15,3,6,16],
-      "values": {"low": 0, "high": 9},
+      "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 40},
       "client": "boundaries_client",
       "server": "no_logic_server",

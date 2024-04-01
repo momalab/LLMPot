@@ -1,38 +1,30 @@
 import argparse
+import json
 import os
 import traceback
 
-import torch
 from datasets import load_dataset
 from lightning import Trainer
 from lightning.pytorch.loggers import TensorBoardLogger
 from torch.utils.data import DataLoader
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
-from cfg import OUTPUTS_DIR
-from finetune.custom_lightning.byt5_dataset import Byt5Dataset
+from cfg import OUTPUTS_DIR, EXPERIMENTS
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
 
-torch.set_float32_matmul_precision('medium')
-
-VAL_LOSS = "val_loss"
-TRAIN_LOSS = "train_loss"
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-mt', default="google", required=False)
-    parser.add_argument('-mn', default="byt5-small", required=False)
-    parser.add_argument('-base', default="mbtcp-deterministic-2k_fc-3-6", required=False)
-    parser.add_argument('-csv', default="mbtcp-deterministic-2k_fc-3-6", required=False)
-    parser.add_argument('-e', default=100, required=False)
-    parser.add_argument('-p', default=32, required=False)
-    parser.add_argument('-dt', default="20231213T1449", required=False)
-    parser.add_argument('-ds', default="mbtcp-deterministic-2k_fc-3-6", required=False)
+    parser.add_argument('-t', default="mbtcp-protocol-test.json", required=False)
     args = parser.parse_args()
 
-    finetuner_model = FinetunerModel(model_type=args.mt, model_name=args.mn, dataset_filename=args.base,
-                                     precision=args.p, start_datetime=args.dt)
+    with open(f"{EXPERIMENTS}/{args.t}", "r") as cfg:
+        config = cfg.read()
+        config = json.loads(config)
+        finetuner_model = FinetunerModel(**config)
+        finetuner_model.current_dataset = finetuner_model.test
+        finetuner_model.start_datetime = os.listdir(f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.experiment_filename}/{finetuner_model.the_name}")[0]
 
     try:
         logger = TensorBoardLogger(f"{OUTPUTS_DIR}/checkpoints/", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
@@ -47,21 +39,19 @@ def main():
         tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
         model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
         model = Byt5LightningModule.load_from_checkpoint(
-            checkpoint_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/{args.csv}.ckpt",
+            checkpoint_path=f"{OUTPUTS_DIR}/checkpoints/{finetuner_model.experiment_filename}/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
             finetuner_model=finetuner_model,
             tokenizer=tokenizer,
             model=model_orig,
-            val_loss_const=VAL_LOSS,
-            train_loss_const=TRAIN_LOSS
+            test_dataset=None,
+            map_location="gpu"
         )
         model.eval()
 
-        dataset = load_dataset('csv', data_files={'test': f"{OUTPUTS_DIR}/datasets/test/{args.ds}.csv"})
+        dataset = load_dataset('csv', data_files={'test': f"{OUTPUTS_DIR}/datasets/parsed/{finetuner_model.current_dataset.__str__()}.csv"})
         dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
-        if dataset.column_names.keys().__contains__("Unnamed: 0"):
-            dataset = dataset.remove_columns("Unnamed: 0")
 
-        dataloader = DataLoader(dataset["test"], batch_size=10, shuffle=False, num_workers=1)
+        dataloader = DataLoader(dataset["test"], batch_size=finetuner_model.batch_size, shuffle=False, num_workers=finetuner_model.workers)
         trainer.test(model=model, dataloaders=dataloader)
 
     except:
