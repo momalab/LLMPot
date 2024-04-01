@@ -8,7 +8,7 @@ from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
 class P3Client(MbtcpClient):
 
     def start_client(self):
-        for _ in tqdm(range(int(self._samples_num/9))):
+        for _ in tqdm(range(int(self._samples_num/13))):
             functions = [(self.read_discrete_inputs, [0], []),
                          (self.read_holding_registers, [0], []),
                          (self.read_holding_registers, [1], []),
@@ -31,8 +31,9 @@ class P3Client(MbtcpClient):
                                       (self.read_discrete_inputs, [di_addresses], []),
                                       (self.write_coil, [coil_addresses, mixing_status], [])]
 
-            selected_functions = random.choices(exception_function, k=2)
-            exceptions = [(self.illegal_function, [], [])]
+            selected_functions = random.choices(exception_function, k=4)
+            exceptions = [(self.illegal_function, [], []),
+                          (self.illegal_function, [], [])]
             exceptions.extend(selected_functions)
 
             functions.extend(exceptions)

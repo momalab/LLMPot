@@ -37,7 +37,7 @@ class MbtcpServer:
 def retrieve_args() -> Tuple[str, int]:
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
-    parser.add_argument('-p', default=5020, required=False)
+    parser.add_argument('-p', default=502, required=False)
     args = parser.parse_args()
 
     return args.ip, int(args.p)

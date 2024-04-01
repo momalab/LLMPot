@@ -39,7 +39,11 @@ class Validator:
             # EXCEPTIONS
             if (q_fc == "01") and (r_fc == "81"):
                 return
+            elif (q_fc == "02") and (r_fc == "82"):
+                return
             elif (q_fc == "03") and (r_fc == "83"):
+                return
+            elif (q_fc == "04") and (r_fc == "84"):
                 return
             elif (q_fc == "05") and (r_fc == "85"):
                 return

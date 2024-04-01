@@ -4,9 +4,9 @@ import pandas as pd
 from cfg import VALIDATION
 
 
-def calculate_error_margin(file_name):
+def calculate_error_margin(folder_name, file_name):
 
-    with open(f"{VALIDATION}/google_byt5-small_mbtcp-p3-c2-1200_20240324T1521/{file_name}.jsonl", "r") as file:
+    with open(f"{VALIDATION}/{folder_name}/{file_name}.jsonl", "r") as file:
         data = [json.loads(line) for line in file]
 
     df = pd.DataFrame(data)
@@ -45,14 +45,13 @@ def calculate_error_margin(file_name):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-name', default="epoch-48_val_type-exactly", required=False)
-    # mbtcp-processContextException-1.2k_20240214T1232_epoch-89
-    # mbtcp-process2-1.2k_20240208T1631_epoch-55
-    # mbtcp-process3-2.4k_20240209T1204_epoch-50
+    parser.add_argument('-fo', default="google_byt5-small_mbtcp-p3-c2-1200_20240329T1216", required=False)
+    parser.add_argument('-fi', default="epoch-60_val_type-exactly", required=False)
     args = parser.parse_args()
 
-    file_name = args.name
-    calculate_error_margin(file_name)
+    folder_name = args.fo
+    file_name = args.fi
+    calculate_error_margin(folder_name, file_name)
 
 
 if __name__ == '__main__':
