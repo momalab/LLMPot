@@ -27,11 +27,12 @@ def main():
         finetuner_model = FinetunerModel(**config)
         finetuner_model.experiment = finetuner_model.experiment_filename
         finetuner_model.current_dataset = finetuner_model.test
+        new_datetime = finetuner_model.start_datetime
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}")[0]
 
     try:
-        tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
-        csv_logger = CSVLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime, prefix="csv")
+        tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=new_datetime)
+        csv_logger = CSVLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=new_datetime, prefix="test.csv")
 
         trainer = Trainer(logger=[tensor_logger, csv_logger],
                           log_every_n_steps=1,
