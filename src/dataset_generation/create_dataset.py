@@ -62,7 +62,7 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
             print(f'Experiment {dataset} already exists. Skipping...')
             continue
 
-        server_inst = ServerClass(ip, port)
+        server_inst = ServerClass(ip, port, finetuner_model.current_dataset.addresses.high, finetuner_model.current_dataset.addresses.high)
 
         client_inst: MbtcpClient = ClientClass(ip, port,
                                                finetuner_model.current_dataset.size,
