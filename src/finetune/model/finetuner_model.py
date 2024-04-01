@@ -15,7 +15,7 @@ class RangeModel:
             setattr(self, key, value)
 
     def __str__(self):
-        return f"{self.low}-{self.high}"
+        return f"{self.low}_{self.high}"
 
 
 class DatasetModel:
