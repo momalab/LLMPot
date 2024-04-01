@@ -42,9 +42,9 @@ class DatasetModel:
 
     def __str__(self):
         return (f"{self.protocol}-{self.client}-c{self.context}" +
-                f"-f{self.functions_str()}" if self.functions else "" +
-                f"-v{self.values}" if self.values else "" +
-                f"-a{self.addresses}" if self.addresses else "" +
+                (f"-f{self.functions_str()}" if self.functions else "") +
+                (f"-v{self.values}" if self.values else "") +
+                (f"-a{self.addresses}" if self.addresses else "") +
                 f"-s{self.size}")
 
 
