@@ -24,9 +24,9 @@ class DatasetModel:
     client: str
     server: str
     context: int
-    functions: List[int]
-    values: RangeModel
-    addresses: RangeModel
+    functions: List[int] = None
+    values: RangeModel = None
+    addresses: RangeModel = None
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
@@ -36,10 +36,16 @@ class DatasetModel:
                 setattr(self, key, value)
 
     def functions_str(self):
-        return f"{'-'.join([str(x) for x in self.functions])}"
+        if self.functions:
+            return f"{'_'.join([str(x) for x in self.functions])}"
+        return ""
 
     def __str__(self):
-        return f"{self.protocol}_{self.client}_c{self.context}_f{self.functions_str()}_v{self.values}_a{self.addresses}_s{self.size}"
+        return (f"{self.protocol}-{self.client}-c{self.context}" +
+                f"-f{self.functions_str()}" if self.functions else "" +
+                f"-v{self.values}" if self.values else "" +
+                f"-a{self.addresses}" if self.addresses else "" +
+                f"-s{self.size}")
 
 
 class FinetunerModel:
