@@ -32,19 +32,14 @@ class P3Client(MbtcpClient):
                 (self.read_discrete_inputs, [di_addresses]),
                 (self.write_coils, [coil_addresses, coil_values]),
                 (self.write_register, [hr_addresses, input_value]),
-                (self.write_coil, [coil_addresses, coil_value])
-            ]
+                (self.write_coil, [coil_addresses, coil_value])]
 
-            # Choose a random exception function and add it to functions list
             function, args = random.choice(exception_function)
-            exceptions = [
-                (self.illegal_function, []),
-                (function, args)
-            ]
+            exceptions = [(self.illegal_function, []),
+                          (function, args)]
             functions.extend(exceptions)
             random.shuffle(functions)
 
-            # Execute functions with their arguments
             for function, args in functions:
                 print(function, args)
                 response = function(*args)
