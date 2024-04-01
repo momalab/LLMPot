@@ -3,6 +3,7 @@ import json
 import os
 import traceback
 
+import torch
 from datasets import load_dataset
 from lightning import Trainer
 from lightning.pytorch.loggers import TensorBoardLogger
@@ -44,7 +45,7 @@ def main():
             tokenizer=tokenizer,
             model=model_orig,
             test_dataset=None,
-            map_location="gpu"
+            map_location=torch.device("cuda")
         )
         model.eval()
 
