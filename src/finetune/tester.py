@@ -26,7 +26,7 @@ def main():
         config = json.loads(config)
         finetuner_model = FinetunerModel(**config)
         finetuner_model.experiment = finetuner_model.experiment_filename
-        finetuner_model.current_dataset = finetuner_model.datasets[0]
+        finetuner_model.current_dataset = finetuner_model.test
         new_datetime = finetuner_model.start_datetime
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}")[0]
 
@@ -53,7 +53,7 @@ def main():
         )
         model.eval()
 
-        dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{finetuner_model.current_dataset.__str__()}.csv"})
+        dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{finetuner_model.datasets[0].__str__()}.csv"})
         dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
 
         dataloader = DataLoader(dataset["test"], batch_size=finetuner_model.batch_size, shuffle=False, num_workers=finetuner_model.workers)
