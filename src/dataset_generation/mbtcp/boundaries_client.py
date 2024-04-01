@@ -1,12 +1,8 @@
-import itertools
 import random
 from typing import List, Callable, Any
 
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
 from finetune.model.finetuner_model import RangeModel
-
-MAX_ADDRESS = 65535
-MAX_REG_VALUE = 65535
 
 
 class BoundariesClient(MbtcpClient):
@@ -17,32 +13,13 @@ class BoundariesClient(MbtcpClient):
         self._values = values
         self._max_elements = max_elements
 
-    @staticmethod
-    def generate_single_request(values: RangeModel, elements=0):
-        return [values.low, random.randrange(values.low, values.high - elements - 1), values.high - elements]
-
-    @staticmethod
-    def generate_exception_ranges(addresses: RangeModel, elements=0):
-        return [addresses.high + 1, random.randrange(addresses.high, MAX_ADDRESS - elements - 1), MAX_ADDRESS - elements]
-
-    @staticmethod
-    def generate_multiple_coil_requests(elements):
-        return itertools.product(range(2), repeat=elements + 1)
-
-    @staticmethod
-    def generate_combinations(values: RangeModel, elements):
-        nums = [values.low, random.randrange(values.low + 1, values.high - elements - 1), values.high - elements]
-
-        combinations = itertools.product(nums, repeat=elements + 1)
-        return {i: list(t) for i, t in enumerate(combinations)}
-
     def start_client(self):
         functions = []
         while len(functions) < (2 * self._samples_num) + 100:
 
             coil_functions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 5 in self._codes:
-                address_range = self.generate_single_request(self._addresses)
+                address_range = self.generate_triplet_value(self._addresses)
                 for address in address_range:
                     coil_functions.extend([
                         (self.read_coils, [address, 1], []),
@@ -64,9 +41,9 @@ class BoundariesClient(MbtcpClient):
 
             register_functions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 6 in self._codes:
-                address_range = self.generate_single_request(self._addresses)
+                address_range = self.generate_triplet_value(self._addresses)
                 for address in address_range:
-                    single_data_to_write = self.generate_single_request(self._values)
+                    single_data_to_write = self.generate_triplet_value(self._values)
                     for data in single_data_to_write:
                         register_functions.extend([
                             (self.read_holding_registers, [address, 1], []),
@@ -78,7 +55,7 @@ class BoundariesClient(MbtcpClient):
             if 3 in self._codes and 6 in self._codes:
                 exception_range = self.generate_exception_ranges(self._addresses)
                 for address in exception_range:
-                    random_value = random.randrange(0, MAX_REG_VALUE)
+                    random_value = random.randrange(0, MbtcpClient.MAX_REG_VALUE)
                     register_functions_exceptions.extend([
                         (self.read_holding_registers, [address, 1], []),
                         (self.write_register, [address, random_value], []),
@@ -87,7 +64,7 @@ class BoundariesClient(MbtcpClient):
             register_functions_multiple: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 16 in self._codes:
                 for elements in range(1, self._max_elements):
-                    address_range = self.generate_single_request(self._addresses, elements)
+                    address_range = self.generate_triplet_value(self._addresses, elements)
                     for address in address_range:
                         combinations = self.generate_combinations(self._values, elements)
                         for combination in combinations.values():
@@ -113,7 +90,7 @@ class BoundariesClient(MbtcpClient):
             coils_functions_multiple: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 15 in self._codes:
                 for elements in range(1, self._max_elements):
-                    address_range = self.generate_single_request(self._addresses, elements)
+                    address_range = self.generate_triplet_value(self._addresses, elements)
                     for address in address_range:
                         coils_combinations = self.generate_multiple_coil_requests(elements)
                         for coil_values in coils_combinations:

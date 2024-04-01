@@ -6,6 +6,16 @@ from typing import List
 from cfg import CHECKPOINTS, LOGS, VALIDATION
 
 
+class ServerModel:
+    name: str
+    coils: int = 40
+    registers: int = 40
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
 class RangeModel:
     low: int
     high: int
@@ -22,7 +32,7 @@ class DatasetModel:
     protocol: str
     size: int
     client: str
-    server: str
+    server: ServerModel
     context: int
     functions: List[int] = None
     values: RangeModel = None
@@ -32,6 +42,8 @@ class DatasetModel:
         for key, value in kwargs.items():
             if key == "values" or key == "addresses":
                 setattr(self, key, RangeModel(**value))
+            elif key == "server":
+                self.server = ServerModel(**value)
             else:
                 setattr(self, key, value)
 

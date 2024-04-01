@@ -1,4 +1,5 @@
 import argparse
+import itertools
 import random
 import time
 from typing import Tuple, Optional, Callable, Any, List
@@ -6,9 +7,13 @@ from typing import Tuple, Optional, Callable, Any, List
 from pymodbus.client import ModbusTcpClient
 
 from dataset_generation.mbtcp.invalid_function import MbtcpCustomInvalidFunctionRequest
+from finetune.model.finetuner_model import RangeModel
 
 
 class MbtcpClient(ModbusTcpClient):
+    MAX_ADDRESS = 65535
+    MAX_REG_VALUE = 65535
+
     def __init__(self, ip: str, port: int, samples_num: int, codes: List[int]):
         super().__init__(ip, port)
         self._samples_num = samples_num
@@ -22,6 +27,29 @@ class MbtcpClient(ModbusTcpClient):
         false_function_code = random.choice([x for x in range(0, 254) if x not in valid_function_code])
         request = MbtcpCustomInvalidFunctionRequest(false_function_code)
         return self.execute(request)
+
+    @staticmethod
+    def generate_random_value(values: RangeModel, elements=0):
+        return random.randrange(values.low, values.high - elements - 1, values.high - elements)
+
+    @staticmethod
+    def generate_multiple_coil_requests(elements):
+        return itertools.product(range(2), repeat=elements + 1)
+
+    @staticmethod
+    def generate_combinations(values: RangeModel, elements):
+        nums = [values.low, random.randrange(values.low + 1, values.high - elements - 1), values.high - elements]
+
+        combinations = itertools.product(nums, repeat=elements + 1)
+        return {i: list(t) for i, t in enumerate(combinations)}
+
+    @staticmethod
+    def generate_triplet_value(values: RangeModel, elements=0):
+        return [values.low, random.randrange(values.low, values.high - elements - 1), values.high - elements]
+
+    @staticmethod
+    def generate_exception_ranges(addresses: RangeModel, elements=0):
+        return [addresses.high + 1, random.randrange(addresses.high, MbtcpClient.MAX_ADDRESS - elements - 1), MbtcpClient.MAX_ADDRESS - elements]
 
     def start_client(self):
         pass

@@ -52,10 +52,10 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
     for dataset in finetuner_model.datasets:
         print(f'Experiment {dataset} running...')
         finetuner_model.current_dataset = dataset
-        server_class = ''.join(word.title() for word in finetuner_model.current_dataset.server.split('_'))
+        server_class = ''.join(word.title() for word in finetuner_model.current_dataset.server.name.split('_'))
         client_class = ''.join(word.title() for word in finetuner_model.current_dataset.client.split('_'))
 
-        ServerClass = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.server}"), server_class)
+        ServerClass = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.server.name}"), server_class)
         ClientClass = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.client}"), client_class)
 
         if os.path.exists(f"{DATASET_PARSED}/{dataset}.csv") and overwrite is False:
@@ -104,7 +104,7 @@ def init():
     parser.add_argument('-ip', default="localhost", type=str, required=False)
     parser.add_argument('-p', default=5020, type=int, required=False)
     parser.add_argument('-intrf', default="lo0", type=str, required=False)
-    parser.add_argument('-exp', default="mbtcp-protocol-emulation.json", type=str, required=False)
+    parser.add_argument('-exp', default="mbtcp-protocol-test.json", type=str, required=False)
     parser.add_argument('-o', default=True, type=bool, required=False)
     args = parser.parse_args()
 
