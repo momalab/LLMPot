@@ -25,6 +25,7 @@ def main():
         config = cfg.read()
         config = json.loads(config)
         finetuner_model = FinetunerModel(**config)
+        finetuner_model.experiment = finetuner_model.experiment_filename
         finetuner_model.current_dataset = finetuner_model.test
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}")[0]
 
@@ -32,7 +33,7 @@ def main():
         tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
         csv_logger = CSVLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime, prefix="csv")
 
-        trainer = Trainer(logger=logger,
+        trainer = Trainer(logger=[tensor_logger, csv_logger],
                           log_every_n_steps=1,
                           accelerator="gpu",
                           devices=len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")),
