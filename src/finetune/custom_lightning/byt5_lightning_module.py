@@ -100,7 +100,7 @@ class Byt5LightningModule(LightningModule):
         for batch in test_set:
             self.test_step(batch, self._finetuner_model.batch_size)
 
-        # self.on_test_end_custom()
+        self.on_test_end()
 
         self.model.train()
 

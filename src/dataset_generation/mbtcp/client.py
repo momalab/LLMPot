@@ -1,7 +1,7 @@
 import argparse
 import random
 import time
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Callable, Any, List
 
 from pymodbus.client import ModbusTcpClient
 
@@ -9,13 +9,13 @@ from dataset_generation.mbtcp.invalid_function import MbtcpCustomInvalidFunction
 
 
 class MbtcpClient(ModbusTcpClient):
-    def __init__(self, ip: str, port: int, samples_num: int):
+    def __init__(self, ip: str, port: int, samples_num: int, codes: List[int]):
         super().__init__(ip, port)
         self._samples_num = samples_num
         self.ip = ip
         self.port = port
-        self.dry_run = False
-        self.connect()
+        self._functions = []
+        self._codes = codes
 
     def illegal_function(self):
         valid_function_code = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
@@ -26,11 +26,9 @@ class MbtcpClient(ModbusTcpClient):
     def start_client(self):
         pass
 
-    def execute_functions(self, functions) -> Optional[int]:
-        if self.dry_run:
-            return len(functions)
-
-        for function, args, kwargs in functions:
+    def execute_functions(self):
+        self.connect()
+        for function, args, kwargs in self._functions:
             response = function(*args, *kwargs)
             if not response:
                 print(f"Not received response to request: {function.__name__} and {args}")
@@ -41,8 +39,13 @@ class MbtcpClient(ModbusTcpClient):
 def retrieve_args() -> Tuple[str, int, int]:
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
+<<<<<<< HEAD
     parser.add_argument('-p', default=502, required=False)
     parser.add_argument('-num', default=2400, required=False)
+=======
+    parser.add_argument('-p', default=5020, required=False)
+    parser.add_argument('-num', default=100, required=False)
+>>>>>>> 0b0e9b48b9363334ae23f552bd534b6363af931b
     args = parser.parse_args()
 
     return args.ip, int(args.p), int(args.num)

@@ -1,8 +1,45 @@
 import datetime
 import os
 import time
+from typing import List
 
 from cfg import CHECKPOINTS, LOGS, VALIDATION
+
+
+class RangeModel:
+    low: int
+    high: int
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+    def __str__(self):
+        return f"{self.low}-{self.high}"
+
+
+class DatasetModel:
+    protocol: str
+    size: int
+    client: str
+    server: str
+    context: int
+    functions: List[int]
+    values: RangeModel
+    addresses: RangeModel
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            if key == "values" or key == "addresses":
+                setattr(self, key, RangeModel(**value))
+            else:
+                setattr(self, key, value)
+
+    def functions_str(self):
+        return f"{'-'.join([str(x) for x in self.functions])}"
+
+    def __str__(self):
+        return f"{self.protocol}_{self.client}_c{self.context}_f{self.functions_str()}_v{self.values}_a{self.addresses}_s{self.size}"
 
 
 class FinetunerModel:
@@ -10,8 +47,8 @@ class FinetunerModel:
     model_name: str
 
     experiment: str
-    current_dataset: str
-    datasets: [str]
+    current_dataset: DatasetModel
+    datasets: [DatasetModel]
 
     max_epochs: int = 30
     patience: int = 10
@@ -39,7 +76,10 @@ class FinetunerModel:
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
-            setattr(self, key, value)
+            if key == "datasets":
+                self.datasets = [DatasetModel(**x) for x in value]
+            else:
+                setattr(self, key, value)
         self.checkpoints_dir = CHECKPOINTS
         self.log_output_dir = LOGS
         self.start_time = time.time()
@@ -53,10 +93,8 @@ class FinetunerModel:
 
     @property
     def the_name(self):
-        return f"{self.model_type}_{self.model_name}_{self.current_dataset}"
+        return self.current_dataset.__str__()
 
     def get_validation_filename(self, epoch, validation_type):
         os.makedirs(os.path.dirname(f"{VALIDATION}/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"), exist_ok=True)
         return f"{VALIDATION}/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"
-
-
