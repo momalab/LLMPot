@@ -1,4 +1,4 @@
-FROM web:1.0
+FROM cv43nyu/allippe:modbus
 WORKDIR /app
 
 EXPOSE 8080

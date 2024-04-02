@@ -1,4 +1,4 @@
-FROM modbus:1.0
+FROM cv43nyu/allippe:modbus
 WORKDIR /app
 
 COPY ./src /app/src
