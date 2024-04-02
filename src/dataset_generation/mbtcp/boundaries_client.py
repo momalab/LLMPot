@@ -120,9 +120,8 @@ class BoundariesClient(MbtcpClient):
             functions.extend(coils_functions_multiple_exceptions)
             functions.extend(register_functions_exceptions)
             functions.extend(register_functions_multiple_exceptions)
-            print(len(functions))
 
-        # random.shuffle(functions)
+        random.shuffle(functions)
         functions = functions[:(2 * self._samples_num) + 100]
         self._functions = functions
 

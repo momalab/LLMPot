@@ -62,13 +62,14 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
             print(f'Experiment {dataset} already exists. Skipping...')
             continue
 
-        server_inst = ServerClass(ip, port, finetuner_model.current_dataset.addresses.high, finetuner_model.current_dataset.addresses.high)
+        server_inst = ServerClass(ip, port, finetuner_model.current_dataset.server.coils, finetuner_model.current_dataset.server.registers)
 
         client_inst: MbtcpClient = ClientClass(ip, port,
                                                finetuner_model.current_dataset.size,
                                                finetuner_model.current_dataset.functions,
                                                finetuner_model.current_dataset.addresses,
-                                               finetuner_model.current_dataset.values, 3)
+                                               finetuner_model.current_dataset.values,
+                                               finetuner_model.current_dataset.multi_elements)
         client_inst.start_client()
 
         capture_thread = Process(target=capture_packets, args=[interface, port,
@@ -104,7 +105,7 @@ def init():
     parser.add_argument('-ip', default="localhost", type=str, required=False)
     parser.add_argument('-p', default=5020, type=int, required=False)
     parser.add_argument('-intrf', default="lo0", type=str, required=False)
-    parser.add_argument('-exp', default="mbtcp-protocol-test.json", type=str, required=False)
+    parser.add_argument('-exp', default="mbtcp-protocol-emulation.json", type=str, required=False)
     parser.add_argument('-o', default=True, type=bool, required=False)
     args = parser.parse_args()
 

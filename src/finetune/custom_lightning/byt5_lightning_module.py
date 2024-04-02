@@ -91,7 +91,8 @@ class Byt5LightningModule(LightningModule):
 
     def test_dataloader(self) -> DataLoader:
         return DataLoader(self._test_dataset, batch_size=self._finetuner_model.batch_size,
-                          shuffle=False, num_workers=2, sampler=DistributedSampler(self._test_dataset))
+                          shuffle=False, num_workers=self._finetuner_model.workers,
+                          sampler=DistributedSampler(self._test_dataset))
 
     def on_train_epoch_end(self) -> None:
         test_set: DataLoader = self.test_dataloader()
@@ -150,7 +151,7 @@ class Byt5LightningModule(LightningModule):
                         question = request[request.rindex("|") + 1:len(request)]
                         context = request[:request.rindex("|")]
 
-                    self.validate_choice(validation_type, question, response, expected_response)
+                    self.validate_choice(validation_type, question, response, expected_response, self._finetuner_model.current_dataset.addresses.high)
 
                     to_save.valid = True
 
@@ -169,11 +170,11 @@ class Byt5LightningModule(LightningModule):
         return valid / batch_size
 
     @staticmethod
-    def validate_choice(validation_type: str, question: str, response: str, expected_response: str):
+    def validate_choice(validation_type: str, question: str, response: str, expected_response: str, end_address: int):
         if response != expected_response:
             if validation_type == "micro":
                 try:
-                    validation = Validator(question, response)
+                    validation = Validator(question, response, end_address)
                     validation.check_header_ids()
                     validation.check_payload()
                 except IndexError:

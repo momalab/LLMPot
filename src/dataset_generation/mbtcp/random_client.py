@@ -75,7 +75,7 @@ class RandomClient(MbtcpClient):
 def main():
     ip, port, samples_num = retrieve_args()
 
-    client = BoundariesClient(ip, port, samples_num, [1, 5, 15, 3, 6, 16], RangeModel(low=0, high=1), RangeModel(low=0, high=10), 2)
+    client = RandomClient(ip, port, samples_num, [1, 5, 15, 3, 6, 16], RangeModel(low=0, high=1), RangeModel(low=0, high=10), 2)
     client.start_client()
     client.execute_functions()
     try:

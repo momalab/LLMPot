@@ -11,8 +11,13 @@
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 40},
       "client": "boundaries_client",
-      "server": "no_logic_server",
-      "context": 0
+      "server": {
+        "name": "no_logic_server",
+        "coils": 40,
+        "registers": 40
+      },
+      "context": 0,
+      "multi_elements": 3
     },
     {
       "protocol": "mbtcp",
@@ -21,8 +26,13 @@
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 40},
       "client": "boundaries_client",
-      "server": "no_logic_server",
-      "context": 0
+      "server": {
+        "name": "no_logic_server",
+        "coils": 40,
+        "registers": 40
+      },
+      "context": 0,
+      "multi_elements": 3
     },
     {
       "protocol": "mbtcp",
@@ -31,8 +41,13 @@
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 40},
       "client": "boundaries_client",
-      "server": "no_logic_server",
-      "context": 0
+      "server": {
+        "name": "no_logic_server",
+        "coils": 40,
+        "registers": 40
+      },
+      "context": 0,
+      "multi_elements": 3
     },
     {
       "protocol": "mbtcp",
@@ -41,8 +56,13 @@
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 40},
       "client": "boundaries_client",
-      "server": "no_logic_server",
-      "context": 0
+      "server": {
+        "name": "no_logic_server",
+        "coils": 40,
+        "registers": 40
+      },
+      "context": 0,
+      "multi_elements": 3
     },
     {
       "protocol": "mbtcp",
@@ -51,8 +71,13 @@
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 40},
       "client": "boundaries_client",
-      "server": "no_logic_server",
-      "context": 0
+      "server": {
+        "name": "no_logic_server",
+        "coils": 40,
+        "registers": 40
+      },
+      "context": 0,
+      "multi_elements": 3
     },
     {
       "protocol": "mbtcp",
@@ -61,8 +86,13 @@
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 40},
       "client": "boundaries_client",
-      "server": "no_logic_server",
-      "context": 0
+      "server": {
+        "name": "no_logic_server",
+        "coils": 40,
+        "registers": 40
+      },
+      "context": 0,
+      "multi_elements": 3
     }
   ]
 }

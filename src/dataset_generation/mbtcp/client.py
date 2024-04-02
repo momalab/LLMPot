@@ -30,7 +30,7 @@ class MbtcpClient(ModbusTcpClient):
 
     @staticmethod
     def generate_random_value(values: RangeModel, elements=0):
-        return random.randrange(values.low, values.high - elements - 1, values.high - elements)
+        return random.randrange(values.low, values.high - elements)
 
     @staticmethod
     def generate_multiple_coil_requests(elements):
