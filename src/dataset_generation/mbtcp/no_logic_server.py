@@ -11,7 +11,7 @@ class NoLogicServer(MbtcpServer):
 
 def main():
     ip, port = retrieve_args()
-    server = NoLogicServer(ip, port, 65500, 65500)
+    server = NoLogicServer(ip, port, 40, 40)
     server.start()
 
 
