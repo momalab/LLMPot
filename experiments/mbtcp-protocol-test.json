@@ -17,6 +17,20 @@
         "registers": 40
       },
       "context": 0
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 1000,
+      "functions": [1,5,15,3,6,16],
+      "values": {"low": 0, "high": 65535},
+      "addresses": {"low": 0, "high": 65535},
+      "client": "random_client",
+      "server": {
+        "name": "no_logic_server",
+        "coils": 65000,
+        "registers": 65000
+      },
+      "context": 0
     }
   ],
   "test": {

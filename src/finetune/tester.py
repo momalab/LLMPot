@@ -11,7 +11,7 @@ from lightning_fabric.loggers import CSVLogger
 from torch.utils.data import DataLoader
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
-from cfg import OUTPUTS_DIR, EXPERIMENTS, CHECKPOINTS, DATASET_PARSED
+from cfg import EXPERIMENTS, CHECKPOINTS, DATASET_PARSED
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
 
@@ -53,11 +53,12 @@ def main():
         )
         model.eval()
 
-        dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{finetuner_model.datasets[0].__str__()}.csv"})
-        dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
+        for test_dataset in finetuner_model.datasets:
+            dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{test_dataset.__str__()}.csv"})
+            dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
 
-        dataloader = DataLoader(dataset["test"], batch_size=finetuner_model.batch_size, shuffle=False, num_workers=finetuner_model.workers)
-        trainer.test(model=model, dataloaders=dataloader)
+            dataloader = DataLoader(dataset["test"], batch_size=finetuner_model.batch_size, shuffle=False, num_workers=finetuner_model.workers)
+            trainer.test(model=model, dataloaders=dataloader)
 
     except:
         print(traceback.format_exc())
