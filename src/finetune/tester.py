@@ -8,7 +8,7 @@ from datasets import load_dataset
 from lightning import Trainer
 from lightning.pytorch.loggers import TensorBoardLogger
 from lightning_fabric.loggers import CSVLogger
-from torch.utils.data import DataLoader, DistributedSampler
+from torch.utils.data import DataLoader
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
 from cfg import EXPERIMENTS, CHECKPOINTS, DATASET_PARSED
@@ -59,9 +59,7 @@ def main():
             dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{test_dataset.__str__()}.csv"})
             dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
 
-            dataloader = DataLoader(dataset["test"],
-                                    batch_size=finetuner_model.batch_size, shuffle=False, num_workers=finetuner_model.workers,
-                                    sampler=DistributedSampler(dataset["test"]))
+            dataloader = DataLoader(dataset["test"], batch_size=finetuner_model.batch_size, shuffle=False, num_workers=finetuner_model.workers)
             trainer.test(model=model, dataloaders=dataloader)
 
     except:
