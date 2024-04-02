@@ -55,7 +55,7 @@ def main():
             )
             model.eval()
 
-            dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{finetuner_model.current_dataset.__str__()}.csv"})
+            dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{test_dataset.__str__()}.csv"})
             dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
 
             dataloader = DataLoader(dataset["test"], batch_size=finetuner_model.batch_size, shuffle=False, num_workers=finetuner_model.workers)
