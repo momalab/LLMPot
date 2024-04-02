@@ -121,5 +121,6 @@ class FinetunerModel:
         return self.current_dataset.__str__()
 
     def get_validation_filename(self, epoch, validation_type):
-        os.makedirs(os.path.dirname(f"{VALIDATION}/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"), exist_ok=True)
-        return f"{VALIDATION}/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"
+        path = f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/epoch-{epoch}_val_type-{validation_type}.jsonl"
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        return path
