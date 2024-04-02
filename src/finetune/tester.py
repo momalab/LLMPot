@@ -33,10 +33,8 @@ def main():
 
     try:
         for test_dataset in finetuner_model.datasets:
-            finetuner_model.current_dataset = test_dataset
-
-            tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=finetuner_model.the_name, version=new_datetime)
-            csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=finetuner_model.the_name, version=new_datetime, prefix="test.csv")
+            tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.the_name, version=new_datetime)
+            csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.the_name, version=new_datetime, prefix="test.csv")
 
             trainer = Trainer(logger=[tensor_logger, csv_logger],
                               log_every_n_steps=1,
@@ -48,7 +46,7 @@ def main():
             tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
             model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
             model = Byt5LightningModule.load_from_checkpoint(
-                checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
+                checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.current_dataset.__str__()}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
                 finetuner_model=finetuner_model,
                 tokenizer=tokenizer,
                 model=model_orig,
