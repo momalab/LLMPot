@@ -21,40 +21,43 @@ def main():
     parser.add_argument('-t', default="mbtcp-protocol-test.json", required=False)
     args = parser.parse_args()
 
-    with open(f"{EXPERIMENTS}/{args.t}", "r") as cfg:
+    experiment = args.t
+
+    with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
         config = cfg.read()
         config = json.loads(config)
         finetuner_model = FinetunerModel(**config)
-        finetuner_model.experiment = finetuner_model.experiment_filename
         finetuner_model.current_dataset = finetuner_model.test
         new_datetime = finetuner_model.start_datetime
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}")[0]
 
     try:
-        tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=new_datetime)
-        csv_logger = CSVLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=new_datetime, prefix="test.csv")
-
-        trainer = Trainer(logger=[tensor_logger, csv_logger],
-                          log_every_n_steps=1,
-                          accelerator="gpu",
-                          devices=len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")),
-                          strategy="ddp",
-                          )
-
-        tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
-        model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
-        model = Byt5LightningModule.load_from_checkpoint(
-            checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
-            finetuner_model=finetuner_model,
-            tokenizer=tokenizer,
-            model=model_orig,
-            test_dataset=None,
-            map_location=torch.device("cuda")
-        )
-        model.eval()
-
         for test_dataset in finetuner_model.datasets:
-            dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{test_dataset.__str__()}.csv"})
+            finetuner_model.current_dataset = test_dataset
+
+            tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=finetuner_model.the_name, version=new_datetime)
+            csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=finetuner_model.the_name, version=new_datetime, prefix="test.csv")
+
+            trainer = Trainer(logger=[tensor_logger, csv_logger],
+                              log_every_n_steps=1,
+                              accelerator="gpu",
+                              devices=len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")),
+                              strategy="ddp",
+                              )
+
+            tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
+            model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
+            model = Byt5LightningModule.load_from_checkpoint(
+                checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
+                finetuner_model=finetuner_model,
+                tokenizer=tokenizer,
+                model=model_orig,
+                test_dataset=None,
+                map_location=torch.device("cuda")
+            )
+            model.eval()
+
+            dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{finetuner_model.current_dataset.__str__()}.csv"})
             dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
 
             dataloader = DataLoader(dataset["test"], batch_size=finetuner_model.batch_size, shuffle=False, num_workers=finetuner_model.workers)

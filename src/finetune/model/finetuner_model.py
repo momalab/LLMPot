@@ -32,7 +32,7 @@ class DatasetModel:
     protocol: str
     size: int
     client: str
-    server: ServerModel
+    server: ServerModel = None
     context: int
     functions: List[int] = None
     values: RangeModel = None
@@ -57,7 +57,9 @@ class DatasetModel:
         return (f"{self.protocol}-{self.client}-c{self.context}-s{self.size}" +
                 (f"-f{self.functions_str()}" if self.functions else "") +
                 (f"-v{self.values}" if self.values else "") +
-                (f"-a{self.addresses}" if self.addresses else "")
+                (f"-a{self.addresses}" if self.addresses else "") +
+                (f"-sc{self.server.coils}" if self.server else "") +
+                (f"-sr{self.server.registers}" if self.server else "")
                 )
 
 
