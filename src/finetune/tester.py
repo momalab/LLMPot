@@ -28,9 +28,8 @@ def main():
         config = json.loads(config)
         finetuner_model = FinetunerModel(**config)
         finetuner_model.experiment = experiment
-        finetuner_model.current_dataset = finetuner_model.test
         new_datetime = finetuner_model.start_datetime
-        finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}")[0]
+        finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.test.__str__()}")[0]
 
     try:
         for test_dataset in finetuner_model.datasets:
@@ -48,7 +47,7 @@ def main():
             tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
             model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
             model = Byt5LightningModule.load_from_checkpoint(
-                checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.current_dataset.__str__()}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
+                checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.test.__str__()}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
                 finetuner_model=finetuner_model,
                 tokenizer=tokenizer,
                 model=model_orig,
