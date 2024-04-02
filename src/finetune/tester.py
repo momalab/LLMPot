@@ -27,6 +27,7 @@ def main():
         config = cfg.read()
         config = json.loads(config)
         finetuner_model = FinetunerModel(**config)
+        finetuner_model.experiment = experiment
         finetuner_model.current_dataset = finetuner_model.test
         new_datetime = finetuner_model.start_datetime
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}")[0]
