@@ -28,12 +28,13 @@ def main():
         config = json.loads(config)
         finetuner_model = FinetunerModel(**config)
         finetuner_model.experiment = experiment
-        finetuner_model.current_dataset = finetuner_model.test
+
         new_datetime = finetuner_model.start_datetime
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.the_name}")[0]
 
     try:
         for test_dataset in finetuner_model.datasets:
+            finetuner_model.current_dataset = test_dataset
             tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=new_datetime)
             csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=new_datetime, prefix="test.csv")
 
