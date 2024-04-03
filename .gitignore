@@ -21,5 +21,5 @@ checkpoints/
 nohup.out
 outputs/datasets/dumps_old
 outputs/logs
-outputs/datasets/
+outputs/datasets/dumps
 outputs/validation_data

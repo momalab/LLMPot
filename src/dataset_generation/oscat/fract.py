@@ -1,4 +1,5 @@
 import random
+import numpy as np
 import time
 from client import MbtcpClient, retrieve_args
 from pymodbus.constants import Endian
@@ -8,12 +9,12 @@ class P3Client(MbtcpClient):
     def start_client(self):
         for _ in range(int(self._samples_num / 5)):
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
-            input_1 = random.randint(0, 50)
-            builder.add_32bit_float(float(input_1))
-            inputs = builder.build()
+            input_value = np.random.uniform(0, 50)
+            builder.add_32bit_float(float(input_value))
+            inputs_value = builder.build()
             functions = [
-                (self.read_holding_registers, [0, 2], {}),  # read_IN (array of 2 elements)
-                (self.write_registers, [0, inputs], {"skip_encode": True}),  # write_IN
+                (self.read_holding_registers, [0, 2], {}),  # read_IN (array of 4 elements)
+                (self.write_registers, [0, inputs_value], {"skip_encode": True}),  # write_IN
                 (self.read_input_registers, [0, 2], {})  # read_returned_x (array of 2 elements)
             ]
 
@@ -21,7 +22,8 @@ class P3Client(MbtcpClient):
 
             coil_value = random.choice([True, False])
             coil_values = random.choices([True, False],k=4)
-            input_value = random.randint(0, 50)
+            input_1 = random.randint(0, 50)
+            input_value = np.random.uniform(0, 50)
             builder.add_32bit_float(float(input_value))
             inputs_value = builder.build()
 
@@ -36,7 +38,7 @@ class P3Client(MbtcpClient):
                 (self.read_coils, [coil_addresses], {}),
                 (self.read_discrete_inputs, [di_addresses], {}),
                 (self.write_coils, [coil_addresses, coil_values], {}),
-                (self.write_register, [hr_addresses, input_value], {}),
+                (self.write_register, [hr_addresses, input_1], {}),
                 (self.write_coil, [coil_addresses, coil_value], {})]
 
             function, args, kwargs = random.choice(exception_function)
