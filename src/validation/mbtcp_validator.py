@@ -1,14 +1,16 @@
 class Validator:
 
-    def __init__(self, request, response):
+    def __init__(self, request, response, end_address):
         self.request = request
         if ":" in request:
             self.request = request[:-1]
         self.response = response
+        self._end_address = end_address
         hex_chunks_query = [self.request[i:i + 2] for i in range(0, len(self.request), 2)]
         hex_chunks_response = [self.response[i:i + 2] for i in range(0, len(self.response), 2)]
         self.query_header = hex_chunks_query[:7]
         self.query_payload = hex_chunks_query[7:]
+        self.address = int(self.query_payload[1] + self.query_payload[2], base=16)
         self.response_header = hex_chunks_response[:7]
         self.response_payload = hex_chunks_response[7:]
 
@@ -39,7 +41,11 @@ class Validator:
             # EXCEPTIONS
             if (q_fc == "01") and (r_fc == "81"):
                 return
+            elif (q_fc == "02") and (r_fc == "82"):
+                return
             elif (q_fc == "03") and (r_fc == "83"):
+                return
+            elif (q_fc == "04") and (r_fc == "84"):
                 return
             elif (q_fc == "05") and (r_fc == "85"):
                 return
@@ -51,6 +57,9 @@ class Validator:
                 return
             else:
                 raise ValueError(f"FC: {r_fc}, expected: {q_fc}")
+
+        if self.address > self._end_address:
+            raise ValueError(f"Should have thrown an exception since requested address: {self.address} exceeds: {self._end_address}")
 
         elif r_fc == q_fc:
             if fc == "01":
@@ -116,8 +125,7 @@ class Validator:
             raise ValueError(f"data_length: {data_length}, expected: {q_byte_count}")
 
     def _write_single_register(self):
-        if self.response_payload != self.query_payload:
-            raise ValueError(f"payload: {self.response_payload}, expected: {self.query_payload}")
+        self._write_single_coil()
 
     def _write_multiple_registers(self):
         q_ref = self.query_payload[1:3]
@@ -139,5 +147,5 @@ class Validator:
 
 
 if __name__ == '__main__':
-    val = Validator("00c50000000d0010a149000306000900000000", "00c500000003009002")
+    val = Validator("000100000006000100050001", "00010000000400010100", 3)
     val.check_payload()

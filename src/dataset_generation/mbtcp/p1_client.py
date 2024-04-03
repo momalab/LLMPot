@@ -9,7 +9,7 @@ class P1Client(MbtcpClient):
             temp = random.randrange(0, 50)
             cool = random.choice([True, False])
             functions = [(self.read_holding_registers, [0]),
-                         (self.write_register, [temp, 0]),
+                         (self.write_register, [0, temp]),
                          (self.read_discrete_inputs, [0]),
                          (self.write_coil, [0, cool])]
 

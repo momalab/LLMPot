@@ -6,6 +6,16 @@ from typing import List
 from cfg import CHECKPOINTS, LOGS, VALIDATION
 
 
+class ServerModel:
+    name: str
+    coils: int = 40
+    registers: int = 40
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
 class RangeModel:
     low: int
     high: int
@@ -15,31 +25,42 @@ class RangeModel:
             setattr(self, key, value)
 
     def __str__(self):
-        return f"{self.low}-{self.high}"
+        return f"{self.low}_{self.high}"
 
 
 class DatasetModel:
     protocol: str
     size: int
     client: str
-    server: str
+    server: ServerModel = None
     context: int
-    functions: List[int]
-    values: RangeModel
-    addresses: RangeModel
+    functions: List[int] = None
+    values: RangeModel = None
+    addresses: RangeModel = None
+    multi_elements: int = 3
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             if key == "values" or key == "addresses":
                 setattr(self, key, RangeModel(**value))
+            elif key == "server":
+                setattr(self, key, ServerModel(**value))
             else:
                 setattr(self, key, value)
 
     def functions_str(self):
-        return f"{'-'.join([str(x) for x in self.functions])}"
+        if self.functions:
+            return f"{'_'.join([str(x) for x in self.functions])}"
+        return ""
 
     def __str__(self):
-        return f"{self.protocol}_{self.client}_c{self.context}_f{self.functions_str()}_v{self.values}_a{self.addresses}_s{self.size}"
+        return (f"{self.protocol}-{self.client}-c{self.context}-s{self.size}" +
+                (f"-f{self.functions_str()}" if self.functions else "") +
+                (f"-v{self.values}" if self.values else "") +
+                (f"-a{self.addresses}" if self.addresses else "") +
+                (f"-sc{self.server.coils}" if self.server else "") +
+                (f"-sr{self.server.registers}" if self.server else "")
+                )
 
 
 class FinetunerModel:
@@ -49,6 +70,8 @@ class FinetunerModel:
     experiment: str
     current_dataset: DatasetModel
     datasets: [DatasetModel]
+    test: DatasetModel = None
+    experiment_filename: str = None
 
     max_epochs: int = 30
     patience: int = 10
@@ -78,6 +101,8 @@ class FinetunerModel:
         for key, value in kwargs.items():
             if key == "datasets":
                 self.datasets = [DatasetModel(**x) for x in value]
+            elif key == "test":
+                self.test = DatasetModel(**value)
             else:
                 setattr(self, key, value)
         self.checkpoints_dir = CHECKPOINTS
@@ -96,5 +121,6 @@ class FinetunerModel:
         return self.current_dataset.__str__()
 
     def get_validation_filename(self, epoch, validation_type):
-        os.makedirs(os.path.dirname(f"{VALIDATION}/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"), exist_ok=True)
-        return f"{VALIDATION}/{self.__str__()}/epoch-{epoch}_val_type-{validation_type}.jsonl"
+        path = f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/epoch-{epoch}_val_type-{validation_type}.jsonl"
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        return path

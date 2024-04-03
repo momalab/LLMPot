@@ -52,23 +52,24 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
     for dataset in finetuner_model.datasets:
         print(f'Experiment {dataset} running...')
         finetuner_model.current_dataset = dataset
-        server_class = ''.join(word.title() for word in finetuner_model.current_dataset.server.split('_'))
+        server_class = ''.join(word.title() for word in finetuner_model.current_dataset.server.name.split('_'))
         client_class = ''.join(word.title() for word in finetuner_model.current_dataset.client.split('_'))
 
-        ServerClass = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.server}"), server_class)
+        ServerClass = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.server.name}"), server_class)
         ClientClass = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.client}"), client_class)
 
         if os.path.exists(f"{DATASET_PARSED}/{dataset}.csv") and overwrite is False:
             print(f'Experiment {dataset} already exists. Skipping...')
             continue
 
-        server_inst = ServerClass(ip, port, finetuner_model.current_dataset.addresses.high, finetuner_model.current_dataset.addresses.high)
+        server_inst = ServerClass(ip, port, finetuner_model.current_dataset.server.coils, finetuner_model.current_dataset.server.registers)
 
         client_inst: MbtcpClient = ClientClass(ip, port,
                                                finetuner_model.current_dataset.size,
                                                finetuner_model.current_dataset.functions,
                                                finetuner_model.current_dataset.addresses,
-                                               finetuner_model.current_dataset.values, 3)
+                                               finetuner_model.current_dataset.values,
+                                               finetuner_model.current_dataset.multi_elements)
         client_inst.start_client()
 
         capture_thread = Process(target=capture_packets, args=[interface, port,
