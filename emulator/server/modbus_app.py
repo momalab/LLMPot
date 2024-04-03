@@ -45,12 +45,12 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
-    with open(f"{EXPERIMENTS}/mbtcp-protocol-emulation.json", "r") as cfg:
-        config = cfg.read()
-        config = json.loads(config)
-        finetuner_model = FinetunerModel(**config)
-        finetuner_model.experiment = "mbtcp-protocol-emulation.json"
-    model, tokenizer = load_model(finetuner_model)
+    # with open(f"{EXPERIMENTS}/mbtcp-protocol-emulation.json", "r") as cfg:
+    #     config = cfg.read()
+    #     config = json.loads(config)
+    #     finetuner_model = FinetunerModel(**config)
+    #     finetuner_model.experiment = "mbtcp-protocol-emulation.json"
+    # model, tokenizer = load_model(finetuner_model)
 
     def handle(self):
         asyncio.run(self.handle_async())

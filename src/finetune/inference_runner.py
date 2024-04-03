@@ -1,7 +1,10 @@
+import json
+import os
+
 import torch
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
-from cfg import CHECKPOINTS
+from cfg import CHECKPOINTS, EXPERIMENTS
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
 
@@ -10,14 +13,13 @@ def load_model(finetuner_model: FinetunerModel):
     tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
     model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
     model = Byt5LightningModule.load_from_checkpoint(
-        checkpoint_path=f"{CHECKPOINTS}/mbtcp-p1-dataset_size-context_length/"
+        checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment}/"
                         f"{finetuner_model.the_name}/"
-                        f"{finetuner_model.start_datetime}/checkpoints/mbtcp-p1-c2-1200-v1.ckpt",
+                        f"{finetuner_model.start_datetime}/checkpoints/last.ckpt",
         finetuner_model=finetuner_model,
         tokenizer=tokenizer,
         model=model,
-        val_loss_const="val_loss",
-        train_loss_const="train_loss",
+        test_dataset=None,
         device_map="cpu"
     )
     model.eval()
@@ -44,13 +46,18 @@ def predict(request: str, model, tokenizer):
 
 
 def main():
-    model, tokenizer = load_model()
-    predict("081b00000006000300620001", model, tokenizer)
-    print("Ground truth: 081b000000050003020007")
-    predict("031a00000006000300250001", model, tokenizer)
-    print("Ground truth: 031a000000050003020007")
-    predict("03c1000000060006002d0007", model, tokenizer)
-    print("Ground truth: 03c1000000060006002d0007")
+    with open(f"{EXPERIMENTS}/mbtcp-protocol-emulation.json", "r") as cfg:
+        config = cfg.read()
+        config = json.loads(config)
+        finetuner_model = FinetunerModel(**config)
+        finetuner_model.experiment = "mbtcp-protocol-emulation.json"
+        finetuner_model.current_dataset = finetuner_model.datasets[4]
+        print(finetuner_model.current_dataset)
+        finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.the_name}")[0]
+
+    model, tokenizer = load_model(finetuner_model)
+    result = predict("00610000000d00102025000306000063146314", model, tokenizer)
+    print(result)
 
 
 if __name__ == '__main__':

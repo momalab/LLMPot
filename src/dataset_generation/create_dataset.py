@@ -105,7 +105,7 @@ def init():
     parser.add_argument('-ip', default="localhost", type=str, required=False)
     parser.add_argument('-p', default=5020, type=int, required=False)
     parser.add_argument('-intrf', default="lo0", type=str, required=False)
-    parser.add_argument('-exp', default="mbtcp-protocol-emulation.json", type=str, required=False)
+    parser.add_argument('-exp', default="mbtcp-protocol-test.json", type=str, required=False)
     parser.add_argument('-o', default=True, type=bool, required=False)
     args = parser.parse_args()
 

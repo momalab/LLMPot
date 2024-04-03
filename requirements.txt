@@ -31,3 +31,4 @@ motor~=3.3.2
 Flask[async]~=3.0.2
 pydantic~=2.5.2
 tensorflow~=2.16.1
+sentencepiece

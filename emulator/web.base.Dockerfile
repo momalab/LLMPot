@@ -4,6 +4,7 @@ WORKDIR /app
 COPY ./emulator /app
 COPY ./src /app
 
+RUN apt-get install gunicorn
 RUN pip install -r requirements_web.txt
 
 ENV PYTHONPATH /app
