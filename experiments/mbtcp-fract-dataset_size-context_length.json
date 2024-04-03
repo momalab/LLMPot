@@ -10,126 +10,162 @@
       "protocol": "mbtcp",
       "size": 1200,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 0
     },
     {
       "protocol": "mbtcp",
       "size": 1200,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 1
     },
     {
       "protocol": "mbtcp",
       "size": 1200,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },      
       "context": 2
     },
     {
       "protocol": "mbtcp",
       "size": 1200,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 4
     },
     {
       "protocol": "mbtcp",
       "size": 1200,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 6
     },
     {
       "protocol": "mbtcp",
       "size": 1200,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 8
     },
     {
       "protocol": "mbtcp",
       "size": 2400,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 0
     },
     {
       "protocol": "mbtcp",
       "size": 2400,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 1
     },
     {
       "protocol": "mbtcp",
       "size": 2400,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 2
     },
     {
       "protocol": "mbtcp",
       "size": 2400,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 4
     },
     {
       "protocol": "mbtcp",
       "size": 2400,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 6
     },
     {
       "protocol": "mbtcp",
       "size": 2400,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 8
     },
     {
       "protocol": "mbtcp",
       "size": 3600,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 0
     },
     {
       "protocol": "mbtcp",
       "size": 3600,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 1
     },
     {
       "protocol": "mbtcp",
       "size": 3600,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 2
     },
     {
       "protocol": "mbtcp",
       "size": 3600,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 4
     },
     {
       "protocol": "mbtcp",
       "size": 3600,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 6
     },
     {
       "protocol": "mbtcp",
       "size": 3600,
       "client": "fract",
-      "server": "no_logic_server",
+      "server": {
+        "name": "no_logic_server"
+      },
       "context": 8
     }
   ]
