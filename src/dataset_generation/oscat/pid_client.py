@@ -15,7 +15,6 @@ class P3Client(MbtcpClient):
                 (self.read_holding_registers, [0, 2], {}),  # read_IN (array of 2 elements)
                 (self.write_registers, [0, inputs], {"skip_encode": True}),  # write_IN
                 (self.read_input_registers, [0, 2], {})  # read_returned_x (array of 2 elements)
-                (self.read_input_registers, [0, 2], {})  # read_returned_x
             ]
 
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
