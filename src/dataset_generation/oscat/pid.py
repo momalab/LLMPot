@@ -10,9 +10,9 @@ class P3Client(MbtcpClient):
         for _ in range(int(self._samples_num / 5)):
             input = random.randint(0, 50)
             functions = [
-                (self.read_holding_registers, [0, 1]),  # read_IN
+                (self.read_holding_registers, [0, 1]),  # read_IN (array of 1 elements)
                 (self.write_register, [0, input]),  # write_IN
-                (self.read_input_registers, [0, 2])  # read_returned_x (array of 2 elements)
+                (self.read_input_registers, [0, 2])  # read_returned_x
             ]
 
             coil_value = random.choice([True, False])
