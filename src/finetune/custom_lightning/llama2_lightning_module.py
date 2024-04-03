@@ -12,6 +12,7 @@ from finetune.model.finetuner_model import FinetunerModel
 from validation.mbtcp_validator import Validator
 from validation.model.result import Result
 
+ #check lines 121,134
 
 class Llama2LightningModule(LightningModule):
 
@@ -74,16 +75,113 @@ class Llama2LightningModule(LightningModule):
         self.log("accuracy/micro", micro, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
         self.log("accuracy/none", exactly, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
 
+    def on_test_end(self) -> None:
+            micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
+            none = torch.tensor(self._accuracy_exactly, dtype=torch.float, device=self.device)
+            dist.all_reduce(micro, op=dist.ReduceOp.SUM)
+            dist.all_reduce(none, op=dist.ReduceOp.SUM)
+            micro = torch.mean(micro)
+            none = torch.mean(none)
+            micro /= dist.get_world_size()
+            none /= dist.get_world_size()
+
+            if self.global_rank == 0:
+                self.logger.experiment.add_scalars('accuracy', {'none': none, 'micro': micro}, self.current_epoch)
+
+            self._accuracy = []
+            self._accuracy_exactly = []
 
     def configure_optimizers(self):
         return AdamW(self.parameters(), lr=0.0001)
 
-    def on_train_epoch_end(self):
-        path = (f"{self._output_dir}/epoch-{self.current_epoch}")
-        if self._save_only_last_epoch:
-            if self.current_epoch == self.trainer.max_epochs - 1:
-                self._tokenizer.save_pretrained(path)
-                self._model.save_pretrained(path)
-        else:
-            self._tokenizer.save_pretrained(path)
-            self._model.save_pretrained(path)
+    def test_dataloader(self) -> DataLoader:
+        return DataLoader(self._test_dataset, batch_size=self._finetuner_model.batch_size,
+                          shuffle=False, num_workers=2, sampler=DistributedSampler(self._test_dataset))
+
+    def on_train_epoch_end(self) -> None:
+        test_set: DataLoader = self.test_dataloader()
+        self.model.eval()
+
+        for batch in test_set:
+            self.test_step(batch, self._finetuner_model.batch_size)
+
+        self.on_test_end()
+
+        self.model.train()
+
+    @property
+    def model(self):
+        return self._model
+
+    @property
+    def tokenizer(self):
+        return self._tokenizer
+    
+    def generate(self, input_str: str):
+        input_ids = self._tokenizer.encode(input_str, return_tensors="pt", add_special_tokens=True).to(self.model.device)
+        with torch.no_grad():
+            output = self.model.generate(input_ids,
+                                         num_beams=2,
+                                         max_length=self._finetuner_model.target_max_token_len,
+                                         repetition_penalty=2.5,
+                                         length_penalty=1.0,
+                                         early_stopping=True,
+                                         top_p=0.95,
+                                         top_k=50,
+                                         num_return_sequences=1,
+                                         do_sample=True
+                                         )
+           
+            return self._tokenizer.batch_decode(output, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+    def validate_wrapper(self, args):
+        batch, result_file_path, validation_type = args
+        self.validate(batch, result_file_path, validation_type)
+
+    def validate(self, batch: dict, result_file_path: str, validation_type: str) -> float:
+        valid = 0
+        batch_size = len(batch['request'])
+        with open(result_file_path, "a") as result_file:
+            for request, response in zip(batch["request"], batch["response"]):
+                to_save = Result()
+                context = ""
+                question = ""
+                expected_response = response
+                try:
+                    question = request
+                    response = self.generate(question)
+
+                    if "|" in request:
+                        question = request[request.rindex("|") + 1:len(request)]
+                        context = request[:request.rindex("|")]
+
+                    self.validate_choice(validation_type, question, response, expected_response)
+
+                    to_save.valid = True
+
+                except ValueError as exception:
+                    to_save.valid = False
+                    to_save.error = exception.__str__()
+                finally:
+                    if to_save.valid:
+                        valid = valid + 1
+                    to_save.context = context
+                    to_save.request = question
+                    to_save.response = response
+                    to_save.expected_response = expected_response
+                    result_file.write(json.dumps(to_save.__dict__) + "\n")
+
+        return valid / batch_size
+
+    @staticmethod
+    def validate_choice(validation_type: str, question: str, response: str, expected_response: str):
+        if response != expected_response:
+            if validation_type == "micro":
+                try:
+                    validation = Validator(question, response)
+                    validation.check_header_ids()
+                    validation.check_payload()
+                except IndexError:
+                    raise ValueError("Invalid packet.")
+            else:
+                raise ValueError("Not same as expected.") #
