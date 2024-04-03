@@ -1,0 +1,43 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 30,
+  "patience": 5,
+  "datasets": [
+    {
+      "protocol": "mbtcp",
+      "size": 1200,
+      "client": "pid_2",
+      "server": "no_logic_server",
+      "context": 1
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 1200,
+      "client": "pid_2",
+      "server": "no_logic_server",
+      "context": 2
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 1200,
+      "client": "pid_2",
+      "server": "no_logic_server",
+      "context": 4
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 1200,
+      "client": "pid_2",
+      "server": "no_logic_server",
+      "context": 6
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 1200,
+      "client": "pid_2",
+      "server": "no_logic_server",
+      "context": 8
+    }
+  ]
+}
