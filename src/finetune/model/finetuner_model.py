@@ -17,8 +17,8 @@ class ServerModel:
 
 
 class RangeModel:
-    low: int
-    high: int
+    low: int = 0
+    high: int = 65535
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
@@ -35,8 +35,8 @@ class DatasetModel:
     server: ServerModel = None
     context: int
     functions: List[int] = None
-    values: RangeModel = None
-    addresses: RangeModel = None
+    values = RangeModel()
+    addresses = RangeModel()
     multi_elements: int = 3
 
     def __init__(self, **kwargs):
