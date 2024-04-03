@@ -39,10 +39,17 @@ class DatasetModel:
     addresses = RangeModel()
     multi_elements: int = 3
 
+    has_addresses: bool = False
+    has_values: bool = False
+
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
-            if key == "values" or key == "addresses":
+            if key == "values":
                 setattr(self, key, RangeModel(**value))
+                self.has_values = True
+            elif key == "addresses":
+                setattr(self, key, RangeModel(**value))
+                self.has_addresses = True
             elif key == "server":
                 setattr(self, key, ServerModel(**value))
             else:
@@ -56,8 +63,8 @@ class DatasetModel:
     def __str__(self):
         return (f"{self.protocol}-{self.client}-c{self.context}-s{self.size}" +
                 (f"-f{self.functions_str()}" if self.functions else "") +
-                (f"-v{self.values}" if self.values else "") +
-                (f"-a{self.addresses}" if self.addresses else "") +
+                (f"-v{self.values}" if self.has_values else "") +
+                (f"-a{self.addresses}" if self.has_addresses else "") +
                 (f"-sc{self.server.coils}" if hasattr(self.server, "coils") else "") +
                 (f"-sr{self.server.registers}" if hasattr(self.server, "registers") else "")
                 )
