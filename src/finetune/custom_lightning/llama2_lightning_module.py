@@ -130,16 +130,7 @@ class Llama2LightningModule(LightningModule):
     def generate(self, input_str: str):
         input_ids = self._tokenizer.encode(input_str, return_tensors="pt", add_special_tokens=True).to(self.model.device)
         with torch.no_grad():
-            print(type(self.model))
-            output = self.model.generate(input_ids,
-                                         generation_config=GenerationConfig(temperature=1.0, top_p=.095, top_k=50, num_beams=2),
-                                         max_length=self._finetuner_model.target_max_token_len,
-                                         repetition_penalty=2.5,
-                                         length_penalty=1.0,
-                                         early_stopping=True,
-                                         num_return_sequences=1,
-                                         do_sample=True
-                                         )
+            output = self.model.generate(input_ids, max_length=256)
            
             return self._tokenizer.batch_decode(output, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
