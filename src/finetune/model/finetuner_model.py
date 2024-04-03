@@ -1,15 +1,15 @@
 import datetime
 import os
 import time
-from typing import List
+from typing import List, Optional
 
 from cfg import CHECKPOINTS, LOGS, VALIDATION
 
 
 class ServerModel:
     name: str
-    coils: int = 40
-    registers: int = 40
+    coils: Optional[int]
+    registers: Optional[int]
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
@@ -58,8 +58,8 @@ class DatasetModel:
                 (f"-f{self.functions_str()}" if self.functions else "") +
                 (f"-v{self.values}" if self.values else "") +
                 (f"-a{self.addresses}" if self.addresses else "") +
-                (f"-sc{self.server.coils}" if self.server else "") +
-                (f"-sr{self.server.registers}" if self.server else "")
+                (f"-sc{self.server.coils}" if self.server.coils else "") +
+                (f"-sr{self.server.registers}" if self.server.registers else "")
                 )
 
 
