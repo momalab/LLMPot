@@ -5,7 +5,7 @@ import torch
 from lightning.pytorch import LightningModule
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, DistributedSampler
-from transformers import PreTrainedModel, PreTrainedTokenizer
+from transformers import PreTrainedModel, PreTrainedTokenizer, GenerationConfig
 import torch.distributed as dist
 
 from finetune.model.finetuner_model import FinetunerModel
@@ -116,18 +116,27 @@ class Llama2LightningModule(LightningModule):
     @property
     def tokenizer(self):
         return self._tokenizer
-    
+    """
+      generation_output = model.generate(
+            input_ids=input_ids,
+            generation_config=GenerationConfig(temperature=1.0, top_p=1.0, top_k=50, num_beams=1),
+            return_dict_in_generate=True,
+            output_scores=True,
+            max_new_tokens=256
+            check those attr
+
+    )
+    """
     def generate(self, input_str: str):
         input_ids = self._tokenizer.encode(input_str, return_tensors="pt", add_special_tokens=True).to(self.model.device)
         with torch.no_grad():
+            print(type(self.model))
             output = self.model.generate(input_ids,
-                                         num_beams=2,
+                                         generation_config=GenerationConfig(temperature=1.0, top_p=.095, top_k=50, num_beams=2),
                                          max_length=self._finetuner_model.target_max_token_len,
                                          repetition_penalty=2.5,
                                          length_penalty=1.0,
                                          early_stopping=True,
-                                         top_p=0.95,
-                                         top_k=50,
                                          num_return_sequences=1,
                                          do_sample=True
                                          )

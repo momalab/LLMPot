@@ -49,6 +49,7 @@ class Finetuner:
 
         self._tokenizer = self._init_tokenizer()
         self._model = self._init_model()
+        print(type(self._model))
 
         self.print_trainable_parameters()
 
@@ -64,6 +65,7 @@ class Finetuner:
     def _init_model(self) -> PreTrainedModel:
         if self._use_quantization:
             self._model = prepare_model_for_kbit_training(self._model, use_gradient_checkpointing=True)
+            print(type(self._model))
             self._model.config.use_cache = False
 
         if self._lora_config:
@@ -125,14 +127,17 @@ class Finetuner:
                               accelerator=self._finetuner_model.accelerator,
                               devices=len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")),
                               strategy="ddp",
+                              
                               )
 
             trainer.fit(self._custom_module, self._data_module)
 
     def print_trainable_parameters(self):
+        
         trainable_params = 0
         all_param = 0
         if hasattr(self._model, "named_parameters"):
+            
             for _, param in self._model.named_parameters():
                 all_param += param.numel()
                 if param.requires_grad:

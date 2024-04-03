@@ -53,4 +53,5 @@ class Llama2(Finetuner):
                                                            quantization_config=self._quantization_config,
                                                            return_dict=True,
                                                            token="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")
-        super()._init_model()
+        
+        return super()._init_model()

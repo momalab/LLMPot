@@ -3,6 +3,9 @@
   "model_name": "Llama-2-7b-hf",
   "max_epochs": 30,
   "patience": 5,
+  "batch_size" : 1,
+  "lora" : "False",
+  "quantization":"True",
   "datasets": [
     {
       "protocol": "mbtcp",
