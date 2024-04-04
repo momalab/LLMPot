@@ -3,6 +3,7 @@ WORKDIR /app
 
 COPY ./src /app/src
 COPY ./emulator /app/emulator
+COPY ./experiments /app/experiments
 
 EXPOSE 5020
 

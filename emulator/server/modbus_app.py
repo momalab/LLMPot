@@ -8,7 +8,7 @@ from beanie import init_beanie, WriteRules
 from motor.motor_asyncio import AsyncIOMotorClient
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
-from cfg import EXPERIMENTS, PROJECT_ROOT_DIR
+from cfg import EXPERIMENTS, PROJECT_ROOT_DIR, CHECKPOINTS
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
 from model.modbus.client import Client
@@ -29,7 +29,7 @@ def load_model(finetuner_model: FinetunerModel):
     tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
     model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id()).to(device)
     model = Byt5LightningModule.load_from_checkpoint(
-        checkpoint_path=f"{PROJECT_ROOT_DIR}/checkpoints/last.ckpt",
+        checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[4].__str__()}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
         finetuner_model=finetuner_model,
         tokenizer=tokenizer,
         model=model,
@@ -45,12 +45,12 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
-    # with open(f"{EXPERIMENTS}/mbtcp-protocol-emulation.json", "r") as cfg:
-    #     config = cfg.read()
-    #     config = json.loads(config)
-    #     finetuner_model = FinetunerModel(**config)
-    #     finetuner_model.experiment = "mbtcp-protocol-emulation.json"
-    # model, tokenizer = load_model(finetuner_model)
+    with open(f"{EXPERIMENTS}/mbtcp-protocol-emulation.json", "r") as cfg:
+        config = cfg.read()
+        config = json.loads(config)
+        finetuner_model = FinetunerModel(**config)
+        finetuner_model.experiment = "mbtcp-protocol-emulation.json"
+    model, tokenizer = load_model(finetuner_model)
 
     def handle(self):
         asyncio.run(self.handle_async())
