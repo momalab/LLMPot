@@ -26,6 +26,7 @@ tokenizer: LlamaTokenizerFast = AutoTokenizer.from_pretrained(
     padding_side="left",
     add_eos_token=False,
     add_bos_token=False,
+    token="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"
 )
 tokenizer.pad_token = tokenizer.eos_token
 
@@ -34,11 +35,11 @@ base_model = AutoModelForCausalLM.from_pretrained(
     # quantization_config=bnb_config,
     device_map="auto",
     trust_remote_code=True,
-    use_auth_token=True,
+    token="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",
 )
 
 ft_model = PeftModel.from_pretrained(base_model,
-                                     f"{cfg.OUTPUTS_DIR}/models/meta-llama_meta-llama_Llama-2-7b-chat-hf_mbtcp-nocontext-6k_fc-3-16_epochs-30_precision-32_20231030T2130/epoch-20",
+                                     f"{cfg.CHECKPOINTS}/checkpoints/llama2-test.json/mbtcp-boundaries_client-c0-s200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40/20240404T1605/checkpoints",
                                      inference_mode=True)
 
 ft_model.eval()
