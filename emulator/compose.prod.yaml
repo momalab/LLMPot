@@ -4,7 +4,11 @@ services:
     volumes:
       - /home/chris/mongo:/data/db
 
+  web_app:
+    image: cv43nyu/allippe:web
+
   modbus_app:
+    image: cv43nyu/allippe:modbus
     deploy:
       resources:
         reservations:
