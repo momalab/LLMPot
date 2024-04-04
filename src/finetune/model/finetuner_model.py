@@ -3,13 +3,15 @@ import os
 import time
 from typing import List, Optional
 
-from cfg import CHECKPOINTS, LOGS, VALIDATION
+from cfg import CHECKPOINTS, LOGS
 
 
 class ServerModel:
     name: str
     coils: Optional[int]
     registers: Optional[int]
+    markers: Optional[int]
+    datablock: Optional[int]
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
@@ -66,7 +68,9 @@ class DatasetModel:
                 (f"-v{self.values}" if self.has_values else "") +
                 (f"-a{self.addresses}" if self.has_addresses else "") +
                 (f"-sc{self.server.coils}" if hasattr(self.server, "coils") else "") +
-                (f"-sr{self.server.registers}" if hasattr(self.server, "registers") else "")
+                (f"-sr{self.server.registers}" if hasattr(self.server, "registers") else "") +
+                (f"-sc{self.server.markers}" if hasattr(self.server, "markers") else "") +
+                (f"-sr{self.server.datablock}" if hasattr(self.server, "datablock") else "")
                 )
 
 

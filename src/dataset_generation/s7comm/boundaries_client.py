@@ -32,7 +32,7 @@ class BoundariesClient(S7Client):
 
             mk_functions_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 5 in self._codes:
-                exception_range = self.generate_exception_ranges(self._addresses, "MK")
+                exception_range = self.generate_exception_ranges(self._addresses)
                 markers_block = random.randint(0, S7Client.MAX_NUM_BLOCKS)
                 for address in exception_range:
                     mk_functions_exceptions.extend([
@@ -55,7 +55,7 @@ class BoundariesClient(S7Client):
 
             db_functions_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 6 in self._codes:
-                exception_range = self.generate_exception_ranges(self._addresses, "DB")
+                exception_range = self.generate_exception_ranges(self._addresses)
                 data_block = random.randint(0, S7Client.MAX_NUM_BLOCKS)
                 for address in exception_range:
                     random_value = random.randrange(0, S7Client.MAX_VALUE)
@@ -80,7 +80,7 @@ class BoundariesClient(S7Client):
             db_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 16 in self._codes:
                 for elements in range(1, self._max_elements):
-                    exception_range = self.generate_exception_ranges(self._addresses, "DB", elements)
+                    exception_range = self.generate_exception_ranges(self._addresses, elements)
                     combinations = self.generate_combinations(self._values, elements)
                     data_block = random.randint(1, S7Client.MAX_NUM_BLOCKS)
                     for combination in combinations.values():
@@ -107,7 +107,7 @@ class BoundariesClient(S7Client):
             mk_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 15 in self._codes:
                 for elements in range(1, self._max_elements):
-                    exception_range = self.generate_exception_ranges(self._addresses, "MK", elements)
+                    exception_range = self.generate_exception_ranges(self._addresses, elements)
                     mk_combinations = self.generate_multiple_mk_requests(self._max_elements)
                     markers_block = random.randint(1, S7Client.MAX_NUM_BLOCKS)
                     for mk_values in mk_combinations:

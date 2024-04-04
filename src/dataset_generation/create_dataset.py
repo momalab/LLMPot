@@ -9,10 +9,13 @@ from multiprocessing import Process
 
 import pyshark
 from pymodbus.server import StartTcpServer
+from snap7.server import Server
 
 from cfg import EXPERIMENTS, DATASET_PARSED
 from dataset_generation.mbtcp.client import MbtcpClient
 from dataset_generation.mbtcp.server import MbtcpServer
+from dataset_generation.s7comm.client import S7Client
+from dataset_generation.s7comm.server import S7Comm
 from dataset_generation.parse import parse_without_file
 from dataset_generation.split import split
 from finetune.model.finetuner_model import FinetunerModel

@@ -8,13 +8,13 @@
       "protocol": "s7comm",
       "size": 200,
       "functions": [1,5,15,3,6,16],
-      "values": {"low": 0, "high": 65535},
+      "values": {"low": 0, "high": 27648},
       "addresses": {"low": 0, "high": 39},
       "client": "boundaries_client",
       "server": {
         "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
+        "markers": 40,
+        "datablock": 40
       },
       "context": 0,
       "multi_elements": 3
@@ -23,13 +23,13 @@
       "protocol": "s7comm",
       "size": 400,
       "functions": [1,5,15,3,6,16],
-      "values": {"low": 0, "high": 65535},
+      "values": {"low": 0, "high": 27648},
       "addresses": {"low": 0, "high": 39},
       "client": "boundaries_client",
       "server": {
         "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
+        "markers": 40,
+        "datablock": 40
       },
       "context": 0,
       "multi_elements": 3
@@ -38,13 +38,13 @@
       "protocol": "s7comm",
       "size": 800,
       "functions": [1,5,15,3,6,16],
-      "values": {"low": 0, "high": 65535},
+      "values": {"low": 0, "high": 27648},
       "addresses": {"low": 0, "high": 39},
       "client": "boundaries_client",
       "server": {
         "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
+        "markers": 40,
+        "datablock": 40
       },
       "context": 0,
       "multi_elements": 3
@@ -53,13 +53,13 @@
       "protocol": "s7comm",
       "size": 1600,
       "functions": [1,5,15,3,6,16],
-      "values": {"low": 0, "high": 65535},
+      "values": {"low": 0, "high": 27648},
       "addresses": {"low": 0, "high": 39},
       "client": "boundaries_client",
       "server": {
         "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
+        "markers": 40,
+        "datablock": 40
       },
       "context": 0,
       "multi_elements": 3
@@ -68,13 +68,13 @@
       "protocol": "s7comm",
       "size": 3200,
       "functions": [1,5,15,3,6,16],
-      "values": {"low": 0, "high": 65535},
+      "values": {"low": 0, "high": 27648},
       "addresses": {"low": 0, "high": 39},
       "client": "boundaries_client",
       "server": {
         "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
+        "markers": 40,
+        "datablock": 40
       },
       "context": 0,
       "multi_elements": 3
@@ -83,13 +83,13 @@
       "protocol": "s7comm",
       "size": 3200,
       "functions": [1,15,3,16],
-      "values": {"low": 0, "high": 65535},
+      "values": {"low": 0, "high": 27648},
       "addresses": {"low": 0, "high": 39},
       "client": "boundaries_client",
       "server": {
         "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
+        "markers": 40,
+        "datablock": 40
       },
       "context": 0,
       "multi_elements": 3

@@ -3,8 +3,8 @@ from snap7.types import srvAreaDB, srvAreaMK
 
 
 class NoLogicServer(S7Comm):
-    def __init__(self, ip: str, port: int, mk: int = 2, db: int = 2):
-        super().__init__(ip, port, {srvAreaDB: db, srvAreaMK: mk})
+    def __init__(self, ip: str, port: int, markers: int = 2, datablock: int = 2):
+        super().__init__(ip, port, {srvAreaDB: datablock, srvAreaMK: markers})
 
 
 def main():

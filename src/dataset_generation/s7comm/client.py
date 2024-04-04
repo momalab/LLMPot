@@ -22,8 +22,7 @@ logger.addHandler(handler)
 
 
 class S7Client(Client):
-    MAX_MK_ADDRESS = 16382
-    MAX_DB_ADDRESS = 15999
+    MAX_ADDRESS = 15999
     MAX_NUM_BLOCKS = 1024
     MAX_VALUE = 27648
 
@@ -81,12 +80,8 @@ class S7Client(Client):
         return [values.low, random.randrange(values.low, values.high - elements - 1), values.high - elements]
 
     @staticmethod
-    def generate_exception_ranges(addresses: RangeModel, area_block, elements=0):
-        if area_block == "MK":
-            return [addresses.high + 1, random.randrange(addresses.high, S7Client.MAX_MK_ADDRESS - elements - 1), S7Client.MAX_MK_ADDRESS - elements]
-        if area_block == "DB":
-            return [addresses.high + 1, random.randrange(addresses.high, S7Client.MAX_DB_ADDRESS - elements - 1), S7Client.MAX_DB_ADDRESS - elements]
-
+    def generate_exception_ranges(addresses: RangeModel, elements=0):
+        return [addresses.high + 1, random.randrange(addresses.high, S7Client.MAX_ADDRESS - elements - 1), S7Client.MAX_ADDRESS - elements]
 
     def start_client(self):
         pass
