@@ -10,10 +10,10 @@ from cfg import PROJECT_ROOT_DIR
 from model.web.client import Client
 from model.web.request import Request
 from server.persistence_decorator_web import log_transport
-from utilities.logger import TheLogger
+from utilities.no_torch_logger import NoTorchLogger
 
 DIR = PROJECT_ROOT_DIR
-logger = TheLogger("web_server", f"{DIR}/logs")
+logger = NoTorchLogger("web_server", f"{DIR}/logs")
 
 app = Flask(__name__,
             static_url_path='',

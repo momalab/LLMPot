@@ -26,7 +26,11 @@ else:
     logger.info("CUDA is not available. Using CPU.")
 
 
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    pass
+
 def load_model(finetuner_model: FinetunerModel):
+    logger.info("Loading model...")
     tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
     model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id()).to(device)
     model = Byt5LightningModule.load_from_checkpoint(
@@ -37,21 +41,19 @@ def load_model(finetuner_model: FinetunerModel):
         test_dataset=None,
         map_location=device
     )
+    logger.info("Loading model... Done.")
     model.eval()
     return model, tokenizer
 
 
-class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
-    pass
-
-
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
+
     with open(f"{EXPERIMENTS}/mbtcp-protocol-emulation.json", "r") as cfg:
         config = cfg.read()
         config = json.loads(config)
         finetuner_model = FinetunerModel(**config)
         finetuner_model.experiment = "mbtcp-protocol-emulation.json"
-        finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.datasets[4].__str__()}")[0]
+        finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[4].__str__()}")[0]
     model, tokenizer = load_model(finetuner_model)
 
     def handle(self):
