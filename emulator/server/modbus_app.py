@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 import socketserver
 from datetime import datetime
 
@@ -50,6 +51,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         config = json.loads(config)
         finetuner_model = FinetunerModel(**config)
         finetuner_model.experiment = "mbtcp-protocol-emulation.json"
+        finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment_filename}/{finetuner_model.datasets[4].__str__()}")[0]
     model, tokenizer = load_model(finetuner_model)
 
     def handle(self):
