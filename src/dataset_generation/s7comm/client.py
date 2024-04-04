@@ -24,7 +24,7 @@ logger.addHandler(handler)
 class S7Client(Client):
     MAX_MK_ADDRESS = 16382
     MAX_DB_ADDRESS = 15999
-    # MAX_NUM_BLOCKS = 1024
+    MAX_NUM_BLOCKS = 1024
     MAX_VALUE = 27648
 
     def __init__(self, ip: str, port: int, samples_num: int, codes: List[int]):
