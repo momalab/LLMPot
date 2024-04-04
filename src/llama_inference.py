@@ -13,7 +13,7 @@ args = parser.parse_args()
 
 checkpoint = args.c
 
-base_model_id = "meta-llama/Llama-2-7b-chat-hf"
+base_model_id = "meta-llama/Llama-2-7b-hf"
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,
@@ -26,6 +26,7 @@ tokenizer: LlamaTokenizerFast = AutoTokenizer.from_pretrained(
     padding_side="left",
     add_eos_token=False,
     add_bos_token=False,
+    token="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"
 )
 tokenizer.pad_token = tokenizer.eos_token
 
@@ -34,10 +35,11 @@ base_model = AutoModelForCausalLM.from_pretrained(
     quantization_config=bnb_config,
     device_map="auto",
     trust_remote_code=True,
-    use_auth_token=True
+    token="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"
 )
 
-ft_model = PeftModel.from_pretrained(base_model, f"{cfg.PROJECT_ROOT_DIR}/models/meta-llama_Llama-2-7b-chat-hf_mbtcp-nocontext-6k_fc-3-16_epochs-2_precision-0_20231024T1235/checkpoint-{checkpoint}")
+# ft_model = PeftModel.from_pretrained(model=base_model,model_id="/home/hl5743/github/ICSPot/checkpoints/mbtcp-protocol-emulation.json/mbtcp-boundaries_client-c0-s200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40/20240404T1327/checkpoints")
+ft_model = PeftModel.from_pretrained("~/github/ICSPot/checkpoints/mbtcp-protocol-emulation.json/mbtcp-boundaries_client-c0-s200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40/20240404T1327/checkpoints/last.ckpt",model_id=base_model_id)
 
 ft_model.eval()
 
