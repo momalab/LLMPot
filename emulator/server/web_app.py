@@ -12,7 +12,7 @@ from model.web.request import Request
 from server.persistence_decorator_web import log_transport
 from utilities.no_torch_logger import NoTorchLogger
 
-DIR = PROJECT_ROOT_DIR
+DIR = f"{PROJECT_ROOT_DIR}/emulator"
 logger = NoTorchLogger("web_server", f"{DIR}/logs")
 
 app = Flask(__name__,

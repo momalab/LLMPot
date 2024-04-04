@@ -8,9 +8,9 @@ from flask import request
 from cfg import PROJECT_ROOT_DIR
 from model.web.client import Client
 from model.web.request import Request
-from utilities.logger import TheLogger
+from utilities.no_torch_logger import NoTorchLogger
 
-logger = TheLogger("web_server_pers", f"{PROJECT_ROOT_DIR}/logs")
+logger = NoTorchLogger("web_server_pers", f"{PROJECT_ROOT_DIR}/logs")
 
 
 def log_transport(func):

@@ -3,12 +3,17 @@ services:
   mongo:
     volumes:
       - /home/chris/mongo:/data/db
+    command: --quiet
 
   web_app:
     image: cv43nyu/allippe:web
+    volumes:
+      - /home/chris/logs/web:/app/app/logs
 
   modbus_app:
     image: cv43nyu/allippe:modbus
+    volumes:
+      - /home/chris/logs/modbus:/app/app/logs
     deploy:
       resources:
         reservations:
