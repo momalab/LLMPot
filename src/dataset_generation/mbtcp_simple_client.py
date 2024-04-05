@@ -50,12 +50,12 @@ def read_data(data_type, address, func_code, num_elements):
 
     elif func_code == 3:
         result = client.read_holding_registers(address, num_elements, unit=0x01)
-        data = ''.join(chr((value >> 8) & 0xFF) + chr(value & 0xFF) for value in result.registers)
+        # data = ''.join(chr((value >> 8) & 0xFF) + chr(value & 0xFF) for value in result.registers)
         if result.isError():
             print(f"Failed to read {num_elements} from {data_type} at {address} . Error: {result}")
         else:
             print(f"{data_type} at address {address}: {result.registers}")
-            return data.strip()
+            # return data.strip()
     elif func_code == 4:
         result = client.read_input_registers(address, num_elements, unit=0x01)
         if result.isError():
@@ -68,7 +68,7 @@ def read_data(data_type, address, func_code, num_elements):
 def write_single_data(data_type, address, single_data_to_write, func_code):
     if func_code == 5:
         result = client.write_coil(address, single_data_to_write, unit=0x01)
-    if func_code == 6:  # write holding register
+    if func_code == 6:
         result = client.write_register(address, single_data_to_write, unit=0x01)
     if result.isError():
         print(f"Failed to write {num_elements} from {data_type} at {address} . Error: {result}")
@@ -98,10 +98,10 @@ log.setLevel(logging.DEBUG)
 # while True :
 try:
 
-    # function_code, address, num_elements, data_to_write, single_data_to_write = 3, 2010, 4, 0, 1
+    function_code, address, num_elements, data_to_write, single_data_to_write = 3, 2010, 4, 0, 1
     # Example: Reading device model from registers 100 to 109
-    res = client.read_device_information()
-    print(res)
+    # res = client.read_device_information()
+    # print(res)
 
     if function_code == 1:  # Read Coils (FC 01)
         read_data("Coils", address, 1, num_elements)
