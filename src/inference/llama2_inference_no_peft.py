@@ -1,9 +1,19 @@
 import argparse
+import json
 
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaTokenizerFast
+from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaTokenizerFast, BitsAndBytesConfig
 
-import cfg
+from cfg import CHECKPOINTS, EXPERIMENTS
+from finetune.custom_lightning.llama2_lightning_module import Llama2LightningModule
+from finetune.model.finetuner_model import FinetunerModel
+
+experiment = "llama2-test.json"
+with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
+    config = cfg.read()
+    config = json.loads(config)
+    finetuner_model = FinetunerModel(**config)
+    finetuner_model.experiment = experiment
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', required=False, default="2400")
@@ -11,7 +21,7 @@ args = parser.parse_args()
 
 checkpoint = args.c
 
-base_model_id = "meta-llama/Llama-2-7b-chat-hf"
+base_model_id = "meta-llama/Llama-2-7b-hf"
 tokenizer: LlamaTokenizerFast = AutoTokenizer.from_pretrained(
     base_model_id,
     padding_side="left",
@@ -19,9 +29,26 @@ tokenizer: LlamaTokenizerFast = AutoTokenizer.from_pretrained(
     add_bos_token=False,
     token="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"
 )
+
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16
+)
+
 tokenizer.pad_token = tokenizer.eos_token
-model_root_folder = f"{cfg.CHECKPOINTS}/checkpoints/llama2-test.json/mbtcp-boundaries_client-c0-s200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40/20240404T1605/checkpoints/"
-model = AutoModelForCausalLM.from_pretrained(model_root_folder, device_map="auto")
+model_root_folder = f"{CHECKPOINTS}/llama2-test.json/mbtcp-boundaries_client-c0-s200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40/20240404T1605/checkpoints/last.ckpt"
+model_base = AutoModelForCausalLM.from_pretrained(base_model_id,
+                                                  quantization_config=bnb_config,
+                                                  token="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")
+model = Llama2LightningModule.load_from_checkpoint(checkpoint_path=model_root_folder,
+                                                   finetuner_model=finetuner_model,
+                                                   tokenizer=tokenizer,
+                                                   model=model_base,
+                                                   test_dataset=None,
+                                                   map_location="cpu"
+                                                   )
 
 model.eval()
 
