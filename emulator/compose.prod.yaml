@@ -8,12 +8,12 @@ services:
   web_app:
     image: cv43nyu/allippe:web
     volumes:
-      - /home/chris/logs/web:/app/app/logs
+      - /home/chris/logs/web:/app/logs
 
   modbus_app:
     image: cv43nyu/allippe:modbus
     volumes:
-      - /home/chris/logs/modbus:/app/app/logs
+      - /home/chris/logs/modbus:/app/logs
     deploy:
       resources:
         reservations:
