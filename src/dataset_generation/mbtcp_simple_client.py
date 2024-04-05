@@ -8,11 +8,20 @@ import pdb
 
 # 1: dataset size (# of samples), 2: if 0 no context else 1 with context
 
-SERVER_HOST = "localhost"
+SERVER_HOST = "10.224.33.30"
 
-client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 5020)
+client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 502)
 
 random.seed(1111)
+
+def read_ascii_from_registers(client, start_address, num_registers):
+    response = client.read_holding_registers(start_address, num_registers)
+    if response.isError():
+        print("Error reading registers")
+        return None
+    # Combine register values and convert to ASCII
+    data = ''.join(chr((value >> 8) & 0xFF) + chr(value & 0xFF) for value in response.registers)
+    return data.strip()
 
 
 def generate_random_request():
@@ -41,10 +50,12 @@ def read_data(data_type, address, func_code, num_elements):
 
     elif func_code == 3:
         result = client.read_holding_registers(address, num_elements, unit=0x01)
+        data = ''.join(chr((value >> 8) & 0xFF) + chr(value & 0xFF) for value in result.registers)
         if result.isError():
             print(f"Failed to read {num_elements} from {data_type} at {address} . Error: {result}")
         else:
             print(f"{data_type} at address {address}: {result.registers}")
+            return data.strip()
     elif func_code == 4:
         result = client.read_input_registers(address, num_elements, unit=0x01)
         if result.isError():
@@ -87,7 +98,10 @@ log.setLevel(logging.DEBUG)
 # while True :
 try:
 
-    function_code, address, num_elements, data_to_write, single_data_to_write = 1, 65500, 1, 0, 1
+    # function_code, address, num_elements, data_to_write, single_data_to_write = 3, 2010, 4, 0, 1
+    # Example: Reading device model from registers 100 to 109
+    res = client.read_device_information()
+    print(res)
 
     if function_code == 1:  # Read Coils (FC 01)
         read_data("Coils", address, 1, num_elements)
@@ -97,6 +111,8 @@ try:
 
     elif function_code == 3:  # Read Holding Registers (FC 03)
         res = read_data("Holding Registers", address, 3, num_elements)
+        # device_model = read_ascii_from_registers(client, address, num_elements)
+        # print(f"Device Model: {device_model}")
 
     elif function_code == 4:  # Read Input Registers (FC 04)
         res = read_data("Input Registers", address, 4, num_elements)

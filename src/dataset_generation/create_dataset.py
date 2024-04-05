@@ -24,7 +24,7 @@ packets = []
 
 
 def append_to_list(packet):
-    if hasattr(packet, 'mbtcp_raw'):
+    if hasattr(packet, 'tpkt_raw'):
         packets.append(packet)
 
 
@@ -106,9 +106,9 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
 def init():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", type=str, required=False)
-    parser.add_argument('-p', default=5020, type=int, required=False)
-    parser.add_argument('-intrf', default="lo0", type=str, required=False)
-    parser.add_argument('-exp', default="mbtcp-protocol-test.json", type=str, required=False)
+    parser.add_argument('-p', default=102, type=int, required=False)
+    parser.add_argument('-intrf', default="lo", type=str, required=False)
+    parser.add_argument('-exp', default="s7comm-protocol-test.json", type=str, required=False)
     parser.add_argument('-o', default=True, type=bool, required=False)
     args = parser.parse_args()
 
