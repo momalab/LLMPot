@@ -49,7 +49,7 @@ class Finetuner:
 
         self._tokenizer = self._init_tokenizer()
         self._model = self._init_model()
-        print(type(self._model))
+        
 
         self.print_trainable_parameters()
 
@@ -65,7 +65,6 @@ class Finetuner:
     def _init_model(self) -> PreTrainedModel:
         if self._use_quantization:
             self._model = prepare_model_for_kbit_training(self._model, use_gradient_checkpointing=True)
-            print(type(self._model))
             self._model.config.use_cache = False
 
         if self._lora_config:
@@ -131,6 +130,7 @@ class Finetuner:
                               )
 
             trainer.fit(self._custom_module, self._data_module)
+        trainer.model.save_pretrained("/home/hl5743/github/ICSPot/checkpoints/llama-2-testing.json/mbtcp-boundaries_client-c0-s200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40/20240404T2006/checkpoints/")
 
     def print_trainable_parameters(self):
         

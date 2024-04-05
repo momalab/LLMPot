@@ -35,6 +35,6 @@ def main(experiment: str):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-cfg', default="mbtcp-protocol-emulation.json", required=False)
+    parser.add_argument('-cfg', default="llama-2-testing.json", required=False)
     args = parser.parse_args()
     main(args.cfg)

@@ -37,10 +37,15 @@ base_model = AutoModelForCausalLM.from_pretrained(
     trust_remote_code=True,
     token="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"
 )
+#we should use trainer.model.save_pretrained
+#ft_model = PeftModel.from_pretrained(model=base_model,model_id=base_model_id)
+checkpoint_path = "/home/hl5743/github/ICSPot/checkpoints/llama-2-testing.json/mbtcp-boundaries_client-c0-s200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40/20240404T2158/checkpoints/"
 
-# ft_model = PeftModel.from_pretrained(model=base_model,model_id="/home/hl5743/github/ICSPot/checkpoints/mbtcp-protocol-emulation.json/mbtcp-boundaries_client-c0-s200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40/20240404T1327/checkpoints")
-ft_model = PeftModel.from_pretrained("~/github/ICSPot/checkpoints/mbtcp-protocol-emulation.json/mbtcp-boundaries_client-c0-s200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40/20240404T1327/checkpoints/last.ckpt",model_id=base_model_id)
-
+# Load the PeftModel for inference
+ft_model = PeftModel.from_pretrained(
+    base_model,
+    checkpoint_path
+)
 ft_model.eval()
 
 
