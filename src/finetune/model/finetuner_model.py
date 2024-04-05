@@ -20,7 +20,7 @@ class ServerModel:
 
 class RangeModel:
     low: int = 0
-    high: int = 65535
+    high: int = 15999 #65535
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():

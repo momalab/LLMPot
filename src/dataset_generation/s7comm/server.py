@@ -38,8 +38,14 @@ class S7Comm:
             server.start_to(self._ip, self._port)
             print("S7comm server started")
             server.get_status()
+        except Exception as e:
+            logging.error(f"Failed to start server: {e}")
+            raise
+            # self._update_control_logic()
 
-            self._update_control_logic()
+        try:
+            while True:
+                continue
         except KeyboardInterrupt:
             print("Server stopped by user.")
             server.stop()

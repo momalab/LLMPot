@@ -106,7 +106,7 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
 
 def init():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-ip', default="127.0.0.1", type=str, required=False)
+    parser.add_argument('-ip', default="localhost", type=str, required=False)
     parser.add_argument('-p', default=10200, type=int, required=False)
     parser.add_argument('-intrf', default="lo", type=str, required=False)
     parser.add_argument('-exp', default="s7comm-protocol-test.json", type=str, required=False)
