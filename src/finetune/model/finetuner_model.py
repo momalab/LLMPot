@@ -135,3 +135,11 @@ class FinetunerModel:
         path = f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/epoch-{epoch}_val_type-{validation_type}.jsonl"
         os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
+
+    @property
+    def s7comm_args(self):
+        return self.current_dataset.server.markers, self.current_dataset.server.datablock
+
+    @property
+    def mbtcp_args(self):
+        return self.current_dataset.server.coils, self.current_dataset.server.registers

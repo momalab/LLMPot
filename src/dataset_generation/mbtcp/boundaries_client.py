@@ -1,9 +1,8 @@
 import random
 from typing import List, Callable, Any
 
-from pymodbus.mei_message import ReadDeviceInformationRequest
-
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
+from dataset_generation.utils import value_generator
 from finetune.model.finetuner_model import RangeModel
 
 
@@ -25,7 +24,7 @@ class BoundariesClient(MbtcpClient):
 
             coil_functions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 5 in self._codes:
-                address_range = self.generate_triplet_value(self._addresses)
+                address_range = value_generator.generate_triplet_value(self._addresses)
                 for address in address_range:
                     coil_functions.extend([
                         (self.write_coil, [address, True], []),
@@ -36,7 +35,7 @@ class BoundariesClient(MbtcpClient):
 
             coil_functions_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 5 in self._codes:
-                exception_range = self.generate_exception_ranges(self._addresses)
+                exception_range = value_generator.generate_exception_ranges(self._addresses, MbtcpClient.MAX_ADDRESS)
                 for address in exception_range:
                     coil_functions_exceptions.extend([
                         (self.read_coils, [address, 1], []),
@@ -46,16 +45,16 @@ class BoundariesClient(MbtcpClient):
 
             register_functions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 6 in self._codes:
-                address_range = self.generate_triplet_value(self._addresses)
+                address_range = value_generator.generate_triplet_value(self._addresses)
                 for address in address_range:
                     register_functions.extend([
-                        (self.write_register, [address, self.generate_random_value(self._values)], []),
+                        (self.write_register, [address, value_generator.generate_random_value(self._values)], []),
                         (self.read_holding_registers, [address, 1], []),
                     ])
 
             register_functions_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 6 in self._codes:
-                exception_range = self.generate_exception_ranges(self._addresses)
+                exception_range = value_generator.generate_exception_ranges(self._addresses, MbtcpClient.MAX_ADDRESS)
                 for address in exception_range:
                     register_functions_exceptions.extend([
                         (self.write_register, [address, random.randrange(0, MbtcpClient.MAX_REG_VALUE)], []),
@@ -65,9 +64,9 @@ class BoundariesClient(MbtcpClient):
             register_functions_multiple: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 16 in self._codes:
                 for elements in range(1, self._max_elements):
-                    address_range = self.generate_triplet_value(self._addresses, elements)
+                    address_range = value_generator.generate_triplet_value(self._addresses, elements)
                     for address in address_range:
-                        combinations = self.generate_combinations(self._values, elements)
+                        combinations = value_generator.generate_combinations(self._values, elements)
                         for combination in combinations.values():
                             register_functions_multiple.extend([
                                 (self.write_registers, [address, combination], []),
@@ -77,8 +76,8 @@ class BoundariesClient(MbtcpClient):
             register_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 16 in self._codes:
                 for elements in range(1, self._max_elements):
-                    exception_range = self.generate_exception_ranges(self._addresses, elements)
-                    combinations = self.generate_combinations(self._values, elements)
+                    exception_range = value_generator.generate_exception_ranges(self._addresses, MbtcpClient.MAX_ADDRESS, elements)
+                    combinations = value_generator.generate_combinations(self._values, elements)
                     for combination in combinations.values():
                         for address in exception_range:
                             register_functions_multiple_exceptions.extend([
@@ -89,9 +88,9 @@ class BoundariesClient(MbtcpClient):
             coils_functions_multiple: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 15 in self._codes:
                 for elements in range(1, self._max_elements):
-                    address_range = self.generate_triplet_value(self._addresses, elements)
+                    address_range = value_generator.generate_triplet_value(self._addresses, elements)
                     for address in address_range:
-                        coils_combinations = self.generate_multiple_coil_requests(elements)
+                        coils_combinations = value_generator.generate_multiple_requests(elements, [True, False])
                         for coil_values in coils_combinations:
                             coils_functions_multiple.extend([
                                 (self.write_coils, [address, coil_values], []),
@@ -101,8 +100,8 @@ class BoundariesClient(MbtcpClient):
             coils_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 15 in self._codes:
                 for elements in range(1, self._max_elements):
-                    exception_range = self.generate_exception_ranges(self._addresses, elements)
-                    coils_combinations = self.generate_multiple_coil_requests(self._max_elements)
+                    exception_range = value_generator.generate_exception_ranges(self._addresses, MbtcpClient.MAX_ADDRESS, elements)
+                    coils_combinations = value_generator.generate_multiple_requests(self._max_elements, [True, False])
                     for coil_values in coils_combinations:
                         for address in exception_range:
                             coils_functions_multiple_exceptions.extend([

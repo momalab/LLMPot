@@ -1,13 +1,12 @@
 import argparse
-import itertools
-import random
+import logging
+import sys
+import time
 from typing import Tuple, List
+
 from snap7.client import Client
 from snap7.types import Areas
 from snap7.util import get_word, get_bool
-
-import logging
-import sys
 
 from finetune.model.finetuner_model import RangeModel
 
@@ -54,44 +53,38 @@ class S7Client(Client):
                     logger.info(f"Data at {block_num} is: {get_bool(value, 0, 0)}")
                 if block_name == Areas.DB:
                     logger.info(f"Data at {block_num} is: {get_word(value, 0)}")
-        except RuntimeError:
-            logger.error("----- Exception -----")
-        except IndexError:
-            logger.error("----- Exception -----")
-
-    @staticmethod
-    def generate_random_value(values: RangeModel, elements=0):
-        return random.randrange(values.low, values.high - elements)
-
-    @staticmethod
-    def generate_multiple_mk_requests(elements):
-        mk_value = [bytearray([0b00000001]), bytearray([0b00000000])]
-        return itertools.product(mk_value, repeat=elements + 1)
-
-    @staticmethod
-    def generate_combinations(values: RangeModel, elements):
-        nums = [values.low, random.randrange(values.low + 1, values.high - elements - 1), values.high - elements]
-
-        combinations = itertools.product(nums, repeat=elements + 1)
-        return {i: list(t) for i, t in enumerate(combinations)}
-
-    @staticmethod
-    def generate_triplet_value(values: RangeModel, elements=0):
-        return [values.low, random.randrange(values.low, values.high - elements - 1), values.high - elements]
-
-    @staticmethod
-    def generate_exception_ranges(addresses: RangeModel, elements=0):
-        return [addresses.high + 1, random.randrange(addresses.high, S7Client.MAX_ADDRESS - elements - 1), S7Client.MAX_ADDRESS - elements]
+        except Exception as e:
+            logger.error(f"Exception: {e}")
 
     def start_client(self):
         pass
+
+    def execute_functions(self):
+        time.sleep(2)
+        i = 0
+        print(len(self._functions))
+        print(len(self._functions))
+        print(len(self._functions))
+        print(len(self._functions))
+        for function, args, kwargs in self._functions:
+            try:
+                response = function(*args, *kwargs)
+                i += 1
+                if not response:
+                    print(f"Not received response to request: {function} and {args}")
+            except Exception as e:
+                i += 1
+                print(f"{i} -- Failed to execute function: {function.__name__} with args: {args}, exception: {e}")
+            time.sleep(0.1)
+            # if function.__name__ == self.write_area.__name__:
+            #     time.sleep(0.05)
 
 
 def retrieve_args() -> Tuple[str, int, int]:
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="127.0.0.1", required=False)
-    parser.add_argument('-p', default=10200, required=False)
-    parser.add_argument('-num', default=5, required=False)
+    parser.add_argument('-p', default=10200, type=int, required=False)
+    parser.add_argument('-num', default=100, type=int, required=False)
     args = parser.parse_args()
 
     return args.ip, int(args.p), int(args.num)

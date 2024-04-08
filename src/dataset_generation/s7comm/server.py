@@ -11,6 +11,7 @@ class S7Comm:
         self._ip = ip
         self._port = port
         self._block_dict = block_dict
+        setup_logging()
 
         for block_code, size in block_dict.items():
             for index in range(size):
@@ -20,7 +21,6 @@ class S7Comm:
                     setattr(self, f"_MKdata_{index}", (wordlen_to_ctypes[WordLen.Byte.value] * 2)())
 
     def start(self):
-        setup_logging()
         logging.info("Starting S7comm Server..")
         server = Server()
         try:
@@ -37,11 +37,10 @@ class S7Comm:
 
             server.start_to(self._ip, self._port)
             print("S7comm server started")
-            server.get_status()
+            self._update_control_logic()
         except Exception as e:
             logging.error(f"Failed to start server: {e}")
             raise
-            # self._update_control_logic()
 
         try:
             while True:

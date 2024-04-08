@@ -20,17 +20,17 @@ from finetune.model.finetuner_model import FinetunerModel
 
 
 def parse_packets(port: int, protocol: str, context_length: int, output_filename: str):
-    parse_with_file(protocol, protocol, port, "temp.pcap", output_filename, context_length)
+    if protocol == "s7comm":
+        parse_with_file(protocol, "tpkt", port, "temp", output_filename, context_length)
+    else:
+        parse_with_file(protocol, protocol, port, "temp", output_filename, context_length)
     split(output_filename)
 
 
 def server(ip: str, port: int, server_inst: Any):
-    if isinstance(server_inst, S7Comm):
-        server_inst.start()
-    elif isinstance(server_inst, MbtcpServer):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        StartTcpServer(context=server_inst._context, address=(ip, port))
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    StartTcpServer(context=server_inst._context, address=(ip, port))
 
 
 async def main(ip: str, port: int, interface: str, experiment: str, overwrite: bool = False):
@@ -42,7 +42,7 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
 
     for dataset in finetuner_model.datasets:
         print(f'Experiment {dataset} running...')
-        pr = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
+        tcpdump_process = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
 
         finetuner_model.current_dataset = dataset
         server_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.server.name.split('_'))
@@ -57,9 +57,19 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
         elif overwrite:
             print(f'Experiment {dataset} already exists. Overwriting...')
 
+        args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
+        server_inst = server_class(ip, port, *args)
 
-        server_inst = server_class(ip, port, finetuner_model.current_dataset.server.coils, finetuner_model.current_dataset.server.registers)
-        # server_inst = ServerClass(ip, port, finetuner_model.current_dataset.server.markers, finetuner_model.current_dataset.server.datablock)
+        server_thread = None
+        update_thread = None
+        if isinstance(server_inst, MbtcpServer):
+            server_thread = Process(target=server, args=[ip, port, server_inst], daemon=True)
+            server_thread.start()
+
+            update_thread = Process(target=server_inst._update_control_logic, daemon=True)
+            update_thread.start()
+
+        time.sleep(5)
 
         client_inst = client_class(ip, port,
                                    finetuner_model.current_dataset.size,
@@ -68,45 +78,37 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
                                    finetuner_model.current_dataset.values,
                                    finetuner_model.current_dataset.multi_elements)
 
-        if isinstance(server_inst, MbtcpServer):
-            server_thread = Process(target=server, args=[ip, port, server_inst], daemon=True)
-            server_thread.start()
-        elif isinstance(server_inst, S7Comm):
-            server(ip, port, server_inst)
-
-        update_thread = None
-        if isinstance(server_inst, MbtcpServer):
-            update_thread = Process(target=server_inst._update_control_logic, daemon=True)
-            update_thread.start()
-
-        time.sleep(1)
-
         client_inst.start_client()
         thread = threading.Thread(target=client_inst.execute_functions, daemon=True)
         thread.start()
         thread.join()
 
+        if isinstance(server_inst, MbtcpServer):
+            update_thread.terminate()
+            update_thread.join()
+
+            server_thread.terminate()
+            server_thread.join()
+
         time.sleep(1)
 
-        pr.terminate()
-        pr.wait()
+        tcpdump_process.terminate()
+        tcpdump_process.wait()
 
-        parse_packets(port, finetuner_model.current_dataset.protocol,
-                      finetuner_model.current_dataset.context,
-                      dataset.__str__())
+        parse = Process(target=parse_packets, args=[port, finetuner_model.current_dataset.protocol, finetuner_model.current_dataset.context, dataset.__str__()])
+        parse.start()
 
-        update_thread.terminate()
-        update_thread.join()
+        parse.join()
 
     exit(1)
 
 
 def init():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-ip', default="localhost", type=str, required=False)
-    parser.add_argument('-p', default=5020, type=int, required=False)
+    parser.add_argument('-ip', default="127.0.0.1", type=str, required=False)
+    parser.add_argument('-p', default=10200, type=int, required=False)
     parser.add_argument('-intrf', default="lo0", type=str, required=False)
-    parser.add_argument('-exp', default="mbtcp-protocol-emulation2.json", type=str, required=False)
+    parser.add_argument('-exp', default="s7comm-protocol-test.json", type=str, required=False)
     parser.add_argument('-o', default=True, type=bool, required=False)
     args = parser.parse_args()
 
