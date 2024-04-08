@@ -16,7 +16,7 @@ from model.modbus.client import Client
 from model.modbus.request import Request
 from utilities.logger import TheLogger
 
-logger = TheLogger("modbus_server", f"{PROJECT_ROOT_DIR}/app/logs")
+logger = TheLogger("modbus_server", f"{PROJECT_ROOT_DIR}/logs")
 
 if torch.cuda.is_available():
     device = torch.device("cuda")

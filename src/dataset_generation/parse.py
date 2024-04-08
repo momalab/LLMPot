@@ -33,9 +33,7 @@ def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: in
     else:
         eval_str = [f"packet.{protocol}_raw.value"]
 
-    i = 0
     for packet in tqdm(cap):
-        i += 1
         fragments = []
         for item in eval_str:
             fragments.append(eval(item))

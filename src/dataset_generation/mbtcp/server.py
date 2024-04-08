@@ -4,6 +4,7 @@ from typing import Tuple
 
 from pymodbus.datastore import ModbusServerContext, ModbusSlaveContext
 from pymodbus.datastore import ModbusSparseDataBlock
+from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.server.async_io import StartTcpServer
 
 
@@ -24,7 +25,15 @@ class MbtcpServer:
         try:
             update_logic_thread.start()
 
-            StartTcpServer(context=self._context, address=(self._ip, self._port))
+            identity = ModbusDeviceIdentification()
+            identity.VendorName = 'CODE'
+            identity.ProductCode = 'MyProductCode'
+            identity.VendorUrl = 'http://www.mycompany.com'
+            identity.ProductName = 'MyProductName'
+            identity.ModelName = 'MyModelName'
+            identity.MajorMinorRevision = '1.0'
+
+            StartTcpServer(context=self._context, identity=identity, address=(self._ip, self._port))
         except KeyboardInterrupt:
             print("Server stopped by user.")
             update_logic_thread.terminate()

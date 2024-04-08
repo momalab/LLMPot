@@ -1,6 +1,8 @@
 import random
 from typing import List, Callable, Any
 
+from pymodbus.mei_message import ReadDeviceInformationRequest
+
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
 from finetune.model.finetuner_model import RangeModel
 
@@ -15,19 +17,22 @@ class BoundariesClient(MbtcpClient):
 
     def start_client(self):
         functions = []
-        while len(functions) < (2 * self._samples_num) + 100:
+        while len(functions) < self._samples_num:
+
+            device_functions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
+            for _ in range(10):
+                device_functions.append((self.read_device_information, [], []))
 
             coil_functions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 5 in self._codes:
                 address_range = self.generate_triplet_value(self._addresses)
                 for address in address_range:
                     coil_functions.extend([
-                        (self.read_coils, [address, 1], []),
                         (self.write_coil, [address, True], []),
                         (self.read_coils, [address, 1], []),
                         (self.write_coil, [address, False], []),
+                        (self.read_coils, [address, 1], []),
                     ])
-                    coil_functions.append((self.read_coils, [address, 1], []))
 
             coil_functions_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 5 in self._codes:
@@ -43,22 +48,18 @@ class BoundariesClient(MbtcpClient):
             if 3 in self._codes and 6 in self._codes:
                 address_range = self.generate_triplet_value(self._addresses)
                 for address in address_range:
-                    single_data_to_write = self.generate_triplet_value(self._values)
-                    for data in single_data_to_write:
-                        register_functions.extend([
-                            (self.read_holding_registers, [address, 1], []),
-                            (self.write_register, [address, data], []),
-                        ])
-                    register_functions.append((self.read_holding_registers, [address, 1], []))
+                    register_functions.extend([
+                        (self.write_register, [address, self.generate_random_value(self._values)], []),
+                        (self.read_holding_registers, [address, 1], []),
+                    ])
 
             register_functions_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 6 in self._codes:
                 exception_range = self.generate_exception_ranges(self._addresses)
                 for address in exception_range:
-                    random_value = random.randrange(0, MbtcpClient.MAX_REG_VALUE)
                     register_functions_exceptions.extend([
+                        (self.write_register, [address, random.randrange(0, MbtcpClient.MAX_REG_VALUE)], []),
                         (self.read_holding_registers, [address, 1], []),
-                        (self.write_register, [address, random_value], []),
                     ])
 
             register_functions_multiple: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
@@ -69,10 +70,9 @@ class BoundariesClient(MbtcpClient):
                         combinations = self.generate_combinations(self._values, elements)
                         for combination in combinations.values():
                             register_functions_multiple.extend([
-                                (self.read_holding_registers, [address, elements], []),
-                                (self.write_registers, [address, combination], [])
+                                (self.write_registers, [address, combination], []),
+                                (self.read_holding_registers, [address, elements], [])
                             ])
-                        register_functions_multiple.append((self.read_holding_registers, [address, elements + 1], []))
 
             register_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 16 in self._codes:
@@ -82,10 +82,9 @@ class BoundariesClient(MbtcpClient):
                     for combination in combinations.values():
                         for address in exception_range:
                             register_functions_multiple_exceptions.extend([
-                                (self.read_holding_registers, [address, elements], []),
-                                (self.write_registers, [address, combination], [])
+                                (self.write_registers, [address, combination], []),
+                                (self.read_holding_registers, [address, elements], [])
                             ])
-                        register_functions_multiple_exceptions.append((self.read_holding_registers, [exception_range[-1], elements + 1], []))
 
             coils_functions_multiple: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 15 in self._codes:
@@ -95,10 +94,9 @@ class BoundariesClient(MbtcpClient):
                         coils_combinations = self.generate_multiple_coil_requests(elements)
                         for coil_values in coils_combinations:
                             coils_functions_multiple.extend([
-                                (self.read_coils, [address, elements], []),
-                                (self.write_coils, [address, coil_values], [])
+                                (self.write_coils, [address, coil_values], []),
+                                (self.read_coils, [address, elements], [])
                             ])
-                        coils_functions_multiple.append((self.read_coils, [address, 1], []))
 
             coils_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 15 in self._codes:
@@ -108,10 +106,11 @@ class BoundariesClient(MbtcpClient):
                     for coil_values in coils_combinations:
                         for address in exception_range:
                             coils_functions_multiple_exceptions.extend([
-                                (self.read_coils, [address, elements], []),
-                                (self.write_coil, [address, coil_values], [])
+                                (self.write_coil, [address, coil_values], []),
+                                (self.read_coils, [address, elements], [])
                             ])
 
+            functions.extend(device_functions)
             functions.extend(coil_functions)
             functions.extend(coils_functions_multiple)
             functions.extend(register_functions)
@@ -122,14 +121,14 @@ class BoundariesClient(MbtcpClient):
             functions.extend(register_functions_multiple_exceptions)
 
         random.shuffle(functions)
-        functions = functions[:(2 * self._samples_num) + 100]
+        functions = functions[:self._samples_num]
         self._functions = functions
 
 
 def main():
     ip, port, samples_num = retrieve_args()
 
-    client = BoundariesClient(ip, port, samples_num, [1, 5, 15, 3, 6, 16], RangeModel(low=0, high=1), RangeModel(low=0, high=10), 2)
+    client = BoundariesClient(ip, port, samples_num, [1, 5, 15, 3, 6, 16], RangeModel(low=0, high=10), RangeModel(low=0, high=10), 2)
     client.start_client()
     client.execute_functions()
     try:
