@@ -2,6 +2,7 @@ import os
 from abc import abstractmethod
 
 import torch
+from accelerate import Accelerator
 from datasets import Dataset
 from lightning import LightningModule, LightningDataModule
 from lightning.pytorch import Trainer
@@ -50,7 +51,6 @@ class Finetuner:
         self._tokenizer = self._init_tokenizer()
         self._model = self._init_model()
 
-
         self.print_trainable_parameters()
 
     @abstractmethod
@@ -70,12 +70,11 @@ class Finetuner:
         if self._lora_config:
             self._model = get_peft_model(self._model, self._lora_config)
 
-        # if torch.cuda.device_count() > 1:
-        #     accelerator = Accelerator(gradient_accumulation_steps=2)
-        #     self._model = accelerator.prepare_model(self._model)
-        #
-        #     self._model.is_parallelizable = True
-        #     self._model.model_parallel = True
+            accelerator = Accelerator(gradient_accumulation_steps=2)
+            self._model = accelerator.prepare_model(self._model)
+
+            self._model.is_parallelizable = True
+            self._model.model_parallel = True
 
         return self._model
 
@@ -126,7 +125,6 @@ class Finetuner:
                               accelerator=self._finetuner_model.accelerator,
                               devices=len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")),
                               strategy="ddp",
-
                               )
 
             trainer.fit(self._custom_module, self._data_module)

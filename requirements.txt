@@ -5,14 +5,14 @@ pymodbus~=3.6.3
 
 transformers==4.39.1
 
-accelerate~=0.24.0
+accelerate~=0.29.1
 peft~=0.5.0
 datasets~=2.14.6
 scipy~=1.11.3
 pyarrow~=13.0.0
 lightning[extra]~=2.1.0
 numpy~=1.26.1
-bitsandbytes~=0.41.1
+bitsandbytes~=0.43.0
 
 plotly~=5.18.0
 kaleido~=0.2.1

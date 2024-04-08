@@ -24,9 +24,7 @@ def main(finetuner_model: FinetunerModel):
 
         if finetuner_model.model_type == "meta-llama":
             llama2 = Llama2(finetuner_model)
-            
             llama2.train([tensor_logger, csv_logger])
-            
         elif finetuner_model.model_type == "google":
             byt5 = Byt5(finetuner_model)
             byt5.train([tensor_logger, csv_logger])

@@ -26,17 +26,11 @@ class Llama2(Finetuner):
                                                     finetuner_model=finetuner_model,
                                                     test_dataset=dataset["test"])
 
-    # def _load_dataset(self) -> Dataset:
-    #     dataset = load_dataset('csv', data_files={
-    #         'train': f"{OUTPUTS_DIR}/datasets/train/{self._finetune_model.dataset_filename}.csv",
-    #         'val': f"{OUTPUTS_DIR}/datasets/validation/{self._finetune_model.dataset_filename}.csv",
-    #         'test': f"{OUTPUTS_DIR}/datasets/test/{self._finetune_model.dataset_filename}.csv"})
-    #     return dataset.remove_columns("Unnamed: 0")
     def _load_dataset(self) -> Dataset:
         return utilities.load_dataset.load_dataset_from_file(dataset_filename=self._finetuner_model.current_dataset)
 
     def _init_tokenizer(self) -> PreTrainedTokenizer:
-        tokenizer: LlamaTokenizerFast = LlamaTokenizer.from_pretrained(
+        tokenizer: LlamaTokenizer = LlamaTokenizer.from_pretrained(
             self._finetuner_model.base_model_id(),
             padding_side="left",
             add_eos_token=False,
@@ -51,7 +45,7 @@ class Llama2(Finetuner):
     def _init_model(self) -> PreTrainedModel:
         self._model = AutoModelForCausalLM.from_pretrained(self._finetuner_model.base_model_id(),
                                                            quantization_config=self._quantization_config,
-                                                           return_dict=True,
+                                                           device_map="auto",
                                                            token="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")
         
         return super()._init_model()
