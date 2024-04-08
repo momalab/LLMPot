@@ -1,8 +1,7 @@
-from transformers import LlamaTokenizerFast, AutoModelForCausalLM, PreTrainedTokenizer, PreTrainedModel, LlamaTokenizer
 from datasets import Dataset
-import utilities.load_dataset
+from transformers import AutoModelForCausalLM, PreTrainedTokenizer, PreTrainedModel, LlamaTokenizer
 
-from cfg import OUTPUTS_DIR
+import utilities.load_dataset
 from finetune.custom_lightning.llama2_lightning_data_module import Llama2LightningDataModule
 from finetune.custom_lightning.llama2_lightning_module import Llama2LightningModule
 from finetune.model.finetuner_model import FinetunerModel
@@ -46,6 +45,7 @@ class Llama2(Finetuner):
         self._model = AutoModelForCausalLM.from_pretrained(self._finetuner_model.base_model_id(),
                                                            quantization_config=self._quantization_config,
                                                            device_map="auto",
+                                                           ow_cpu_mem_usage=False,
                                                            token="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")
         
         return super()._init_model()

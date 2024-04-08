@@ -64,17 +64,18 @@ class Finetuner:
     @abstractmethod
     def _init_model(self) -> PreTrainedModel:
         if self._use_quantization:
+            self._model.gradient_checkpointing_enable()
             self._model = prepare_model_for_kbit_training(self._model, use_gradient_checkpointing=True)
-            self._model.config.use_cache = False
+            # self._model.config.use_cache = False
 
         if self._lora_config:
             self._model = get_peft_model(self._model, self._lora_config)
 
-            accelerator = Accelerator(gradient_accumulation_steps=2)
-            self._model = accelerator.prepare_model(self._model)
-
-            self._model.is_parallelizable = True
-            self._model.model_parallel = True
+            # accelerator = Accelerator(gradient_accumulation_steps=2)
+            # self._model = accelerator.prepare_model(self._model)
+            #
+            # self._model.is_parallelizable = True
+            # self._model.model_parallel = True
 
         return self._model
 
