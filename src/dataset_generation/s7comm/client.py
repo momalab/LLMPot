@@ -61,23 +61,15 @@ class S7Client(Client):
 
     def execute_functions(self):
         time.sleep(2)
-        i = 0
-        print(len(self._functions))
-        print(len(self._functions))
-        print(len(self._functions))
-        print(len(self._functions))
         for function, args, kwargs in self._functions:
             try:
                 response = function(*args, *kwargs)
-                i += 1
                 if not response:
                     print(f"Not received response to request: {function} and {args}")
             except Exception as e:
-                i += 1
-                print(f"{i} -- Failed to execute function: {function.__name__} with args: {args}, exception: {e}")
-            time.sleep(0.1)
-            # if function.__name__ == self.write_area.__name__:
-            #     time.sleep(0.05)
+                print(f"Error in function: {function.__name__} with args: {args}, exception: {e}")
+            if function.__name__ == self.write_area.__name__:
+                time.sleep(0.05)
 
 
 def retrieve_args() -> Tuple[str, int, int]:

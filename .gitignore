@@ -17,6 +17,7 @@ ENV/
 
 models/
 checkpoints/
+checkpoints_*/
 
 nohup.out
 outputs/datasets/dumps_old

@@ -14,7 +14,6 @@ from pymodbus.server import StartTcpServer
 from cfg import EXPERIMENTS, DATASET_PARSED, DATASET_DUMPS
 from dataset_generation.mbtcp.server import MbtcpServer
 from dataset_generation.parse import parse_with_file
-from dataset_generation.s7comm.server import S7Comm
 from dataset_generation.split import split
 from finetune.model.finetuner_model import FinetunerModel
 
@@ -100,6 +99,8 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
 
         parse.join()
 
+        os.remove(f"{DATASET_DUMPS}/temp.pcap")
+
     exit(1)
 
 
@@ -108,8 +109,8 @@ def init():
     parser.add_argument('-ip', default="127.0.0.1", type=str, required=False)
     parser.add_argument('-p', default=10200, type=int, required=False)
     parser.add_argument('-intrf', default="lo0", type=str, required=False)
-    parser.add_argument('-exp', default="s7comm-protocol-test.json", type=str, required=False)
-    parser.add_argument('-o', default=True, type=bool, required=False)
+    parser.add_argument('-exp', default="s7comm-protocol-emulation.json", type=str, required=False)
+    parser.add_argument('-o', default=False, type=bool, required=False)
     args = parser.parse_args()
 
     server_address = args.ip
