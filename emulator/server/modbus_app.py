@@ -29,6 +29,7 @@ else:
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
+
 def load_model(finetuner_model: FinetunerModel):
     logger.info("Loading model...")
     tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
@@ -56,38 +57,57 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[4].__str__()}")[0]
     model, tokenizer = load_model(finetuner_model)
 
+    def __init__(self, request, client_address, server):
+        super().__init__(request, client_address, server)
+        self.proxy_port = None
+        self.client_port = None
+        self.proxy_ip = None
+        self.client_ip = None
+
+    def setup(self):
+        header = self.request.recv(107)
+        if header.startswith(b'PROXY TCP4'):
+            parts = header.decode('ascii').split()
+            self.client_ip = parts[2]
+            self.proxy_ip = parts[3]
+            self.client_port = parts[4]
+            self.proxy_port = parts[5]
+            logger.info(f"Proxying from {self.client_ip}:{self.client_port} to {self.proxy_ip}:{self.proxy_port}")
+
     def handle(self):
         asyncio.run(self.handle_async())
 
     async def handle_async(self):
-        client_ip = self.client_address[0]
-        client_port = self.client_address[1]
+        if self.proxy_port is None:
+            self.client_ip = self.client_address[0]
+            self.client_port = self.client_address[1]
         server_port = self.server.server_address[1]
 
         incoming_raw = self.request.recv(1024)
         try:
             incoming_str = ''.join(['{:02x}'.format(byte) for byte in incoming_raw])
         except:
-            logger.error(f"IP: {client_ip}:{client_port} - Error: {incoming_raw}")
+            logger.error(f"IP: {self.client_ip}:{self.client_port} - Error: {incoming_raw}")
             incoming_str = str(incoming_raw)
 
-        logger.info(f"IP: {client_ip}:{client_port} - Incoming String: {incoming_str}, Incoming Raw: {incoming_raw}")
+        logger.info(f"RAW: {self.request}")
+        logger.info(f"IP: {self.client_ip}:{self.client_port} - Incoming String: {incoming_str}, Incoming Raw: {incoming_raw}")
 
-        client = await Client.find(Client.ip == client_ip).first_or_none()
+        client = await Client.find(Client.ip == self.client_ip).first_or_none()
         if client is None:
-            client = Client(ip=client_ip)
+            client = Client(ip=self.client_ip)
 
-        client_request = Request(client=client.id.__str__(), request=incoming_str, client_port=client_port)
+        client_request = Request(client=client.id.__str__(), request=incoming_str, client_port=self.client_port)
 
         outgoing_str = self.model.generate(incoming_str)
         try:
             outgoing_raw = bytes.fromhex(outgoing_str)
         except:
-            logger.error(f"IP: {client_ip}:{client_port} - Outgoing Error Encoding: {outgoing_str}")
+            logger.error(f"IP: {self.client_ip}:{self.client_port} - Outgoing Error Encoding: {outgoing_str}")
             outgoing_raw = bytes.fromhex(incoming_str)
             client_request.error = True
         self.request.sendall(outgoing_raw)
-        logger.info(f"IP: {client_ip}:{client_port} - Outgoing String: {outgoing_str}, Outgoing Raw: {outgoing_raw}")
+        logger.info(f"IP: {self.client_ip}:{self.client_port} - Outgoing String: {outgoing_str}, Outgoing Raw: {outgoing_raw}")
 
         client_request.response_time = datetime.now()
         client_request.response = outgoing_str
@@ -105,7 +125,7 @@ async def async_server():
 
 
 async def modbus_app():
-    client = AsyncIOMotorClient('mongo', 27017, username='root', password='root', authSource='admin')
+    client = AsyncIOMotorClient('localhost', 27017, username='root', password='root', authSource='admin')
     await init_beanie(database=client.modbus, document_models=[Client, Request], multiprocessing_mode=True)
 
     await async_server()

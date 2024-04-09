@@ -12,7 +12,7 @@ scipy~=1.11.3
 pyarrow~=13.0.0
 lightning[extra]~=2.1.0
 numpy~=1.26.1
-bitsandbytes~=0.43.0
+bitsandbytes~=0.41.0
 
 plotly~=5.18.0
 kaleido~=0.2.1

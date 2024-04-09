@@ -1,9 +1,4 @@
-FROM python:3.10-slim as model
-WORKDIR /app
-
-COPY ./checkpoints /app/checkpoints
-
-FROM model as python-base
+FROM python:3.10-slim as python-base
 WORKDIR /app
 
 COPY ./requirements.txt /app
@@ -13,6 +8,11 @@ RUN pip install -r ./requirements_modbus.txt
 
 ENV PYTHONPATH "/app/emulator:/app/src"
 ENV DOCKER_ENV "True"
+
+FROM python-base as model
+WORKDIR /app
+
+COPY ./checkpoints /app/checkpoints
 
 FROM python-base as modbus
 

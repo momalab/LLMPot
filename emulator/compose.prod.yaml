@@ -9,6 +9,10 @@ services:
     image: cv43nyu/allippe:web
     volumes:
       - /home/chris/logs/web:/app/logs
+    deploy:
+      resources:
+        limits:
+          memory: 8G
 
   modbus_app:
     image: cv43nyu/allippe:modbus
@@ -16,6 +20,8 @@ services:
       - /home/chris/logs/modbus:/app/logs
     deploy:
       resources:
+        limits:
+          memory: 8G
         reservations:
           devices:
             - driver: nvidia
