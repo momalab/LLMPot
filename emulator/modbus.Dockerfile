@@ -14,7 +14,7 @@ WORKDIR /app
 
 COPY ./checkpoints /app/checkpoints
 
-FROM python-base as modbus
+FROM model as modbus
 
 COPY ./src /app/src
 COPY ./emulator /app/emulator
