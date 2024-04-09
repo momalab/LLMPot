@@ -66,7 +66,7 @@ class Finetuner:
         if self._use_quantization:
             self._model.gradient_checkpointing_enable()
             self._model = prepare_model_for_kbit_training(self._model, use_gradient_checkpointing=True)
-            # self._model.config.use_cache = False
+            self._model.config.use_cache = False
 
         if self._lora_config:
             self._model = get_peft_model(self._model, self._lora_config)
@@ -97,7 +97,7 @@ class Finetuner:
                 load_in_4bit=True,
                 bnb_4bit_use_double_quant=True,
                 bnb_4bit_quant_type="nf4",
-                bnb_4bit_compute_dtype=torch.float16
+                bnb_4bit_compute_dtype=torch.bfloat16
             )
 
     def train(self, loggers: [Logger]):

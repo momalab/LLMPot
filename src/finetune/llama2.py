@@ -31,6 +31,7 @@ class Llama2(Finetuner):
     def _init_tokenizer(self) -> PreTrainedTokenizer:
         tokenizer: LlamaTokenizer = LlamaTokenizer.from_pretrained(
             self._finetuner_model.base_model_id(),
+            device_map="sequential",
             padding_side="left",
             add_eos_token=False,
             add_bos_token=False,
@@ -44,7 +45,7 @@ class Llama2(Finetuner):
     def _init_model(self) -> PreTrainedModel:
         self._model = AutoModelForCausalLM.from_pretrained(self._finetuner_model.base_model_id(),
                                                            quantization_config=self._quantization_config,
-                                                           device_map="auto",
+                                                           device_map="sequential",
                                                            token="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")
         
         return super()._init_model()

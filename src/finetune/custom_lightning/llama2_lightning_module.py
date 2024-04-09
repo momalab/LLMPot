@@ -60,8 +60,7 @@ class Llama2LightningModule(LightningModule):
         return loss
 
     def on_train_end(self) -> None:
-        self.tokenizer.save_pretrained({CHECKPOINTS}/self._finetuner_model.experiment)
-        self.model.save_pretrained({CHECKPOINTS}/self._finetuner_model.experiment)
+        self.model.save_pretrained(f"{CHECKPOINTS}/{self._finetuner_model.experiment}")
 
     # def test_step(self, batch, batch_size):
     #     micro = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro")
