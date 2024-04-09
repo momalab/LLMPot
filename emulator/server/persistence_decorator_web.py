@@ -22,7 +22,7 @@ def log_transport(func):
             logger.warning(request)
             logger.warning(request.environ)
             environment = request.environ
-            client_ip = environment["REMOTE_ADDR"]
+            client_ip = environment["HTTP_X_FORWARDED_FOR"]
             request_method = environment["REQUEST_METHOD"]
             request_uri = environment["RAW_URI"]
 

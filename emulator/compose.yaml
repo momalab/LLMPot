@@ -1,7 +1,6 @@
 services:
 
   modbus_app:
-    image: cv43nyu/allippe:modbus
     build:
       context: ..
       dockerfile: emulator/modbus.Dockerfile
