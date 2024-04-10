@@ -2,6 +2,7 @@ import asyncio
 import json
 import os
 import socketserver
+import time
 from datetime import datetime
 
 import torch
@@ -65,19 +66,28 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         logger.info(f"Incoming: {incoming}")
         if incoming.startswith(b'PROXY TCP4'):
             parts = incoming.decode('ascii').split()
-            logger.info(f"Incoming: {incoming.decode('ascii')}")
-            logger.info(f"Incoming: {incoming.decode('ascii').split()   }")
             client_ip = parts[2]
             proxy_ip = parts[3]
             client_port = parts[4]
             proxy_port = parts[5]
             incoming_raw = incoming.decode('ascii').split("\r\n")[1]
+            if not incoming:
+                logger.info(f"No data in incoming: {incoming}")
+                time.sleep(0.05)
+                logger.info(f"Trying second time to read request...")
+                incoming_raw = self.request.recv(1024)
+                logger.info(f"2nd time incoming: {incoming_raw}")
+                if not incoming_raw:
+                    logger.info(f"No request arrived..")
+                    return
             logger.info(f"Proxying from {client_ip}:{client_port} to {proxy_ip}:{proxy_port}")
         else:
             incoming_raw = incoming
+            logger.info(f"Incoming: {incoming_raw}")
             client_ip = self.client_address[0]
             client_port = self.client_address[1]
         server_port = self.server.server_address[1]
+
 
         try:
             incoming_str = bytes(incoming_raw, 'ascii').hex()
@@ -119,7 +129,7 @@ async def async_server():
 
 
 async def modbus_app():
-    client = AsyncIOMotorClient('mongo', 27017, username='root', password='root', authSource='admin')
+    client = AsyncIOMotorClient('localhost', 27017, username='root', password='root', authSource='admin')
     await init_beanie(database=client.modbus, document_models=[Client, Request], multiprocessing_mode=True)
 
     await async_server()
