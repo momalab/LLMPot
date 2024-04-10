@@ -23,6 +23,7 @@ PROJECT_ROOT_DIR = find_project_root(__file__)
 
 OUTPUTS_DIR = f"{PROJECT_ROOT_DIR}/outputs"
 EXPERIMENTS = f"{PROJECT_ROOT_DIR}/experiments"
+ASSETS = f"{PROJECT_ROOT_DIR}/assets"
 CHECKPOINTS = f"{PROJECT_ROOT_DIR}/checkpoints"
 LOGS = f"{OUTPUTS_DIR}/logs"
 VALIDATION = f"{OUTPUTS_DIR}/validation_data"

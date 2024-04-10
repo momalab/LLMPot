@@ -57,9 +57,9 @@ class DatasetModel:
             else:
                 setattr(self, key, value)
 
-    def functions_str(self):
+    def functions_str(self, separator="_"):
         if self.functions:
-            return f"{'_'.join([str(x) for x in self.functions])}"
+            return f"{separator.join([str(x) for x in self.functions])}"
         return ""
 
     def __str__(self):

@@ -24,7 +24,7 @@ def main():
     parser.add_argument('-p', default=32, required=False)
     parser.add_argument('-w', default=2, required=False)
     parser.add_argument('-g', default="True", required=False)
-    parser.add_argument('-val', default="micro", required=False)
+    parser.add_argument('-val', default="validator", required=False)
     args = parser.parse_args()
 
     test_set_name = args.ts
