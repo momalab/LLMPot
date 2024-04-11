@@ -41,7 +41,6 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
 
     for dataset in finetuner_model.datasets:
         print(f'Experiment {dataset} running...')
-        tcpdump_process = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
 
         finetuner_model.current_dataset = dataset
         server_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.server.name.split('_'))
@@ -55,6 +54,8 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
             continue
         elif overwrite:
             print(f'Experiment {dataset} already exists. Overwriting...')
+
+        tcpdump_process = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
 
         args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
         server_inst = server_class(ip, port, *args)
@@ -107,9 +108,9 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
 def init():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="127.0.0.1", type=str, required=False)
-    parser.add_argument('-p', default=10200, type=int, required=False)
+    parser.add_argument('-p', default=5020, type=int, required=False)
     parser.add_argument('-intrf', default="lo0", type=str, required=False)
-    parser.add_argument('-exp', default="s7comm-protocol-emulation.json", type=str, required=False)
+    parser.add_argument('-exp', default="mbtcp-protocol-emulation.json", type=str, required=False)
     parser.add_argument('-o', default=False, type=bool, required=False)
     args = parser.parse_args()
 
