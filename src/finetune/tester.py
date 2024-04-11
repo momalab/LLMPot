@@ -53,7 +53,7 @@ def main():
             for dataset in finetuner_orig_exp.datasets:
                 finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
                 model = Byt5LightningModule.load_from_checkpoint(
-                    checkpoint_path=f"{CHECKPOINTS}/{finetuner_orig_exp.experiment}/{finetuner_orig_exp.start_datetime}/checkpoints/last.ckpt",
+                    checkpoint_path=f"{CHECKPOINTS}/{finetuner_orig_exp.experiment}/{dataset}/{finetuner_orig_exp.start_datetime}/checkpoints/last.ckpt",
                     finetuner_model=finetuner_orig_exp,
                     tokenizer=tokenizer,
                     model=model_orig,
