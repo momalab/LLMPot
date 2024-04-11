@@ -82,6 +82,8 @@ class FinetunerModel:
     current_dataset: DatasetModel
     datasets: [DatasetModel]
     experiment_filename: str = None
+    test_experiment: Optional[str] = None
+    test_dataset: Optional[str] = None
 
     max_epochs: int = 30
     patience: int = 10
@@ -128,8 +130,11 @@ class FinetunerModel:
     def the_name(self):
         return self.current_dataset.__str__()
 
-    def get_validation_filename(self, epoch, validation_type):
-        path = f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/epoch-{epoch}_val_type-{validation_type}.jsonl"
+    def get_validation_filename(self, epoch: int, validation_type: str):
+        if self.test_experiment:
+            path = f"{CHECKPOINTS}/{self.test_experiment}/{self.test_dataset}/{self.start_datetime}/val_type_{validation_type}-model_{self.current_dataset.__str__()}.jsonl"
+        else:
+            path = f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/epoch-{epoch}_val_type-{validation_type}.jsonl"
         os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
