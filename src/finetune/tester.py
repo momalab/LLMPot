@@ -58,10 +58,12 @@ def main():
                               strategy="ddp")
 
             for dataset in finetuner_orig_exp.datasets:
-                finetuner_orig_exp.current_dataset = dataset
                 if os.path.exists(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/val_type_exact-model_{dataset}.jsonl"):
                     print(f"Skipping...test: {test_dataset} dataset: {dataset} already exists.")
                     continue
+
+                finetuner_orig_exp.current_dataset = dataset
+                finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
 
                 model = Byt5LightningModule.load_from_checkpoint(
                     checkpoint_path=f"{CHECKPOINTS}/{finetuner_orig_exp.experiment}/{finetuner_orig_exp.current_dataset}/{finetuner_orig_exp.start_datetime}/checkpoints/last.ckpt",
@@ -70,9 +72,6 @@ def main():
                     model=model_orig,
                     test_dataset=None)
                 model.eval()
-
-                finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
-                finetuner_orig_exp.current_dataset = dataset
 
                 trainer.test(model=model, dataloaders=dataloader)
 
