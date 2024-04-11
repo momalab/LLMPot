@@ -179,4 +179,5 @@ class Byt5LightningModule(LightningModule):
             except IndexError:
                 raise ValueError("Invalid packet.")
         else:
-            raise ValueError("Not same as expected.")
+            if response != expected_response:
+                raise ValueError("Not same as expected.")
