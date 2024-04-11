@@ -48,13 +48,13 @@ def main():
             tokenizer = ByT5Tokenizer.from_pretrained(finetuner_test.base_model_id())
             model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_test.base_model_id())
 
-            tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset, version=finetuner_test.start_datetime)
-            csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset, version=finetuner_test.start_datetime)
+            tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
+            csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
 
             trainer = Trainer(logger=[tensor_logger, csv_logger],
                               log_every_n_steps=1,
                               accelerator=finetuner_test.accelerator,
-                              devices=len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")),
+                              devices=finetuner_test.devices,
                               strategy="ddp")
 
             for dataset in finetuner_orig_exp.datasets:
