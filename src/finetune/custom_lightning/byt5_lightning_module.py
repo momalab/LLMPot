@@ -82,6 +82,7 @@ class Byt5LightningModule(LightningModule):
 
         if self.global_rank == 0:
             self.logger.experiment.add_scalars('accuracy', {'exact': none, 'validator': micro}, self.current_epoch)
+            self.logger.log_metrics({"dataset": self._finetuner_model.current_dataset.__str__()})
 
         self._accuracy = []
         self._accuracy_exactly = []
