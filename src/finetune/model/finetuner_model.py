@@ -74,6 +74,16 @@ class DatasetModel:
                 )
 
 
+class TestExperiment:
+    experiment: str
+    dataset: str
+    start_datetime: str
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
 class FinetunerModel:
     model_type: str
     model_name: str
@@ -82,8 +92,7 @@ class FinetunerModel:
     current_dataset: DatasetModel
     datasets: [DatasetModel]
     experiment_filename: str = None
-    test_experiment: Optional[str] = None
-    test_dataset: Optional[str] = None
+    test_experiment: Optional[TestExperiment] = None
 
     max_epochs: int = 30
     patience: int = 10
@@ -113,6 +122,8 @@ class FinetunerModel:
         for key, value in kwargs.items():
             if key == "datasets":
                 self.datasets = [DatasetModel(**x) for x in value]
+            elif key == "test_experiment":
+                self.test_experiment = TestExperiment(**value)
             else:
                 setattr(self, key, value)
         self.checkpoints_dir = CHECKPOINTS
@@ -132,7 +143,9 @@ class FinetunerModel:
 
     def get_validation_filename(self, epoch: int, validation_type: str):
         if self.test_experiment:
-            path = f"{CHECKPOINTS}/{self.test_experiment}/{self.test_dataset}/{self.start_datetime}/val_type_{validation_type}-model_{self.current_dataset.__str__()}.jsonl"
+            path = (f"{CHECKPOINTS}/{self.test_experiment.experiment}/{self.test_experiment.dataset}"
+                    f"/{self.test_experiment.start_datetime}"
+                    f"/val_type_{validation_type}-model_{self.current_dataset.__str__()}.jsonl")
         else:
             path = f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/epoch-{epoch}_val_type-{validation_type}.jsonl"
         os.makedirs(os.path.dirname(path), exist_ok=True)

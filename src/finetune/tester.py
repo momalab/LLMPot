@@ -14,7 +14,7 @@ from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
 from cfg import EXPERIMENTS, CHECKPOINTS, DATASET_PARSED
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
-from finetune.model.finetuner_model import FinetunerModel
+from finetune.model.finetuner_model import FinetunerModel, TestExperiment
 
 
 def main():
@@ -43,11 +43,13 @@ def main():
 
                 finetuner_orig_exp = FinetunerModel(**config_orig_experiment)
                 finetuner_orig_exp.experiment = finetuner_test.experiment_filename
-                finetuner_orig_exp.test_experiment = finetuner_test.experiment
 
             for dataset in finetuner_orig_exp.datasets:
                 finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
-                finetuner_test.start_datetime = finetuner_orig_exp.start_datetime
+                finetuner_orig_exp.test_experiment = TestExperiment(
+                    experiment=finetuner_test.experiment,
+                    dataset=finetuner_test.current_dataset.__str__(),
+                    start_datetime=finetuner_orig_exp.start_datetime)
 
                 tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
                 csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
