@@ -3,6 +3,7 @@ import json
 import os
 import traceback
 
+import pandas as pd
 import torch
 from datasets import load_dataset
 from lightning import Trainer
@@ -67,6 +68,12 @@ def main():
 
                 dataloader = DataLoader(dataset["test"], batch_size=finetuner_test.batch_size, shuffle=False, num_workers=finetuner_test.workers)
                 trainer.test(model=model, dataloaders=dataloader)
+                del model
+                del trainer
+
+                df = pd.read_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_test.start_datetime}/metrics.csv")
+                df['dataset'] = finetuner_orig_exp.current_dataset.__str__()
+                df.to_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_test.start_datetime}/metrics.csv", index=False)
 
     except:
         print(traceback.format_exc())
