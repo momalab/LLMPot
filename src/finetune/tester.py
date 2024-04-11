@@ -40,16 +40,13 @@ def main():
                 finetuner_orig_exp = FinetunerModel(**config_orig_experiment)
                 finetuner_orig_exp.experiment = finetuner_test.experiment_filename
 
+            dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{test_dataset}.csv"})
+            dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
+
+            dataloader = DataLoader(dataset["test"], batch_size=finetuner_test.batch_size, shuffle=False, num_workers=finetuner_test.workers)
+
             tokenizer = ByT5Tokenizer.from_pretrained(finetuner_test.base_model_id())
             model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_test.base_model_id())
-
-            model = Byt5LightningModule.load_from_checkpoint(
-                checkpoint_path=f"{CHECKPOINTS}/{finetuner_orig_exp.experiment}/{finetuner_orig_exp.current_dataset}/{finetuner_orig_exp.start_datetime}/checkpoints/last.ckpt",
-                finetuner_model=finetuner_orig_exp,
-                tokenizer=tokenizer,
-                model=model_orig,
-                test_dataset=None)
-            model.eval()
 
             tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset, version=finetuner_test.start_datetime)
             csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset, version=finetuner_test.start_datetime)
@@ -64,14 +61,18 @@ def main():
                 if os.path.exists(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/val_type_exact-model_{dataset}.jsonl"):
                     print(f"Skipping...test: {test_dataset} dataset: {dataset} already exists.")
                     continue
-                finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
 
+                model = Byt5LightningModule.load_from_checkpoint(
+                    checkpoint_path=f"{CHECKPOINTS}/{finetuner_orig_exp.experiment}/{finetuner_orig_exp.current_dataset}/{finetuner_orig_exp.start_datetime}/checkpoints/last.ckpt",
+                    finetuner_model=finetuner_orig_exp,
+                    tokenizer=tokenizer,
+                    model=model_orig,
+                    test_dataset=None)
+                model.eval()
+
+                finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
                 finetuner_orig_exp.current_dataset = dataset
 
-                dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{test_dataset}.csv"})
-                dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
-
-                dataloader = DataLoader(dataset["test"], batch_size=finetuner_test.batch_size, shuffle=False, num_workers=finetuner_test.workers)
                 trainer.test(model=model, dataloaders=dataloader)
 
             df = pd.read_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/{finetuner_test.start_datetime}/metrics.csv")
