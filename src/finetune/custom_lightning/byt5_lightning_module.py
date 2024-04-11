@@ -171,13 +171,12 @@ class Byt5LightningModule(LightningModule):
 
     @staticmethod
     def validate_choice(validation_type: str, question: str, response: str, expected_response: str, end_address: int):
-        if response != expected_response:
-            if validation_type == "validator":
-                try:
-                    validation = Validator(question, response, end_address)
-                    validation.check_header_ids()
-                    validation.check_payload()
-                except IndexError:
-                    raise ValueError("Invalid packet.")
-            else:
-                raise ValueError("Not same as expected.")
+        if validation_type == "validator":
+            try:
+                validation = Validator(question, response, end_address)
+                validation.check_header_ids()
+                validation.check_payload()
+            except IndexError:
+                raise ValueError("Invalid packet.")
+        else:
+            raise ValueError("Not same as expected.")
