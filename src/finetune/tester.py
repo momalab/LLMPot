@@ -54,8 +54,8 @@ def main():
                     dataset=finetuner_test.current_dataset.__str__(),
                     start_datetime=finetuner_orig_exp.start_datetime)
 
-                tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
-                csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
+                tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_orig_exp.start_datetime)
+                csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_orig_exp.start_datetime)
 
                 trainer = Trainer(logger=[tensor_logger, csv_logger],
                                   log_every_n_steps=1,
