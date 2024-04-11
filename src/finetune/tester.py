@@ -49,7 +49,7 @@ def main():
                 config_orig_experiment = cfg.read()
                 config_orig_experiment = json.loads(config_orig_experiment)
                 finetuner_orig_exp = FinetunerModel(**config_orig_experiment)
-                finetuner_orig_exp.experiment = experiment
+                finetuner_orig_exp.experiment = finetuner_test.experiment_filename
             for dataset in finetuner_orig_exp.datasets:
                 finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
                 model = Byt5LightningModule.load_from_checkpoint(
