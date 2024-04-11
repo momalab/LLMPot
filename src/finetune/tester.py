@@ -78,9 +78,9 @@ def main():
                 trainer.test(model=model, dataloaders=dataloader)
 
             df = pd.read_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_test.start_datetime}/metrics.csv")
-            for dataset in finetuner_orig_exp.datasets:
-                df.loc[df.index[-1], 'dataset'] = dataset.__str__()
-                df.to_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_test.start_datetime}/metrics2.csv", index=False)
+            for index, dataset in enumerate(finetuner_orig_exp.datasets):
+                df.loc[index, 'dataset'] = dataset.__str__()
+            df.to_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_test.start_datetime}/metrics2.csv", index=False)
 
     except:
         print(traceback.format_exc())
