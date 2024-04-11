@@ -32,10 +32,8 @@ def main():
     try:
         for test_dataset in finetuner_test.datasets:
             finetuner_test.current_dataset = test_dataset
-            if os.path.exists(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/val_type_exact-model_{test_dataset}.jsonl"):
-                print(f"Skipping...test: {test_dataset} already exists.")
-                continue
-            finetuner_test.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}")[0]
+            if os.path.exists(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}"):
+                finetuner_test.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}")[0]
 
             with open(f"{EXPERIMENTS}/{finetuner_test.experiment_filename}", "r") as cfg:
                 config_orig_experiment = cfg.read()
