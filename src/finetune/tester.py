@@ -13,7 +13,7 @@ from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
 from cfg import EXPERIMENTS, CHECKPOINTS, DATASET_PARSED
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
-from finetune.model.finetuner_model import FinetunerModel
+from finetune.model.finetuner_model import FinetunerModel, TestExperiment
 
 
 def main():
@@ -64,6 +64,7 @@ def main():
 
                 finetuner_orig_exp.current_dataset = dataset
                 finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
+                finetuner_orig_exp.test_experiment = TestExperiment(experiment=finetuner_test.experiment_filename, dataset=dataset)
 
                 model = Byt5LightningModule.load_from_checkpoint(
                     checkpoint_path=f"{CHECKPOINTS}/{finetuner_orig_exp.experiment}/{finetuner_orig_exp.current_dataset}/{finetuner_orig_exp.start_datetime}/checkpoints/last.ckpt",
