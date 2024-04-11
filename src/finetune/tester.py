@@ -4,7 +4,6 @@ import os
 import traceback
 
 import pandas as pd
-import torch
 from datasets import load_dataset
 from lightning import Trainer
 from lightning.pytorch.loggers import TensorBoardLogger
@@ -14,7 +13,7 @@ from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
 from cfg import EXPERIMENTS, CHECKPOINTS, DATASET_PARSED
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
-from finetune.model.finetuner_model import FinetunerModel, TestExperiment
+from finetune.model.finetuner_model import FinetunerModel
 
 
 def main():

@@ -54,6 +54,49 @@ class Plots:
 
             return finetuner_model
 
+    def accuracy_with_random_dataset(self):
+        dataframes = []
+        for index, dataset in enumerate(self._finetuner.datasets):
+            if not os.path.exists(f"{CHECKPOINTS}/{dataset}_metrics.csv"):
+                continue
+
+            df = pd.read_csv(f"{CHECKPOINTS}/{dataset}_metrics.csv")
+            df.loc[:, 'test_dataset'] = dataset.server.coils
+            df.loc[:, 'is_same'] = df['test_dataset'].apply(lambda x: "same" if x == 40 else "different")
+            df.loc[:, 'size'] = df['dataset'].apply(lambda x: f"{x.split('-')[3]}")
+            df.loc[:, 'functions'] = df['dataset'].apply(lambda x: f"{x.split('-')[4]}")
+            dataframes.append(df)
+        df = pd.concat(dataframes)
+        df.query("functions == 'f1_5_15_3_6_16'", inplace=True)
+        # df.query("functions == 'f1_15_3_16'", inplace=True)
+        # df.query("is_same == 'same'", inplace=True)
+        # df.query("is_same == 'same'", inplace=True)
+
+        fig = px.bar(df, x='size', y='accuracy/validator', color='is_same', barmode='group',
+                     color_discrete_sequence=['darkgreen', 'purple'])
+
+        # fig = px.bar(df, x='size', y='accuracy/exact', color='is_same', barmode='group',
+        #              color_discrete_sequence=['darkgreen', 'purple'])
+
+        fig.update_layout(
+            barmode='group',
+            title=f'Protocol: {self._protocol}, Model: {self._finetuner.model_name}, Validation: {self._metric.split("/")[1]}',
+            title_font_size=28,
+            xaxis_title='Epoch',
+            yaxis_title='Accuracy',
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=0, r=0, b=0, t=60, pad=0),
+            font=dict(family=FONT_FAMILY, size=26, color="black"),
+            xaxis=dict(showgrid=False, showline=False, type='category', categoryorder='array'),
+            yaxis=dict(showgrid=False, showline=False, range=[0, 1]),
+        )
+
+        fig.show()
+
+        os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
+        fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{self._validation_type}.png")
+
     def accuracy_per_epoch(self):
         fig = go.Figure()
         for dataset in self._finetuner.datasets:
@@ -176,6 +219,10 @@ class Plots:
 
 
 if __name__ == '__main__':
+    plot = Plots("mbtcp-protocol-test.json")
+    plot.accuracy_with_random_dataset()
+    exit()
+
     plot = Plots("s7comm-protocol-emulation.json")
     plot.accuracy_per_epoch()
     plot.loss_per_epoch()
