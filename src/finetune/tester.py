@@ -80,10 +80,10 @@ def main():
                 dataloader = DataLoader(dataset["test"], batch_size=finetuner_test.batch_size, shuffle=False, num_workers=finetuner_test.workers)
                 trainer.test(model=model, dataloaders=dataloader)
 
-            df = pd.read_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_test.start_datetime}/metrics.csv")
+            df = pd.read_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_orig_exp.start_datetime}/metrics.csv")
             for index, dataset in enumerate(finetuner_orig_exp.datasets):
                 df.loc[index, 'dataset'] = dataset.__str__()
-            df.to_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_test.start_datetime}/metrics2.csv", index=False)
+            df.to_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_orig_exp.start_datetime}/metrics2.csv", index=False)
 
     except:
         print(traceback.format_exc())
