@@ -51,12 +51,6 @@ def main():
             tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
             csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
 
-            trainer = Trainer(logger=[tensor_logger, csv_logger],
-                              log_every_n_steps=1,
-                              accelerator=finetuner_test.accelerator,
-                              devices=finetuner_test.devices,
-                              strategy="ddp")
-
             for dataset in finetuner_orig_exp.datasets:
                 if os.path.exists(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/val_type_exact-model_{dataset}.jsonl"):
                     print(f"Skipping...test: {test_dataset} dataset: {dataset} already exists.")
@@ -73,6 +67,12 @@ def main():
                     model=model_orig,
                     test_dataset=None)
                 model.eval()
+
+                trainer = Trainer(logger=[tensor_logger, csv_logger],
+                                  log_every_n_steps=1,
+                                  accelerator=finetuner_test.accelerator,
+                                  devices=finetuner_test.devices,
+                                  strategy="ddp")
 
                 trainer.test(model=model, dataloaders=dataloader)
 
