@@ -45,6 +45,9 @@ def main():
                 finetuner_orig_exp.experiment = finetuner_test.experiment_filename
 
             for dataset in finetuner_orig_exp.datasets:
+                if os.path.exists(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/val_type_exact-model_{dataset.__str__()}.jsonl"):
+                    print(f"Skipping...test: {test_dataset.__str__()} dataset: {dataset.__str__()} already exists.")
+                    continue
                 finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
                 finetuner_orig_exp.test_experiment = TestExperiment(
                     experiment=finetuner_test.experiment,
