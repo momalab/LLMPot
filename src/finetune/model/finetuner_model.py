@@ -74,16 +74,6 @@ class DatasetModel:
                 )
 
 
-class TestExperiment:
-    experiment: str
-    dataset: str
-    start_datetime: str
-
-    def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-
 class FinetunerModel:
     model_type: str
     model_name: str
@@ -92,7 +82,6 @@ class FinetunerModel:
     current_dataset: DatasetModel
     datasets: [DatasetModel]
     experiment_filename: str = None
-    test_experiment: Optional[TestExperiment] = None
 
     max_epochs: int = 30
     patience: int = 10
@@ -109,6 +98,7 @@ class FinetunerModel:
     log_output_dir: str
 
     accelerator = "gpu"
+    devices = len(os.getenv('CUDA_VISIBLE_DEVICES').split(","))
 
     validation = "both"
 
@@ -122,8 +112,6 @@ class FinetunerModel:
         for key, value in kwargs.items():
             if key == "datasets":
                 self.datasets = [DatasetModel(**x) for x in value]
-            elif key == "test_experiment":
-                self.test_experiment = TestExperiment(**value)
             else:
                 setattr(self, key, value)
         self.checkpoints_dir = CHECKPOINTS
