@@ -32,8 +32,8 @@ def main():
     try:
         for test_dataset in finetuner_test.datasets:
             finetuner_test.current_dataset = test_dataset
-            tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.new_datetime)
-            csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.new_datetime)
+            tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
+            csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
 
             trainer = Trainer(logger=[tensor_logger, csv_logger],
                               log_every_n_steps=1,
