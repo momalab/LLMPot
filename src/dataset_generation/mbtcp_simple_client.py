@@ -8,7 +8,9 @@ import pdb
 
 # 1: dataset size (# of samples), 2: if 0 no context else 1 with context
 
-SERVER_HOST = "10.224.33.30"
+# SERVER_HOST = "10.224.33.30"
+# SERVER_HOST = "91.230.41.210"
+SERVER_HOST = "localhost"
 
 client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 502)
 
@@ -98,7 +100,7 @@ log.setLevel(logging.DEBUG)
 # while True :
 try:
 
-    function_code, address, num_elements, data_to_write, single_data_to_write = 3, 2010, 4, 0, 1
+    function_code, address, num_elements, data_to_write, single_data_to_write = 1, 0, 1, 0, 1
     # Example: Reading device model from registers 100 to 109
     # res = client.read_device_information()
     # print(res)

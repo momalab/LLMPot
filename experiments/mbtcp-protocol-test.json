@@ -33,18 +33,6 @@
       "context": 0
     }
   ],
-  "test": {
-      "protocol": "mbtcp",
-      "size": 3200,
-      "functions": [1,5,15,3,6,16],
-      "values": {"low": 0, "high": 65535},
-      "addresses": {"low": 0, "high": 39},
-      "client": "boundaries_client",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 0
-    },
   "experiment_filename": "mbtcp-protocol-emulation.json"
 }
 
