@@ -72,7 +72,7 @@ def main():
                 del trainer
 
                 df = pd.read_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_test.start_datetime}/metrics.csv")
-                df['dataset'] = finetuner_orig_exp.current_dataset.__str__()
+                df.loc[df.index[-1], 'dataset'] = finetuner_orig_exp.current_dataset.__str__()
                 df.to_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset.__str__()}/{finetuner_test.start_datetime}/metrics.csv", index=False)
 
     except:
