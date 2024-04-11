@@ -81,7 +81,6 @@ class FinetunerModel:
     experiment: str
     current_dataset: DatasetModel
     datasets: [DatasetModel]
-    test: DatasetModel = None
     experiment_filename: str = None
 
     max_epochs: int = 30
@@ -112,8 +111,6 @@ class FinetunerModel:
         for key, value in kwargs.items():
             if key == "datasets":
                 self.datasets = [DatasetModel(**x) for x in value]
-            elif key == "test":
-                self.test = DatasetModel(**value)
             else:
                 setattr(self, key, value)
         self.checkpoints_dir = CHECKPOINTS
