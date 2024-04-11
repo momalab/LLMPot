@@ -58,6 +58,7 @@ def main():
                               strategy="ddp")
 
             for dataset in finetuner_orig_exp.datasets:
+                finetuner_orig_exp.current_dataset = dataset
                 if os.path.exists(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/val_type_exact-model_{dataset}.jsonl"):
                     print(f"Skipping...test: {test_dataset} dataset: {dataset} already exists.")
                     continue
