@@ -108,7 +108,7 @@ class FinetunerModel:
     log_output_dir: str
 
     accelerator = "gpu"
-    devices = len(os.getenv('CUDA_VISIBLE_DEVICES').split(","))
+    devices = len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")) if os.getenv('CUDA_VISIBLE_DEVICES') else 1
 
     validation = "both"
 
