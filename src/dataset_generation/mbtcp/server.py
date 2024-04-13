@@ -26,12 +26,12 @@ class MbtcpServer:
             update_logic_thread.start()
 
             identity = ModbusDeviceIdentification()
-            identity.VendorName = 'CODE'
-            identity.ProductCode = 'MyProductCode'
-            identity.VendorUrl = 'http://www.mycompany.com'
-            identity.ProductName = 'MyProductName'
-            identity.ModelName = 'MyModelName'
-            identity.MajorMinorRevision = '1.0'
+            identity.VendorName = 'WAGO'
+            identity.ProductCode = '750-881'
+            identity.VendorUrl = 'https://www.wago.com'
+            identity.ProductName = 'ETHERNET Programmable Fieldbus Controller'
+            identity.ModelName = 'PFC200'
+            identity.MajorMinorRevision = '03.01.02'
 
             StartTcpServer(context=self._context, identity=identity, address=(self._ip, self._port))
         except KeyboardInterrupt:

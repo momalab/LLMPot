@@ -33,76 +33,78 @@ def server(ip: str, port: int, server_inst: Any):
 
 
 async def main(ip: str, port: int, interface: str, experiment: str, overwrite: bool = False):
-    with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
-        config = cfg.read()
-        config = json.loads(config)
-        finetuner_model = FinetunerModel(**config)
-        finetuner_model.experiment = experiment
+    try:
+        with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
+            config = cfg.read()
+            config = json.loads(config)
+            finetuner_model = FinetunerModel(**config)
+            finetuner_model.experiment = experiment
 
-    for dataset in finetuner_model.datasets:
-        print(f'Experiment {dataset} running...')
+        for dataset in finetuner_model.datasets:
+            print(f'Experiment {dataset} running...')
 
-        finetuner_model.current_dataset = dataset
-        server_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.server.name.split('_'))
-        client_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.client.split('_'))
+            if os.path.exists(f"{DATASET_PARSED}/{dataset}.csv") and overwrite is False:
+                print(f'Experiment {dataset} already exists. Skipping...')
+                continue
+            elif overwrite:
+                print(f'Experiment {dataset} already exists. Overwriting...')
 
-        server_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.server.name}"), server_class_str)
-        client_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.client}"), client_class_str)
+            finetuner_model.current_dataset = dataset
+            server_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.server.name.split('_'))
+            client_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.client.split('_'))
 
-        if os.path.exists(f"{DATASET_PARSED}/{dataset}.csv") and overwrite is False:
-            print(f'Experiment {dataset} already exists. Skipping...')
-            continue
-        elif overwrite:
-            print(f'Experiment {dataset} already exists. Overwriting...')
+            server_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.server.name}"), server_class_str)
+            client_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.client}"), client_class_str)
 
-        tcpdump_process = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
+            tcpdump_process = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
 
-        args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
-        server_inst = server_class(ip, port, *args)
+            args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
+            server_inst = server_class(ip, port, *args)
 
-        server_thread = None
-        update_thread = None
-        if isinstance(server_inst, MbtcpServer):
-            server_thread = Process(target=server, args=[ip, port, server_inst], daemon=True)
-            server_thread.start()
+            server_thread = None
+            update_thread = None
+            if isinstance(server_inst, MbtcpServer):
+                server_thread = Process(target=server, args=[ip, port, server_inst], daemon=True)
+                server_thread.start()
 
-            update_thread = Process(target=server_inst._update_control_logic, daemon=True)
-            update_thread.start()
+                update_thread = Process(target=server_inst._update_control_logic, daemon=True)
+                update_thread.start()
 
-        time.sleep(5)
+            time.sleep(5)
 
-        client_inst = client_class(ip, port,
-                                   finetuner_model.current_dataset.size,
-                                   finetuner_model.current_dataset.functions,
-                                   finetuner_model.current_dataset.addresses,
-                                   finetuner_model.current_dataset.values,
-                                   finetuner_model.current_dataset.multi_elements)
+            client_inst = client_class(ip, port,
+                                       finetuner_model.current_dataset.size,
+                                       finetuner_model.current_dataset.functions,
+                                       finetuner_model.current_dataset.addresses,
+                                       finetuner_model.current_dataset.values,
+                                       finetuner_model.current_dataset.multi_elements)
 
-        client_inst.start_client()
-        thread = threading.Thread(target=client_inst.execute_functions, daemon=True)
-        thread.start()
-        thread.join()
+            client_inst.start_client()
+            thread = threading.Thread(target=client_inst.execute_functions, daemon=True)
+            thread.start()
+            thread.join()
 
-        if isinstance(server_inst, MbtcpServer):
-            update_thread.terminate()
-            update_thread.join()
+            if isinstance(server_inst, MbtcpServer):
+                update_thread.terminate()
+                update_thread.join()
 
-            server_thread.terminate()
-            server_thread.join()
+                server_thread.terminate()
+                server_thread.join()
 
-        time.sleep(1)
+            time.sleep(1)
 
-        tcpdump_process.terminate()
-        tcpdump_process.wait()
+            tcpdump_process.terminate()
+            tcpdump_process.wait()
 
-        parse = Process(target=parse_packets, args=[port, finetuner_model.current_dataset.protocol, finetuner_model.current_dataset.context, dataset.__str__()])
-        parse.start()
+            parse = Process(target=parse_packets, args=[port, finetuner_model.current_dataset.protocol, finetuner_model.current_dataset.context, dataset.__str__()])
+            parse.start()
 
-        parse.join()
+            parse.join()
 
-        os.remove(f"{DATASET_DUMPS}/temp.pcap")
-
-    exit(1)
+            os.remove(f"{DATASET_DUMPS}/temp.pcap")
+    finally:
+        if os.path.exists(f"{DATASET_DUMPS}/temp.pcap"):
+            os.remove(f"{DATASET_DUMPS}/temp.pcap")
 
 
 def init():

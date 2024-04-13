@@ -63,7 +63,7 @@ class S7Client(Client):
         time.sleep(2)
         for function, args, kwargs in self._functions:
             try:
-                response = function(*args, *kwargs)
+                response = function(*args, **kwargs)
                 if not response:
                     print(f"Not received response to request: {function} and {args}")
             except Exception as e:
