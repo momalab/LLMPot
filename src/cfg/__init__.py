@@ -32,3 +32,6 @@ DATASET_PARSED = f"{OUTPUTS_DIR}/datasets/parsed"
 DATASET_TRAIN = f"{OUTPUTS_DIR}/datasets/train"
 DATASET_TEST = f"{OUTPUTS_DIR}/datasets/test"
 DATASET_VAL = f"{OUTPUTS_DIR}/datasets/validation"
+
+TEST_METRICS = f"{PROJECT_ROOT_DIR}/results/test_metrics"
+TRAINING_METRICS = f"{PROJECT_ROOT_DIR}/results/training_metrics"
