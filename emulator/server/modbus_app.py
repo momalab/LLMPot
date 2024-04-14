@@ -69,7 +69,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
 
         try:
-            incoming_str = bytes(incoming_raw, 'ascii').hex()
+            incoming_str = ''.join(['{:02x}'.format(byte) for byte in incoming_raw])
         except:
             logger.error(f"IP: {client_ip}:{client_port} - Error: {incoming_raw}")
             incoming_str = str(incoming_raw)
