@@ -36,7 +36,7 @@ def load_model(finetuner_model: FinetunerModel):
     tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
     model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id()).to(device)
     model = Byt5LightningModule.load_from_checkpoint(
-        checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[4].__str__()}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
+        checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[0].__str__()}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
         finetuner_model=finetuner_model,
         tokenizer=tokenizer,
         model=model,
@@ -62,30 +62,9 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         asyncio.run(self.handle_async())
 
     async def handle_async(self):
-        incoming = self.request.recv(1024)
-        logger.info(f"Incoming: {incoming}")
-        if incoming.startswith(b'PROXY TCP4'):
-            parts = incoming.decode('ascii').split()
-            client_ip = parts[2]
-            proxy_ip = parts[3]
-            client_port = parts[4]
-            proxy_port = parts[5]
-            incoming_raw = incoming.decode('ascii').split("\r\n")[1]
-            if not incoming:
-                logger.info(f"No data in incoming: {incoming}")
-                time.sleep(0.05)
-                logger.info(f"Trying second time to read request...")
-                incoming_raw = self.request.recv(1024)
-                logger.info(f"2nd time incoming: {incoming_raw}")
-                if not incoming_raw:
-                    logger.info(f"No request arrived..")
-                    return
-            logger.info(f"Proxying from {client_ip}:{client_port} to {proxy_ip}:{proxy_port}")
-        else:
-            incoming_raw = incoming
-            logger.info(f"Incoming: {incoming_raw}")
-            client_ip = self.client_address[0]
-            client_port = self.client_address[1]
+        incoming_raw = self.request.recv(1024)
+        client_ip = self.client_address[0]
+        client_port = self.client_address[1]
         server_port = self.server.server_address[1]
 
 

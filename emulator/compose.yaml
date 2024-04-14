@@ -7,6 +7,8 @@ services:
     restart: always
     depends_on:
       - mongo
+    ports:
+      - "502:5020"
 
   web_app:
     build:
@@ -39,4 +41,3 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "502:502"
