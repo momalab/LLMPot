@@ -8,16 +8,7 @@
   "datasets": [
     {
       "protocol": "mbtcp",
-      "size": 1200,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 0
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 1200,
+      "size": 800,
       "client": "expo",
       "server": {
         "name": "no_logic_server"
@@ -26,147 +17,21 @@
     },
     {
       "protocol": "mbtcp",
-      "size": 1200,
+      "size": 1600,
+      "client": "expo",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 3200,
       "client": "expo",
       "server": {
         "name": "no_logic_server"
       },      
-      "context": 2
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 1200,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 4
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 1200,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 6
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 1200,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 8
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 2400,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 0
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 2400,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
       "context": 1
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 2400,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 2
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 2400,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 4
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 2400,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 6
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 2400,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 8
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 3600,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 0
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 3600,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 1
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 3600,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 2
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 3600,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 4
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 3600,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 6
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 3600,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 8
     }
   ]
 }
