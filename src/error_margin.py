@@ -10,34 +10,30 @@ def calculate_error_margin(folder_name, file_name):
         data = [json.loads(line) for line in file]
 
     df = pd.DataFrame(data)
-    invalid = df.query('valid == True')
-    if not invalid.empty:
-        invalid_df = invalid.copy()
-        print(f"Total invalids = {len(invalid_df)}")
-    else:
-        print("No invalid packets")
-        exit(1)
 
     results_data = []
-    for i, row in invalid_df.iterrows():
-        response = row['response']
-        expected_response = row['expected_response']
-        hex_distance = 0
-        # if len(response) == len(expected_response):
-        differences = sum(1 for resp, exp_resp in zip(response, expected_response) if resp != exp_resp)
-        hex_distance += abs(int(response, 16) - int(expected_response, 16))
-        print(f"Response: {response}, Expected Response: {expected_response}, Digits Different: {differences}, Hex Distance: {hex_distance}")
-        results_data.append({'Response': response,
-                        'Expected Response': expected_response,
-                        'Digits Different': differences,
-                        'Hex Distance': hex_distance})
-        # else:
-        #     print(f"The length is not the same")
-        #     return
+    for i, row in df.iterrows():
+        try:
+            response = row['response']
+            expected_response = row['expected_response']
+
+            if len(response) != len(expected_response):
+                print(f"Error in row {i}")
+                continue
+
+            hex_distance = 0
+            differences = sum(1 for resp, exp_resp in zip(response, expected_response) if resp != exp_resp)
+            hex_distance += abs(int(response, 16) - int(expected_response, 16))
+            print(f"Response: {response}, Expected Response: {expected_response}, Digits Different: {differences}, Hex Distance: {hex_distance}")
+            results_data.append({'Response': response,
+                                 'Expected Response': expected_response,
+                                 'Digits Different': differences,
+                                 'Hex Distance': hex_distance})
+        except:
+            print(f"Error in row {i}")
 
     results = pd.DataFrame(results_data)
-    results.to_json(f"{VALIDATION}/{folder_name}/result_file-{file_name}.jsonl",
-                    orient='records', lines=True)
+    results.to_json(f"{VALIDATION}/{folder_name}/result_file-{file_name}.jsonl", orient='records', lines=True)
     mae_value = results['Digits Different'].mean()
     std_dev = results['Digits Different'].std()
     print(f"MAE:{mae_value}, Std: {std_dev}")
