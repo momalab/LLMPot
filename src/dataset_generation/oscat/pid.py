@@ -12,11 +12,9 @@ class PIDClient(MbtcpClient):
             builder.add_32bit_float(float(input_1))
             inputs = builder.build()
             functions = [
-                (self.read_holding_registers, [0, 2], {}),
                 (self.write_registers, [0, inputs], {"skip_encode": True}),
                 (self.read_input_registers, [0, 2], {})]
 
-            random.shuffle(functions)
             for function, args, kwargs in functions:
                 response = function(*args, **kwargs)
                 print(response)

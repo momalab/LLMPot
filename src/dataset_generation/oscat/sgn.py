@@ -12,11 +12,9 @@ class SGNClient(MbtcpClient):
             builder.add_32bit_int(input_value)
             inputs_value = builder.build()
             functions = [
-                (self.read_holding_registers, [0, 2], {}),
                 (self.write_registers, [0, inputs_value], {"skip_encode": True}),
                 (self.read_discrete_inputs, [0, 1], {})]
 
-            random.shuffle(functions)
             for function, args, kwargs in functions:
                 response = function(*args, **kwargs)
                 print(response)
