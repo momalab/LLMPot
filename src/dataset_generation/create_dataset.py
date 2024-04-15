@@ -26,10 +26,11 @@ def parse_packets(port: int, protocol: str, context_length: int, output_filename
     split(output_filename)
 
 
-def server(ip: str, port: int, server_inst: Any):
+def server(ip: str, port: int, finetuner_model: FinetunerModel, args: Any, server_class: Any):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    StartTcpServer(context=server_inst._context, address=(ip, port))
+    args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
+    server_inst = server_class(ip, port, *args)
 
 
 async def main(ip: str, port: int, interface: str, experiment: str, overwrite: bool = False):
@@ -59,12 +60,12 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
             tcpdump_process = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
 
             args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
-            server_inst = server_class(ip, port, *args)
+            # server_inst = server_class(ip, port, *args)
 
             server_thread = None
             update_thread = None
-            if isinstance(server_inst, MbtcpServer):
-                server_thread = Process(target=server, args=[ip, port, server_inst], daemon=True)
+            if finetuner_model.datasets[0].protocol == "mbtcp":
+                server_thread = Process(target=server, args=[ip, port, finetuner_model, args, server_class], daemon=True)
                 server_thread.start()
 
                 update_thread = Process(target=server_inst._update_control_logic, daemon=True)
@@ -84,7 +85,7 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
             thread.start()
             thread.join()
 
-            if isinstance(server_inst, MbtcpServer):
+            if finetuner_model.datasets[0].protocol == "mbtcp":
                 update_thread.terminate()
                 update_thread.join()
 
@@ -113,7 +114,7 @@ def init():
     parser.add_argument('-p', default=5020, type=int, required=False)
     parser.add_argument('-intrf', default="lo0", type=str, required=False)
     parser.add_argument('-exp', default="mbtcp-protocol-emulation.json", type=str, required=False)
-    parser.add_argument('-o', default=False, type=bool, required=False)
+    parser.add_argument('-o', default=True, type=bool, required=False)
     args = parser.parse_args()
 
     server_address = args.ip

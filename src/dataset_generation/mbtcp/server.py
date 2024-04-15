@@ -19,21 +19,21 @@ class MbtcpServer:
                                          di=ModbusSparseDataBlock(discrete_block), co=ModbusSparseDataBlock(coil_block))
 
         self._context = ModbusServerContext(slaves=self._store, single=True)
+        self._identity = ModbusDeviceIdentification()
+        self._identity.VendorName = 'WAGO'
+        self._identity.ProductCode = '750-881'
+        self._identity.VendorUrl = 'https://www.wago.com'
+        self._identity.ProductName = 'ETHERNET Programmable Fieldbus Controller'
+        self._identity.ModelName = 'PFC200'
+        self._identity.MajorMinorRevision = '03.01.02'
+        StartTcpServer(context=self._context, identity=self._identity, address=(self._ip, self._port))
 
     def start(self):
         update_logic_thread = multiprocessing.Process(target=self._update_control_logic)
         try:
             update_logic_thread.start()
 
-            identity = ModbusDeviceIdentification()
-            identity.VendorName = 'WAGO'
-            identity.ProductCode = '750-881'
-            identity.VendorUrl = 'https://www.wago.com'
-            identity.ProductName = 'ETHERNET Programmable Fieldbus Controller'
-            identity.ModelName = 'PFC200'
-            identity.MajorMinorRevision = '03.01.02'
-
-            StartTcpServer(context=self._context, identity=identity, address=(self._ip, self._port))
+            StartTcpServer(context=self._context, identity=self._identity, address=(self._ip, self._port))
         except KeyboardInterrupt:
             print("Server stopped by user.")
             update_logic_thread.terminate()
