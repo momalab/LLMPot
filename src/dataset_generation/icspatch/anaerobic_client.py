@@ -1,43 +1,54 @@
 import random
 import time
+from typing import List, Callable, Any
 
 from client import MbtcpClient, retrieve_args
 
+def generate_exception_ranges(invalid_address: int, max_address: int):
+    return [invalid_address, random.randrange(invalid_address + 1, max_address - 1), max_address]
 
 class P2Client(MbtcpClient):
     def start_client(self):
-        for _ in range(int(self._samples_num/9)):
-            ss_method_type = random.choice([True, False])
-            input_1 = random.randrange(0, 50)
-            input_2 = random.randrange(0, 50)
-            inputs = [input_1, input_2]
-            input_bit_offset = random.randrange(0, 50)
-            functions = [(self.write_registers, [0, inputs]),
-                         (self.write_register, [2, input_bit_offset]),
-                         (self.write_coil, [0, ss_method_type]),
-                         (self.read_input_registers, [0, 4])]  #read_returned_x
+        functions = []
+        while len(functions) < self._samples_num:
+            MAX_ADDRESS = 65535
+            MAX_REG_VALUE = 65535
+            inputs = [random.randrange(0, MAX_REG_VALUE), random.randrange(0, MAX_REG_VALUE)]
+            input_bit_offset = random.randrange(0, MAX_REG_VALUE)
+            functions.extend([
+                (self.write_registers, [0, inputs]),
+                (self.write_register, [2, input_bit_offset]),
+                (self.read_input_registers, [0, 4])])
 
-            ss_method_type = random.choice([True, False])
-            inputs_value = random.randrange(0, 50)
-            coil_addresses = random.randint(1, 50)
-            hr_addresses = random.randint(3, 50)
-            ir_addresses = random.randint(4, 50)
-            exception_function = [(self.read_holding_registers, [hr_addresses]),
-                                  (self.write_register, [hr_addresses, inputs_value]),
-                                  (self.read_input_registers, [ir_addresses]),
-                                  (self.read_coils, [coil_addresses]),
-                                  (self.write_coil, [coil_addresses, ss_method_type])]
+            hr_addresses = 3
+            ir_addresses = 4
+            coil_di_addresses = 0
+            register_functions_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
+            exception_range = generate_exception_ranges(hr_addresses, MAX_ADDRESS)
+            for address in exception_range:
+                register_functions_exceptions.extend([
+                    (self.write_register, [address, random.randrange(0, MAX_REG_VALUE)]),
+                    (self.read_holding_registers, [address, 1])])
 
-            function, args = random.choice(exception_function)
-            exceptions = [(self.illegal_function, []), (function, [*args])]
-            functions.extend(exceptions)
-            random.shuffle(functions)
+            exception_range = generate_exception_ranges(ir_addresses, MAX_ADDRESS)
+            for address in exception_range:
+                register_functions_exceptions.extend([
+                    (self.read_input_registers, [address, 1])])
 
-            for function, args in functions:
-                response = function(*args)
-                print(response)
-                if function.__name__ == self.write_register.__name__:
-                    time.sleep(0.05)
+            exception_range = generate_exception_ranges(coil_di_addresses, MAX_ADDRESS)
+            for address in exception_range:
+                register_functions_exceptions.extend([
+                    (self.write_coil, [address, random.choice([True, False])]),
+                    (self.read_coils, [address, 1]),
+                    (self.read_discrete_inputs, [address, 1])])
+
+        functions.extend(register_functions_exceptions)
+        functions = functions[:self._samples_num]
+        for function, args in functions:
+            response = function(*args)
+            print(response)
+            if function.__name__ == self.write_register.__name__:
+                time.sleep(0.05)
 
 
 def main():
