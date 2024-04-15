@@ -29,18 +29,12 @@ def generate_nested_affine_transformations(x1):
     return abs(int(x2)), abs(int(x3)), abs(int(x4)), abs(int(x5))
 class P1Client(MbtcpClient):
     def start_client(self):
-        for _ in range(int(self._samples_num/13)):
+        functions = []
+        while len(functions) < self._samples_num:
             ss_method_type = random.choice([True, False])
             input_0 = random.randrange(0, 50)
             input_1,input_2, input_3, input_4 =generate_nested_affine_transformations(input_0)
-            # input_2 = random.randrange(0, 50)
-            # input_3 = random.randrange(0, 50)
-            # input_4 = random.randrange(0, 50)
-            functions = [(self.read_holding_registers, [0]), #read_input_1
-                         (self.read_holding_registers, [1]), #read_input_2
-                         (self.read_holding_registers, [2]), #read_input_3
-                         (self.read_holding_registers, [3]), #read_input_4
-                         (self.write_register, [0, input_1]),
+            functions = [(self.write_register, [0, input_1]),
                          (self.write_register, [1, input_2]),
                          (self.write_register, [2, input_3]),
                          (self.write_register, [3, input_4]),
@@ -60,10 +54,10 @@ class P1Client(MbtcpClient):
                                   (self.write_coil, [coil_addresses, ss_method_type])]
 
             function, args = random.choice(exception_function)
-            exceptions = [(self.illegal_function, []), (function, [*args])]
+            exceptions = [(function, [*args])]
             functions.extend(exceptions)
-            random.shuffle(functions)
 
+            functions = functions[:self._samples_num]
             for function, args in functions:
                 response = function(*args)
                 print(response)

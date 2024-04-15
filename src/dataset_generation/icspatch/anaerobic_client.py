@@ -12,13 +12,10 @@ class P2Client(MbtcpClient):
             input_2 = random.randrange(0, 50)
             inputs = [input_1, input_2]
             input_bit_offset = random.randrange(0, 50)
-            functions = [(self.read_holding_registers, [0, 2]), #read_inputs (array of 2 elements)
-                         (self.read_holding_registers, [2]), #read_input_bit_offset
-                         (self.write_registers, [0, inputs]),
+            functions = [(self.write_registers, [0, inputs]),
                          (self.write_register, [2, input_bit_offset]),
-                         (self.read_input_registers, [0, 4]), #read_returned_x
-                         (self.read_coils, [0]), #read_ss_method_type
-                         (self.write_coil, [0, ss_method_type])]
+                         (self.write_coil, [0, ss_method_type]),
+                         (self.read_input_registers, [0, 4])]  #read_returned_x
 
             ss_method_type = random.choice([True, False])
             inputs_value = random.randrange(0, 50)

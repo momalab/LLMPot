@@ -12,7 +12,7 @@ from dataset_generation.mbtcp.invalid_function import MbtcpCustomInvalidFunction
 class MbtcpClient(ModbusTcpClient):
     def __init__(self, ip: str, port: int, samples_num: int):
         super().__init__(ip, port)
-        self._samples_num = 2 * samples_num
+        self._samples_num = samples_num
         self.ip = ip
         self.port = port
         self.connect()
@@ -31,7 +31,7 @@ def retrieve_args() -> Tuple[str, int, int]:
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="10.224.33.30", required=False)
     parser.add_argument('-p', default=502, required=False)
-    parser.add_argument('-num', default=3600, required=False)
+    parser.add_argument('-num', default=3200, required=False)
     args = parser.parse_args()
 
     return args.ip, int(args.p), int(args.num)

@@ -10,7 +10,7 @@ def calculate_error_margin(folder_name, file_name):
         data = [json.loads(line) for line in file]
 
     df = pd.DataFrame(data)
-    invalid = df.query('valid == False')
+    invalid = df.query('valid == True')
     if not invalid.empty:
         invalid_df = invalid.copy()
         print(f"Total invalids = {len(invalid_df)}")
@@ -38,15 +38,15 @@ def calculate_error_margin(folder_name, file_name):
     results = pd.DataFrame(results_data)
     results.to_json(f"{VALIDATION}/{folder_name}/result_file-{file_name}.jsonl",
                     orient='records', lines=True)
-    mae_value = results['Hex Distance'].mean()
-    std_dev = results['Hex Distance'].std()
+    mae_value = results['Digits Different'].mean()
+    std_dev = results['Digits Different'].std()
     print(f"MAE:{mae_value}, Std: {std_dev}")
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-fo', default="google_byt5-small_mbtcp-pid-c6-1200_20240329T1619", required=False)
-    parser.add_argument('-fi', default="epoch-0_val_type-micro", required=False)
+    parser.add_argument('-fo', default="mbtcp-pid_client-c0-s2400_20240403T1209", required=False)
+    parser.add_argument('-fi', default="epoch-27_val_type-micro", required=False)
     args = parser.parse_args()
 
     folder_name = args.fo
