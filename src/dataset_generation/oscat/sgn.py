@@ -6,7 +6,8 @@ from pymodbus.payload import BinaryPayloadBuilder
 
 class SGNClient(MbtcpClient):
     def start_client(self):
-        for _ in range(int(self._samples_num/5)):
+        functions = []
+        while len(functions) < self._samples_num:
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
             input_value = random.randint(-50, 50)
             builder.add_32bit_int(input_value)
@@ -15,6 +16,7 @@ class SGNClient(MbtcpClient):
                 (self.write_registers, [0, inputs_value], {"skip_encode": True}),
                 (self.read_discrete_inputs, [0, 1], {})]
 
+            functions = functions[:self._samples_num]
             for function, args, kwargs in functions:
                 response = function(*args, **kwargs)
                 print(response)

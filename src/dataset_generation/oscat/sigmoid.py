@@ -6,7 +6,8 @@ from pymodbus.payload import BinaryPayloadBuilder
 
 class Sigmoid_Client(MbtcpClient):
     def start_client(self):
-        for _ in range(int(self._samples_num/5)):
+        functions = []
+        while len(functions) < self._samples_num:
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
             input_1 = random.randint(0, 65535)
             builder.add_32bit_float(float(input_1))
@@ -16,7 +17,7 @@ class Sigmoid_Client(MbtcpClient):
                 (self.write_registers, [0, inputs], {"skip_encode": True}),
                 (self.read_input_registers, [0, 2], {})]
 
-            random.shuffle(functions)
+            functions = functions[:self._samples_num]
             for function, args, kwargs in functions:
                 response = function(*args, **kwargs)
                 print(response)

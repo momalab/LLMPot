@@ -12,7 +12,7 @@ from dataset_generation.mbtcp.invalid_function import MbtcpCustomInvalidFunction
 class MbtcpClient(ModbusTcpClient):
     def __init__(self, ip: str, port: int, samples_num: int):
         super().__init__(ip, port)
-        self._samples_num = samples_num
+        self._samples_num = 2 * samples_num
         self.ip = ip
         self.port = port
         self.connect()

@@ -7,7 +7,8 @@ from pymodbus.payload import BinaryPayloadBuilder
 
 class Fract_Client(MbtcpClient):
     def start_client(self):
-        for _ in range(int(self._samples_num/5)):
+        functions = []
+        while len(functions) < self._samples_num:
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
             input_value = np.random.uniform(0, 65535)
             builder.add_32bit_float(float(input_value))
@@ -16,6 +17,7 @@ class Fract_Client(MbtcpClient):
                 (self.write_registers, [0, inputs_value], {"skip_encode": True}),
                 (self.read_input_registers, [0, 2], {})]
 
+            functions = functions[:self._samples_num]
             for function, args, kwargs in functions:
                 response = function(*args, **kwargs)
                 print(response)
