@@ -9,17 +9,18 @@ class MbtcpClient:
 
     @staticmethod
     def generate_request(sample, element, multiple_data_value, data):
-        address = [x for x in range(0, (sample+1))]
+        address = [x for x in range(0, 65535)]
         num_elements = [z for z in range(1, 4)]
         boolean_value = 2
-        single_data_to_write = [y for y in range(0, 10)] 
+        single_data_to_write = [y for y in range(0, 65535)]
         values_combinations = itertools.product(range(multiple_data_value), repeat=num_elements[element])  
         coils_combinations = itertools.product(range(boolean_value), repeat=num_elements[element])          
         return address[sample], num_elements[element], single_data_to_write[data], values_combinations, coils_combinations
 
     def start_client(self, samples_num: int, single_data_value: int, multiple_data_value: int, max_elements: int, function_code: str):
-        self.mbtcp_requests.connect_client()
+        # self.mbtcp_requests.connect_client()
 
+        count = 0
         try:
             for function in function_code:
                 if (function == '1') or (function == '5'): 
@@ -28,35 +29,42 @@ class MbtcpClient:
                             address, num_elements, single_data_to_write, values_combinations, coils_combinations = self.generate_request(sample, element, multiple_data_value, data=1)      
                             for coil in range(2):
                                 value_to_write = [z for z in [True, False]]
-                                self.mbtcp_requests.read_data("Read Single Coil", address, 1, num_elements=1)
-                                self.mbtcp_requests.write_single_data("Write Single Coil", address, single_data_to_write, 5, value_to_write[coil])
-
+                                count += 2
+                                # self.mbtcp_requests.read_data("Read Single Coil", address, 1, num_elements=1)
+                                # self.mbtcp_requests.write_single_data("Write Single Coil", address, single_data_to_write, 5, value_to_write[coil])
+                print(count)
                 if (function == '3') or (function == '6'):
                     for element in range(1): #Explicitly for read/write single register
                         for sample in range(samples_num):
                             for data in range(single_data_value):
-                                address, num_elements, single_data_to_write, values_combinations, coils_combinations = self.generate_request(sample, element, multiple_data_value, data)      
-                                self.mbtcp_requests.read_data("Read Single Registers", address, 3, num_elements=1)
-                                self.mbtcp_requests.write_single_data("Write Single Registers", address, single_data_to_write, 6, value_to_write=0)
-                            self.mbtcp_requests.read_data("Read Single Registers", address, 3, num_elements=1)
+                                address, num_elements, single_data_to_write, values_combinations, coils_combinations = self.generate_request(sample, element, multiple_data_value, data)
+                                count += 2
+                                # self.mbtcp_requests.read_data("Read Single Registers", address, 3, num_elements=1)
+                                # self.mbtcp_requests.write_single_data("Write Single Registers", address, single_data_to_write, 6, value_to_write=0)
+                            # self.mbtcp_requests.read_data("Read Single Registers", address, 3, num_elements=1)
 
+                print(count)
                 if function == '16':
                     for element in range(max_elements): #Covers 1, 2, and 3 registers requests
-                        for sample in range(samples_num): 
-                            address, num_elements, single_data_to_write, values_combinations, coils_combinations = self.generate_request(sample, element, multiple_data_value, data=1)      
+                        for sample in range(samples_num):
+                            address, num_elements, single_data_to_write, values_combinations, coils_combinations = self.generate_request(sample, element, multiple_data_value, data=1)
                             for values_to_write in values_combinations:
-                                self.mbtcp_requests.read_data("Read Multiple Registers", address, 3, num_elements)
-                                self.mbtcp_requests.write_multiple_data("Write Multiple Registers", address, values_to_write, 16)
-                            self.mbtcp_requests.read_data("Read Multiple Registers", address, 3, num_elements)
+                                count += 2
+                                # self.mbtcp_requests.read_data("Read Multiple Registers", address, 3, num_elements)
+                                # self.mbtcp_requests.write_multiple_data("Write Multiple Registers", address, values_to_write, 16)
+                            # self.mbtcp_requests.read_data("Read Multiple Registers", address, 3, num_elements)
 
+                print(count)
                 if function == '15':
                     for element in range(max_elements): #Covers single, 2, and 3 coils requests
                         for sample in range(samples_num):
-                            address, num_elements, single_data_to_write, values_combinations, coils_combinations = self.generate_request(sample, element, multiple_data_value, data=1)      
+                            address, num_elements, single_data_to_write, values_combinations, coils_combinations = self.generate_request(sample, element, multiple_data_value, data=1)
                             for coil_value in coils_combinations:
-                                self.mbtcp_requests.read_data("Read Multiple Coils", address, 1, num_elements)
-                                self.mbtcp_requests.write_multiple_data("Write Multiple Coils", address, coil_value, 15)
-
+                                count += 2
+                                # self.mbtcp_requests.read_data("Read Multiple Coils", address, 1, num_elements)
+                                # self.mbtcp_requests.write_multiple_data("Write Multiple Coils", address, coil_value, 15)
+            print(count)
+            exit()
         except KeyboardInterrupt:
             print("Client stopped by user.")
         finally:
@@ -72,7 +80,7 @@ def main():
     parser.add_argument('-dat', default=10, required=False)
     parser.add_argument('-mul', default=3, required=False)
     parser.add_argument('-elem', default=3, required=False)
-    parser.add_argument('-fun', type=list_of_strings, required=True) #example: type=list_of_strings use -fun 1,3,etc t #OR for single test default='16' and False
+    parser.add_argument('-fun', type=list_of_strings, default="1,5,15,3,6,16", required=False) #example: type=list_of_strings use -fun 1,3,etc t #OR for single test default='16' and False
     args = parser.parse_args()
 
     server_address = args.ip
