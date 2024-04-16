@@ -13,7 +13,7 @@
       "server": {
         "name": "no_logic_server"
       },
-      "context": 4
+      "context": 1
     },
     {
       "protocol": "mbtcp",
@@ -22,7 +22,7 @@
       "server": {
         "name": "no_logic_server"
       },
-      "context": 4
+      "context": 1
     },
     {
       "protocol": "mbtcp",
@@ -31,7 +31,7 @@
       "server": {
         "name": "no_logic_server"
       },      
-      "context": 4
+      "context": 1
     }
   ]
 }
