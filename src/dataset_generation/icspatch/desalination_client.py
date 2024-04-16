@@ -7,21 +7,15 @@ from client import MbtcpClient, retrieve_args
 def generate_exception_ranges(invalid_address: int, max_address: int):
     return [invalid_address, random.randrange(invalid_address + 1, max_address - 1), max_address]
 
-class P5Client(MbtcpClient):
+class ProcessClient(MbtcpClient):
     def start_client(self):
         functions = []
         while len(functions) < self._samples_num:
             MAX_ADDRESS = 65535
             MAX_REG_VALUE = 65535
-            setpoint_wd = random.randrange(0, MAX_REG_VALUE)
-            initial_setpoint = random.randrange(0, MAX_REG_VALUE)
-            wd_input = random.randrange(0, MAX_REG_VALUE)
-            tb0_input = random.randrange(0, MAX_REG_VALUE)
+            inputs = [random.randrange(0, MAX_REG_VALUE), random.randrange(0, MAX_REG_VALUE), random.randrange(0, MAX_REG_VALUE), random.randrange(0, MAX_REG_VALUE)]
             functions.extend([
-                (self.write_register, [0, setpoint_wd]),
-                (self.write_register, [1, initial_setpoint]),
-                (self.write_register, [2, wd_input]),
-                (self.write_register, [3, tb0_input]),
+                (self.write_registers, [0, inputs]),
                 (self.read_input_registers, [0, 4])])
 
             hr_ir_addresses = 4
@@ -30,15 +24,13 @@ class P5Client(MbtcpClient):
             exception_range = generate_exception_ranges(hr_ir_addresses, MAX_ADDRESS)
             for address in exception_range:
                 register_functions_exceptions.extend([
-                    (self.write_register, [address, random.randrange(0, MAX_REG_VALUE)]),
-                    (self.read_holding_registers, [address, 1]),
+                    (self.write_registers, [address, random.randrange(0, MAX_REG_VALUE)]),
                     (self.read_input_registers, [address, 1])])
 
             exception_range = generate_exception_ranges(coil_di_addresses, MAX_ADDRESS)
             for address in exception_range:
                 register_functions_exceptions.extend([
                     (self.write_coil, [address, random.choice([True, False])]),
-                    (self.read_coils, [address, 1]),
                     (self.read_discrete_inputs, [address, 1])])
 
         functions.extend(register_functions_exceptions)
@@ -52,7 +44,7 @@ class P5Client(MbtcpClient):
 
 def main():
     ip, port, samples_num = retrieve_args()
-    client = P5Client(ip, port, samples_num)
+    client = ProcessClient(ip, port, samples_num)
     try:
         client.start_client()
     except KeyboardInterrupt:
