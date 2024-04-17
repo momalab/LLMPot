@@ -1,4 +1,4 @@
-import random
+import numpy as np
 import time
 from client import MbtcpClient, retrieve_args
 from pymodbus.constants import Endian
@@ -10,7 +10,7 @@ class EXPOClient(MbtcpClient):
         print(self._samples_num)
         while len(functions) < self._samples_num:
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
-            input_1 = random.randint(0, 10)
+            input_1 = np.random.uniform(-4.816, 4.816)
             builder.add_32bit_float(float(input_1))
             inputs = builder.build()
             functions.extend([
