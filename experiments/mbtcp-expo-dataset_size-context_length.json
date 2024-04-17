@@ -8,15 +8,6 @@
   "datasets": [
     {
       "protocol": "mbtcp",
-      "size": 800,
-      "client": "expo",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 1
-    },
-    {
-      "protocol": "mbtcp",
       "size": 1600,
       "client": "expo",
       "server": {

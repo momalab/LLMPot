@@ -9,7 +9,7 @@ class Cosine_Client(MbtcpClient):
         functions = []
         while len(functions) < self._samples_num:
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
-            input_value = np.random.uniform(-1, 1)
+            input_value = np.random.uniform(-10, 10)
             builder.add_32bit_float(float(input_value))
             inputs_value = builder.build()
             functions.extend([
