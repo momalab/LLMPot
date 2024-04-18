@@ -1,5 +1,4 @@
-source_test,target_text
-x,y
+source_text,target_text
 x,y
 -10.0,5e-05
 -9.999,5e-05
