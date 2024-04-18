@@ -1,0 +1,20 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 50,
+  "target_max_token_len": 128,
+  "source_max_token_len": 128,
+  "batch_size": 4,
+  "datasets": [
+    {
+      "protocol": "mbtcp",
+      "size": 20005,
+      "client": "sigmoid_test",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    }
+  ],
+  "experiment_filename": "sigmoid2.json"
+}
