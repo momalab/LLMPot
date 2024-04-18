@@ -25,8 +25,9 @@ class Byt5LightningModule(LightningModule):
         self._val_loss_const = finetuner_model.val_loss_const
         self._train_loss_const = finetuner_model.train_loss_const
 
-        self._accuracy: [float] = []
-        self._accuracy_exactly: [float] = []
+        self._accuracy: {str: [float]} = {}
+        for validation_type in self._finetuner_model.validation:
+            self._accuracy[validation_type] = []
 
     def forward(self, input_ids, attention_mask, decoder_attention_mask, labels=None):
         output = self.model(
@@ -61,30 +62,24 @@ class Byt5LightningModule(LightningModule):
         return loss
 
     def test_step(self, batch, batch_size):
-        micro = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "validator"), "validator")
-        exactly = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exact"), "exact")
+        for validation_type in self._finetuner_model.validation:
+            validation = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, validation_type), validation_type)
 
-        self._accuracy.append(micro)
-        self._accuracy_exactly.append(exactly)
+            self._accuracy[validation_type].append(validation)
 
-        self.log("accuracy/validator", micro, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
-        self.log("accuracy/exact", exactly, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
+            self.log(f"accuracy/{validation_type}", validation, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
 
     def on_test_end(self) -> None:
-        micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
-        none = torch.tensor(self._accuracy_exactly, dtype=torch.float, device=self.device)
-        dist.all_reduce(micro, op=dist.ReduceOp.SUM)
-        dist.all_reduce(none, op=dist.ReduceOp.SUM)
-        micro = torch.mean(micro)
-        none = torch.mean(none)
-        micro /= dist.get_world_size()
-        none /= dist.get_world_size()
+        for validation_type in self._finetuner_model.validation:
+            validation = torch.tensor(self._accuracy[validation_type], dtype=torch.float, device=self.device)
+            dist.all_reduce(validation, op=dist.ReduceOp.SUM)
+            none = torch.mean(validation)
+            validation /= dist.get_world_size()
 
-        if self.global_rank == 0:
-            self.logger.experiment.add_scalars('accuracy', {'exact': none, 'validator': micro}, self.current_epoch)
+            if self.global_rank == 0:
+                self.logger.experiment.add_scalars('accuracy', {validation_type: validation}, self.current_epoch)
 
-        self._accuracy = []
-        self._accuracy_exactly = []
+            self._accuracy = {}
 
     def configure_optimizers(self):
         return AdamW(self.parameters(), lr=0.0001)

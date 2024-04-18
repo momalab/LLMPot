@@ -19,7 +19,7 @@ def split(csv: str):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-csv', required=True)
+    parser.add_argument('-csv', default="mbtcp-sigmoid2-c1-s20005", required=False)
     args = parser.parse_args()
 
     csv = args.csv

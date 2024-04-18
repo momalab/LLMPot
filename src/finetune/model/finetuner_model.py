@@ -110,7 +110,7 @@ class FinetunerModel:
     accelerator = "gpu"
     devices = len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")) if os.getenv('CUDA_VISIBLE_DEVICES') else 1
 
-    validation = "both"
+    validation = ["exact", "validator"]
 
     lora: bool = False
     quantization: bool = False

@@ -1,6 +1,5 @@
 import itertools
 import random
-from typing import Any
 
 from finetune.model.finetuner_model import RangeModel
 
@@ -14,7 +13,7 @@ def generate_multiple_requests(elements: int, values: []):
 
 
 def generate_combinations(values: RangeModel, elements):
-    nums = [values.low, random.randrange(values.low + 1, values.high - elements - 1), values.high - elements]
+    nums = [values.low, random.randrange(values.low + 1, values.high), values.high]
 
     combinations = itertools.product(nums, repeat=elements + 1)
     return {i: list(t) for i, t in enumerate(combinations)}

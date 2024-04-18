@@ -105,8 +105,8 @@ class Finetuner:
 
             checkpoint_callback = ModelCheckpoint(
                 monitor=self._finetuner_model.val_loss_const,
-                filename=self._finetuner_model.current_dataset.__str__() + '-{epoch}',
-                save_top_k=2,
+                filename='best-{epoch}',
+                save_top_k=1,
                 save_last=True,
                 mode='min',
                 auto_insert_metric_name=False

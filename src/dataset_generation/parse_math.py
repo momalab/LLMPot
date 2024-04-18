@@ -58,9 +58,9 @@ def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: in
             csv_context.write(f"{SOURCE_TEXT},{TARGET_TEXT}\n")
             for i in range(0, len(dataset_df) - context_length, context_length + 1):
                 for j in range(0, context_length):
-                    csv_context.write(f"{dataset_df[SOURCE_TEXT][i + j]}:{dataset_df[TARGET_TEXT][i + j]}|")
-                csv_context.write(f"{dataset_df[SOURCE_TEXT][i + context_length]}:,{dataset_df[TARGET_TEXT][i + context_length]}")
-                csv_context.write("\n")
+                    request = dataset_df[SOURCE_TEXT][i + j]
+                    response = dataset_df[TARGET_TEXT][i + context_length]
+                    csv_context.write(f"{request[len(request) - 8:]},{response[len(response) - 8:]}\n")
     else:
         dataset_df.to_csv(f"{DATASET_PARSED}/{csv_filename}.csv", index=False)
 
