@@ -1,29 +1,26 @@
 import random
-import time
-import sys
+import logging
+from pymodbus.constants import Endian
 from pymodbus.client import ModbusTcpClient
-# from ./../..ssher import start_runtime
+from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 
 import pdb
 
-# 1: dataset size (# of samples), 2: if 0 no context else 1 with context
-
-# SERVER_HOST = "10.224.33.30"
-# SERVER_HOST = "91.230.41.210"
-SERVER_HOST = "localhost"
+SERVER_HOST = "10.224.33.30"
+# SERVER_HOST = "localhost"
 
 client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 502)
 
 random.seed(1111)
 
-def read_ascii_from_registers(client, start_address, num_registers):
-    response = client.read_holding_registers(start_address, num_registers)
-    if response.isError():
-        print("Error reading registers")
-        return None
-    # Combine register values and convert to ASCII
-    data = ''.join(chr((value >> 8) & 0xFF) + chr(value & 0xFF) for value in response.registers)
-    return data.strip()
+# def read_ascii_from_registers(client, start_address, num_registers):
+#     response = client.read_holding_registers(start_address, num_registers)
+#     if response.isError():
+#         print("Error reading registers")
+#         return None
+#     # Combine register values and convert to ASCII
+#     data = ''.join(chr((value >> 8) & 0xFF) + chr(value & 0xFF) for value in response.registers)
+#     return data.strip()
 
 
 def generate_random_request():
@@ -40,9 +37,9 @@ def read_data(data_type, address, func_code, num_elements):
         result = client.read_coils(address, num_elements, unit=0x01)
         if result.isError():
             print(f"Failed to read {num_elements} from {data_type} at {address} . Error: {result}")
-
         else:
             print(f"{data_type} at address {address}: {result.bits[0]}")
+
     elif func_code == 2:
         result = client.read_discrete_inputs(address, num_elements, unit=0x01)
         if result.isError():
@@ -52,12 +49,13 @@ def read_data(data_type, address, func_code, num_elements):
 
     elif func_code == 3:
         result = client.read_holding_registers(address, num_elements, unit=0x01)
-        # data = ''.join(chr((value >> 8) & 0xFF) + chr(value & 0xFF) for value in result.registers)
         if result.isError():
             print(f"Failed to read {num_elements} from {data_type} at {address} . Error: {result}")
         else:
+            decoder = BinaryPayloadDecoder.fromRegisters(result.registers, Endian.BIG, wordorder=Endian.LITTLE)
+            print("read_holding_registers:" +str(decoder.decode_32bit_int()))
             print(f"{data_type} at address {address}: {result.registers}")
-            # return data.strip()
+
     elif func_code == 4:
         result = client.read_input_registers(address, num_elements, unit=0x01)
         if result.isError():
@@ -90,20 +88,13 @@ def write_multiple_data(data_type, address, data_to_write, func_code):
 
 
 client.connect()
-a = 4294967297
-a = 65536
-import logging
 
 logging.basicConfig()
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)
-# while True :
-try:
 
+try:
     function_code, address, num_elements, data_to_write, single_data_to_write = 1, 0, 1, 0, 1
-    # Example: Reading device model from registers 100 to 109
-    # res = client.read_device_information()
-    # print(res)
 
     if function_code == 1:  # Read Coils (FC 01)
         read_data("Coils", address, 1, num_elements)
@@ -132,7 +123,6 @@ try:
     elif function_code == 16:  # Write Multiple Registers (FC 16)
         write_multiple_data("Multiple Registers", address, data_to_write, 16)
 except:
-    # start_runtime()
     pass
 
 finally:
