@@ -3,9 +3,8 @@ import datetime
 import time
 import traceback
 
-from lightning.pytorch.loggers import TensorBoardLogger
+from lightning.pytorch.loggers import TensorBoardLogger, CSVLogger
 from lightning_utilities.core.rank_zero import rank_zero_only
-from pytorch_lightning.loggers import CSVLogger
 
 from cfg import CHECKPOINTS
 from finetune.byt5 import Byt5

@@ -3,5 +3,7 @@
     "sarif-viewer.connectToGithubCodeScanning": "off",
     "cSpell.words": [
         "mbtcp"
-    ]
+    ],
+    "python.analysis.autoImportCompletions": false,
+    "python.analysis.typeCheckingMode": "basic",
 }

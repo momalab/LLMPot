@@ -1,7 +1,9 @@
 import json
+from typing import List
 
 import torch
 from lightning.pytorch import LightningModule
+from lightning.pytorch.loggers.logger import DummyLogger
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, DistributedSampler
 from transformers import PreTrainedModel, PreTrainedTokenizer
@@ -25,7 +27,7 @@ class Byt5LightningModule(LightningModule):
         self._val_loss_const = finetuner_model.val_loss_const
         self._train_loss_const = finetuner_model.train_loss_const
 
-        self._accuracy: {str: [float]} = {}
+        self._accuracy: dict[str, List[float]] = {}
         for validation_type in self._finetuner_model.validation:
             self._accuracy[validation_type] = []
 
@@ -36,7 +38,6 @@ class Byt5LightningModule(LightningModule):
             labels=labels,
             decoder_attention_mask=decoder_attention_mask,
         )
-
         return output.loss, output.logits
 
     def training_step(self, batch, batch_size):
@@ -73,13 +74,13 @@ class Byt5LightningModule(LightningModule):
         for validation_type in self._finetuner_model.validation:
             validation = torch.tensor(self._accuracy[validation_type], dtype=torch.float, device=self.device)
             dist.all_reduce(validation, op=dist.ReduceOp.SUM)
-            none = torch.mean(validation)
+            validation = torch.mean(validation)
             validation /= dist.get_world_size()
 
             if self.global_rank == 0:
                 self.logger.experiment.add_scalars('accuracy', {validation_type: validation}, self.current_epoch)
 
-            self._accuracy = {}
+            self._accuracy[validation_type] = []
 
     def configure_optimizers(self):
         return AdamW(self.parameters(), lr=0.0001)

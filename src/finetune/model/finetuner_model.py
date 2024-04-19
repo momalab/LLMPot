@@ -34,9 +34,9 @@ class DatasetModel:
     protocol: str
     size: int
     client: str
-    server: ServerModel = None
+    server: Optional[ServerModel] = None
     context: int
-    functions: List[int] = None
+    functions: List[int] = []
     values = RangeModel()
     addresses = RangeModel()
     multi_elements: int = 3
@@ -67,10 +67,10 @@ class DatasetModel:
                 (f"-f{self.functions_str()}" if self.functions else "") +
                 (f"-v{self.values}" if self.has_values else "") +
                 (f"-a{self.addresses}" if self.has_addresses else "") +
-                (f"-sc{self.server.coils}" if hasattr(self.server, "coils") else "") +
-                (f"-sr{self.server.registers}" if hasattr(self.server, "registers") else "") +
-                (f"-sc{self.server.markers}" if hasattr(self.server, "markers") else "") +
-                (f"-sr{self.server.datablock}" if hasattr(self.server, "datablock") else "")
+                (f"-sc{self.server.coils}" if self.server and hasattr(self.server, "coils") else "") +
+                (f"-sr{self.server.registers}" if self.server and hasattr(self.server, "registers") else "") +
+                (f"-sc{self.server.markers}" if self.server and hasattr(self.server, "markers") else "") +
+                (f"-sr{self.server.datablock}" if self.server and hasattr(self.server, "datablock") else "")
                 )
 
 
@@ -89,9 +89,12 @@ class FinetunerModel:
 
     experiment: str
     current_dataset: DatasetModel
-    datasets: [DatasetModel]
-    experiment_filename: str = None
+    datasets: List[DatasetModel]
+    experiment_filename: str = ""
     test_experiment: Optional[TestExperiment] = None
+    test_datasets: Optional[List[str]] = None
+    test_dataset: Optional[str] = None
+    on_test = False
 
     max_epochs: int = 30
     patience: int = 10
@@ -103,12 +106,13 @@ class FinetunerModel:
 
     start_time: float
     start_datetime: str
+    old_start_datetime: str
 
     checkpoints_dir: str
     log_output_dir: str
 
     accelerator = "gpu"
-    devices = len(os.getenv('CUDA_VISIBLE_DEVICES').split(",")) if os.getenv('CUDA_VISIBLE_DEVICES') else 1
+    devices = len(str(os.getenv('CUDA_VISIBLE_DEVICES')).split(",")) if os.getenv('CUDA_VISIBLE_DEVICES') else 1
 
     validation = ["exact", "validator"]
 
@@ -145,6 +149,8 @@ class FinetunerModel:
         if self.test_experiment:
             path = (f"{CHECKPOINTS}/{self.test_experiment.experiment}/{self.test_experiment.dataset}"
                     f"/val_type_{validation_type}-model_{self.current_dataset.__str__()}.jsonl")
+        elif self.on_test:
+            path = (f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/{self.test_dataset}.jsonl")
         else:
             path = f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/epoch-{epoch}_val_type-{validation_type}.jsonl"
         os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -152,8 +158,10 @@ class FinetunerModel:
 
     @property
     def s7comm_args(self):
-        return self.current_dataset.server.markers, self.current_dataset.server.datablock
+        if self.current_dataset.server:
+            return self.current_dataset.server.markers, self.current_dataset.server.datablock
 
     @property
     def mbtcp_args(self):
-        return self.current_dataset.server.coils, self.current_dataset.server.registers
+        if self.current_dataset.server:
+            return self.current_dataset.server.coils, self.current_dataset.server.registers

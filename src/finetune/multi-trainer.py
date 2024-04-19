@@ -19,14 +19,15 @@ def main(experiment: str):
             finetuner_model = FinetunerModel(**config)
             finetuner_model.experiment = experiment
 
-            for dataset in tqdm(finetuner_model.datasets):
-                finetuner_model.current_dataset = dataset
-                log = TheLogger(finetuner_model.__str__(), finetuner_model.log_output_dir)
-                if os.path.exists(f"{CHECKPOINTS}/{experiment}/{dataset.__str__()}"):
-                    log.warning(f'Experiment {dataset} already exists. Skipping...')
-                    continue
+        for dataset in tqdm(finetuner_model.datasets):
+            finetuner_model.current_dataset = dataset
+            log = TheLogger(finetuner_model.__str__(), finetuner_model.log_output_dir)
+            if os.path.exists(f"{CHECKPOINTS}/{experiment}/{dataset.__str__()}"):
+                finetuner_model.old_start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.current_dataset}")[0]
+                log.warning(f'Experiment {dataset} already exists. Continuing..')
+            else:
                 log.info(f'Fine tuning {dataset} ...')
-                trainer.main(finetuner_model)
+            trainer.main(finetuner_model)
     except KeyboardInterrupt:
         print("User interrupted the process.")
         os.remove(f"{CHECKPOINTS}/{experiment}/{dataset.__str__()}")
@@ -35,6 +36,6 @@ def main(experiment: str):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-cfg', default="llama-2-testing.json", required=False)
+    parser.add_argument('-cfg', default="sigmoid.json", required=False)
     args = parser.parse_args()
     main(args.cfg)

@@ -6,8 +6,7 @@ import traceback
 import pandas as pd
 from datasets import load_dataset
 from lightning import Trainer
-from lightning.pytorch.loggers import TensorBoardLogger
-from lightning_fabric.loggers import CSVLogger
+from lightning.pytorch.loggers import TensorBoardLogger, CSVLogger
 from torch.utils.data import DataLoader
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
