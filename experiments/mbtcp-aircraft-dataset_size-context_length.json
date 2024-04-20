@@ -8,29 +8,11 @@
   "datasets": [
     {
       "protocol": "mbtcp",
-      "size": 800,
+      "size": 4096,
       "client": "aircraft",
       "server": {
         "name": "no_logic_server"
       },
-      "context": 1
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 1600,
-      "client": "aircraft",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 1
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 3200,
-      "client": "aircraft",
-      "server": {
-        "name": "no_logic_server"
-      },      
       "context": 1
     }
   ]

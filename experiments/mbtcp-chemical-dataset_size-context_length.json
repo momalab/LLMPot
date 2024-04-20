@@ -8,29 +8,11 @@
   "datasets": [
     {
       "protocol": "mbtcp",
-      "size": 800,
+      "size": 4096,
       "client": "chemical",
       "server": {
         "name": "no_logic_server"
       },
-      "context": 1
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 1600,
-      "client": "chemical",
-      "server": {
-        "name": "no_logic_server"
-      },
-      "context": 1
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 3200,
-      "client": "chemical",
-      "server": {
-        "name": "no_logic_server"
-      },      
       "context": 1
     }
   ]
