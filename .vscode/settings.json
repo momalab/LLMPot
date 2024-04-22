@@ -4,6 +4,18 @@
     "cSpell.words": [
         "mbtcp"
     ],
-    "python.analysis.autoImportCompletions": false,
+    "python.analysis.autoImportCompletions": true,
     "python.analysis.typeCheckingMode": "basic",
+    "files.exclude": {
+        "**/.icspot": true,
+        "**/.idea": true,
+        "**/.git": true,
+        "**/__pycache__": true
+    },
+    "files.watcherExclude": {
+        "**/.icspot": true,
+        "**/.idea": true,
+        "**/.git": true,
+        "**/__pycache__": true
+    }
 }

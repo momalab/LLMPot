@@ -1,20 +1,20 @@
 {
   "model_type": "google",
   "model_name": "byt5-small",
-  "max_epochs": 100,
-  "patience": 10,
+  "max_epochs": 50,
+  "patience": 5,
   "datasets": [
     {
       "protocol": "mbtcp",
-      "size": 3200,
+      "size": 1600,
       "functions": [1,5,15,3,6,16],
       "values": {"low": 0, "high": 65535},
-      "addresses": {"low": 0, "high": 39},
+      "addresses": {"low": 0, "high": 49999},
       "client": "boundaries_client",
       "server": {
         "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
+        "coils": 50000,
+        "registers": 50000
       },
       "context": 0,
       "multi_elements": 3

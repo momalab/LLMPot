@@ -50,11 +50,11 @@ def load_model(finetuner_model: FinetunerModel):
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
-    with open(f"{EXPERIMENTS}/mbtcp-protocol-emulation.json", "r") as cfg:
+    with open(f"{EXPERIMENTS}/honeypot.json", "r") as cfg:
         config = cfg.read()
         config = json.loads(config)
         finetuner_model = FinetunerModel(**config)
-        finetuner_model.experiment = "mbtcp-protocol-emulation.json"
+        finetuner_model.experiment = "honeypot.json"
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[0].__str__()}")[0]
     model, tokenizer = load_model(finetuner_model)
 

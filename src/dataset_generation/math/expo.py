@@ -1,14 +1,18 @@
+import os
 import numpy as np
 import pandas as pd
 import math
 from scipy.integrate import cumtrapz
 from scipy.interpolate import interp1d
+import plotly.graph_objects as go
 
-from cfg import DATASET_PARSED
+from cfg import ASSETS, DATASET_PARSED
 
+
+FONT_FAMILY = "Times New Roman"
 SAMPLES = 5000
-LOW = -12
-HIGH = 11.08
+LOW = 5
+HIGH = 12
 
 def remove_decimals(x, y, dec_num = 4):
     x = [round(x, dec_num) for x in x]
@@ -28,11 +32,11 @@ def expo_values():
 def expo_values_sampled(x):
     derivative_values = expo(x)
     
-    power = 0.3  # Adjusting to a less aggressive power reduction
+    power = 0.8  # Adjusting to a less aggressive power reduction
     pdf = np.power(derivative_values, power)
     pdf /= np.sum(pdf * np.diff(x)[0])
     
-    mix_ratio = 0.3
+    mix_ratio = 0.5
     uniform_pdf = np.ones_like(pdf) / len(pdf)
     adjusted_pdf = (1 - mix_ratio) * pdf + mix_ratio * uniform_pdf
     adjusted_pdf /= np.sum(adjusted_pdf * np.diff(x)[0])
@@ -45,7 +49,50 @@ def expo_values_sampled(x):
     sampled_x_values = np.sort(sampled_x_values)
     
     y = [expo(x) for x in sampled_x_values]
+    y_orig = [expo(x) for x in x]
     
+    scale_factor_pdf = max(y) / max(adjusted_pdf)
+    scale_factor_hist = max(y) / max(np.histogram(sampled_x_values, bins=100)[0])
+
+    fig_combined = go.Figure()
+
+    fig_combined.add_trace(go.Scatter(x=x, y=y_orig, mode='lines', name='exponential', line=dict(color='#272635')))
+    fig_combined.add_trace(go.Scatter(x=x, y=adjusted_pdf * scale_factor_pdf, mode='lines', name='PDF', line=dict(color='#A6A6A8', dash='dash')))
+
+    hist_data = np.histogram(sampled_x_values, bins=100)
+    hist_x = (hist_data[1][:-1] + hist_data[1][1:]) / 2
+    fig_combined.add_trace(go.Histogram(x=sampled_x_values, name='Sampled Points', marker_color='#B1E5F2', yaxis='y2'))
+
+    fig_combined.update_traces(marker={"opacity": 0.4})
+    # Update layout with two y-axes
+    fig_combined.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis_title='x',
+        yaxis=dict(
+            title='Expo Value / Scaled Density',
+            side='left',
+            showgrid=False
+        ),
+        yaxis2=dict(
+            title='X values Histogram',
+            overlaying='y',
+            side='right',
+            showgrid=False,
+        ),
+        font=dict(family=FONT_FAMILY, size=26, color="black"),
+        legend=dict(
+            orientation="h",  # Horizontal legend
+            xanchor="center",  # Anchor the legend's x to the center
+            x=0.5,  # Center x position
+            y=1.1  # Position y above the top of the plot
+        )
+    )
+
+    fig_combined.show()
+    os.makedirs(f"{ASSETS}/math_functions/", exist_ok=True)
+    fig_combined.write_image(f"{ASSETS}/math_functions/expo.png")
+
     return sampled_x_values, y
 
 def expo_values_with_noise(x):

@@ -12,7 +12,7 @@ ENV DOCKER_ENV "True"
 FROM python-base as model
 WORKDIR /app
 
-COPY ./checkpoints /app/checkpoints
+COPY ./checkpoints/honeypot.json /app/checkpoints/honeypot.json
 
 FROM model as modbus
 

@@ -1,12 +1,18 @@
+import os
 from matplotlib import pyplot as plt
+from matplotlib.animation import adjusted_figsize
 import numpy as np
 import pandas as pd
 import math
+from regex import X
 from scipy.integrate import cumtrapz
 from scipy.interpolate import interp1d
+import plotly.graph_objects as go
 
-from cfg import DATASET_PARSED
+from cfg import ASSETS, DATASET_PARSED
 
+
+FONT_FAMILY = "Times New Roman"
 SAMPLES = 5000
 LOW = -10
 HIGH = 10
@@ -31,9 +37,14 @@ def sigmoid_values():
 
 def sigmoid_values_sampled(x):
     derivative_values = sigmoid_derivative(x)
-    mix_ratio = 0.9
-    uniform_pdf = np.ones_like(derivative_values) / len(derivative_values)
-    adjusted_pdf = (1 - mix_ratio) * derivative_values + mix_ratio * uniform_pdf
+
+    power = 0.8
+    pdf = np.power(derivative_values, power)
+    pdf /= np.sum(pdf * np.diff(x)[0])
+    
+    mix_ratio = 0.5
+    uniform_pdf = np.ones_like(pdf) / len(pdf)
+    adjusted_pdf = (1 - mix_ratio) * pdf + mix_ratio * uniform_pdf
     adjusted_pdf /= np.sum(adjusted_pdf * np.diff(x)[0])
     cdf = cumtrapz(adjusted_pdf, x, initial=0)
     cdf /= cdf[-1]
@@ -42,10 +53,46 @@ def sigmoid_values_sampled(x):
     inverse_cdf = interp1d(cdf, x, kind='linear')
     sampled_x_values = inverse_cdf(uniform_random_samples)
     sampled_x_values = np.sort(sampled_x_values)
-    sampled_x_values = np.append(sampled_x_values, 10)
-    sampled_x_values = np.append(-10, sampled_x_values)
     
     y = [sigmoid(x) for x in sampled_x_values]
+    y_orig = [sigmoid(x) for x in x]
+    
+    scale_factor_pdf = max(y) / max(pdf)
+
+    fig_combined = go.Figure()
+
+    fig_combined.add_trace(go.Scatter(x=x, y=y_orig, mode='lines', name='Sigmoid', line=dict(color='#272635')))
+    fig_combined.add_trace(go.Scatter(x=x, y=pdf * scale_factor_pdf, mode='lines', name='PDF', line=dict(color='#A6A6A8', dash='dash')))
+    fig_combined.add_trace(go.Histogram(x=sampled_x_values, nbinsx=100, name='Sampled Points', opacity=0.5, marker_color='#B1E5F2', yaxis='y2'))
+
+    fig_combined.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis_title='x',
+        yaxis=dict(
+            title='Sigmoid Value / Scaled Density',
+            side='left',
+            showgrid=False
+        ),
+        yaxis2=dict(
+            title='X values Histogram',
+            overlaying='y',
+            side='right',
+            showgrid=False,
+        ),
+        font=dict(family=FONT_FAMILY, size=26, color="black"),
+        legend=dict(
+            orientation="h",
+            xanchor="center",
+            x=0.5,
+            y=1.1
+        )
+    )
+
+    fig_combined.show()
+    os.makedirs(f"{ASSETS}/math_functions/", exist_ok=True)
+    fig_combined.write_image(f"{ASSETS}/math_functions/sigmoid.png")
+
     
     return sampled_x_values, y
 
