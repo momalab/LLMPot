@@ -7,7 +7,7 @@ import subprocess
 import threading
 import time
 from multiprocessing import Process
-from typing import Any
+from typing import Any, Optional
 
 from pymodbus.server import StartTcpServer
 
@@ -51,19 +51,20 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
                 print(f'Experiment {dataset} already exists. Overwriting...')
 
             finetuner_model.current_dataset = dataset
-            server_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.server.name.split('_'))
-            client_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.client.split('_'))
+            if finetuner_model.current_dataset.server:
+                server_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.server.name.split('_'))
+                client_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.client.split('_'))
 
-            server_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.server.name}"), server_class_str)
-            client_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.client}"), client_class_str)
+                server_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.server.name}"), server_class_str)
+                client_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.client}"), client_class_str)
 
             tcpdump_process = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
 
             args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
-            # server_inst = server_class(ip, port, *args)
+            server_inst = server_class(ip, port, *args)
 
-            server_thread = None
-            update_thread = None
+            server_thread = Process()
+            update_thread = Process()
             if finetuner_model.datasets[0].protocol == "mbtcp":
                 server_thread = Process(target=server, args=[ip, port, finetuner_model, args, server_class], daemon=True)
                 server_thread.start()
@@ -113,7 +114,7 @@ def init():
     parser.add_argument('-ip', default="127.0.0.1", type=str, required=False)
     parser.add_argument('-p', default=5020, type=int, required=False)
     parser.add_argument('-intrf', default="lo0", type=str, required=False)
-    parser.add_argument('-exp', default="mbtcp-protocol-emulation.json", type=str, required=False)
+    parser.add_argument('-exp', default="honeypot.json", type=str, required=False)
     parser.add_argument('-o', default=True, type=bool, required=False)
     args = parser.parse_args()
 

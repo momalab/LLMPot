@@ -163,9 +163,11 @@ class Finetuner:
                         
                         trainer.test(model=best_model, dataloaders=dataloader)
 
-                        mae, std = calculate_error_margin(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.start_datetime}", file=test_dataset)
+                        mean, std, percentage = calculate_error_margin(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.start_datetime}", file=test_dataset)
 
-                        loggers[0].log_metrics({"mae": mae, "std": std}, step=int(epoch))
+                        loggers[0].log_metrics({"mean": mean, "std": std, "percentage": percentage}, step=int(epoch))
+                self._finetuner_model.on_test = True
+                self._finetuner_model.test_dataset = test_dataset
 
     def print_trainable_parameters(self):
 

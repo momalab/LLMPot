@@ -19,7 +19,7 @@ class BoundariesClient(MbtcpClient):
         while len(functions) < self._samples_num:
 
             device_functions: List[tuple[Callable[..., Any], List[Any], dict]] = []
-            for _ in range(10):
+            for _ in range(30):
                 object_id = random.randint(0, 3)
                 device_functions.append((self.read_device_information, [], {"object_id": object_id}))
 
