@@ -8,7 +8,7 @@ from pymodbus.payload import BinaryPayloadBuilder
 
 from client import MbtcpClient, retrieve_args
 
-in_1 = np.arange(-4096, 4096, 2)
+in_1 = np.arange(-4096, 4096, 2) #test: (-4095, 4095, 2)
 in_1.tolist()
 all_inputs = [in_1]
 all_combinations = list(itertools.product(*all_inputs))
