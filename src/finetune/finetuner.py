@@ -14,7 +14,7 @@ from peft.utils.peft_types import TaskType
 from peft.mapping import get_peft_model
 from peft.utils.other import prepare_model_for_kbit_training
 from lightning.pytorch.loggers.logger import Logger
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, DistributedSampler
 from transformers import BitsAndBytesConfig, PreTrainedTokenizer, PreTrainedModel
 
 from cfg import OUTPUTS_DIR, DATASET_PARSED, CHECKPOINTS
@@ -58,8 +58,6 @@ class Finetuner:
 
         self._tokenizer = self._init_tokenizer()
         self._model = self._init_model()
-
-        self.print_trainable_parameters()
 
     @abstractmethod
     def _load_dataset(self) -> Dataset:
@@ -107,76 +105,33 @@ class Finetuner:
         )
 
     def train(self, loggers: List[Logger]):
-        with open(f"{self._finetuner_model.log_output_dir}/{self._finetuner_model.__str__()}", "a") as f:
+        checkpoint_callback = ModelCheckpoint(
+            monitor=self._finetuner_model.val_loss_const,
+            filename='best-{epoch}',
+            save_top_k=1,
+            save_last=True,
+            mode='min',
+            auto_insert_metric_name=False
+        )
+        callbacks = [checkpoint_callback, MetricsLogger()]
 
-            checkpoint_callback = ModelCheckpoint(
-                monitor=self._finetuner_model.val_loss_const,
-                filename='best-{epoch}',
-                save_top_k=1,
-                save_last=True,
-                mode='min',
-                auto_insert_metric_name=False
-            )
-            callbacks = [FileTQDMProgressBar(f, refresh_rate=3), checkpoint_callback, MetricsLogger()]
+        if self._finetuner_model.patience > 0:
+            early_stop_callback = EarlyStopping(monitor=self._finetuner_model.val_loss_const, min_delta=0.00,
+                                                patience=self._finetuner_model.patience, verbose=True, mode="min",
+                                                log_rank_zero_only=True)
 
-            if self._finetuner_model.patience > 0:
-                early_stop_callback = EarlyStopping(monitor=self._finetuner_model.val_loss_const, min_delta=0.00,
-                                                    patience=self._finetuner_model.patience, verbose=True, mode="min")
-                callbacks.append(early_stop_callback)
+            callbacks.append(early_stop_callback)
 
-                trainer = Trainer(logger=loggers,
-                                callbacks=callbacks,
-                                max_epochs=self._finetuner_model.max_epochs,
-                                precision=self._finetuner_model.precision,
-                                log_every_n_steps=1,
-                                accelerator=self._finetuner_model.accelerator,
-                                devices=self._finetuner_model.devices,
-                                strategy="ddp",
-                                )
-            if os.path.exists(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}"):
-                trainer.fit(self._custom_module, self._data_module,
-                            ckpt_path=f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.old_start_datetime}/checkpoints/last.ckpt")
-            else:
-                trainer.fit(self._custom_module, self._data_module)
-
-            features = Features({
-                'source_text': Value('string'),
-                'target_text': Value('string')
-            })
-
-            if self._finetuner_model.test_datasets:
-                for test_dataset in self._finetuner_model.test_datasets:
-                    self._finetuner_model.on_test = True
-                    self._finetuner_model.test_dataset = test_dataset
-                    best_model_path = trainer.checkpoint_callback.best_model_path
-                    epoch = best_model_path.split("best-")[1].split(".ckpt")[0]
-                    best_model = Byt5LightningModule.load_from_checkpoint(best_model_path,
-                                                                        finetuner_model=self._finetuner_model,
-                                                                        tokenizer=self._tokenizer, model=self._model,
-                                                                        test_dataset=None)
-                    best_model.eval()
-                    with torch.no_grad():
-                        dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{test_dataset}.csv"}, features=features)
-                        dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
-
-                        dataloader = DataLoader(dataset["test"], batch_size=self._finetuner_model.batch_size, shuffle=False, num_workers=self._finetuner_model.workers)
-                        
-                        trainer.test(model=best_model, dataloaders=dataloader)
-
-                        mean, std, percentage = calculate_error_margin(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.start_datetime}", file=test_dataset)
-
-                        loggers[0].log_metrics({"mean": mean, "std": std, "percentage": percentage}, step=int(epoch))
-                self._finetuner_model.on_test = True
-                self._finetuner_model.test_dataset = test_dataset
-
-    def print_trainable_parameters(self):
-
-        trainable_params = 0
-        all_param = 0
-        if hasattr(self._model, "named_parameters"):
-
-            for _, param in self._model.named_parameters():
-                all_param += param.numel()
-                if param.requires_grad:
-                    trainable_params += param.numel()
-            self._logger.info(f"trainable params: {trainable_params} || all params: {all_param} || trainable%: {100 * trainable_params / all_param}")
+        trainer = Trainer(logger=loggers,
+                          callbacks=callbacks,
+                          max_epochs=self._finetuner_model.max_epochs,
+                          precision=self._finetuner_model.precision,
+                          log_every_n_steps=1,
+                          accelerator=self._finetuner_model.accelerator,
+                          devices=self._finetuner_model.devices,
+                          strategy="ddp")
+        if os.path.exists(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}"):
+            trainer.fit(self._custom_module, self._data_module,
+                        ckpt_path=f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.start_datetime}/checkpoints/last.ckpt")
+        else:
+            trainer.fit(self._custom_module, self._data_module)

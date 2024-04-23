@@ -23,10 +23,9 @@ def main(experiment: str):
             finetuner_model.current_dataset = dataset
             log = TheLogger(finetuner_model.__str__(), finetuner_model.log_output_dir)
             if os.path.exists(f"{CHECKPOINTS}/{experiment}/{dataset.__str__()}"):
-                finetuner_model.old_start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.current_dataset}")[0]
-                log.warning(f'Experiment {dataset} already exists. Continuing..')
-            else:
-                log.info(f'Fine tuning {dataset} ...')
+                log.warning(f'Experiment {dataset} already exists.')
+                continue
+            log.info(f'Fine tuning {dataset} ...')
             trainer.main(finetuner_model)
     except KeyboardInterrupt:
         print("User interrupted the process.")

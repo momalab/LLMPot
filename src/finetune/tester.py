@@ -1,4 +1,5 @@
 import argparse
+import glob
 import json
 import os
 import traceback
@@ -13,6 +14,7 @@ from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 from cfg import EXPERIMENTS, CHECKPOINTS, DATASET_PARSED
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel, TestExperiment
+from utilities.epsilon import calculate_error_margin
 
 
 def main():
@@ -60,9 +62,11 @@ def main():
                 finetuner_orig_exp.current_dataset = dataset
                 finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
                 finetuner_orig_exp.test_experiment = TestExperiment(experiment=finetuner_test.experiment, dataset=test_dataset)
-
+                
+                best_model_path = glob.glob(f"{CHECKPOINTS}/{finetuner_orig_exp.experiment}/{finetuner_orig_exp.current_dataset}/{finetuner_orig_exp.start_datetime}/checkpoints/best-*")[0]
+                
                 model = Byt5LightningModule.load_from_checkpoint(
-                    checkpoint_path=f"{CHECKPOINTS}/{finetuner_orig_exp.experiment}/{finetuner_orig_exp.current_dataset}/{finetuner_orig_exp.start_datetime}/checkpoints/last.ckpt",
+                    checkpoint_path=best_model_path,
                     finetuner_model=finetuner_orig_exp,
                     tokenizer=tokenizer,
                     model=model_orig,
@@ -76,6 +80,10 @@ def main():
                                   strategy="ddp")
 
                 trainer.test(model=model, dataloaders=dataloader)
+                
+                mean, std, percentage = calculate_error_margin(f"{CHECKPOINTS}/{finetuner_orig_exp.experiment}/{finetuner_orig_exp.current_dataset}/{finetuner_orig_exp.start_datetime}", file=test_dataset.__str__())
+
+                print(f"mean: {mean}, std: {std}, percentage: {percentage}")
 
             df = pd.read_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/{finetuner_test.start_datetime}/metrics.csv")
             for index, dataset in enumerate(finetuner_orig_exp.datasets):

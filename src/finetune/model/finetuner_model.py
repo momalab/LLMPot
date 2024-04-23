@@ -92,9 +92,6 @@ class FinetunerModel:
     datasets: List[DatasetModel]
     experiment_filename: str = ""
     test_experiment: Optional[TestExperiment] = None
-    test_datasets: Optional[List[str]] = None
-    test_dataset: Optional[str] = None
-    on_test = False
 
     max_epochs: int = 30
     patience: int = 10
@@ -106,7 +103,6 @@ class FinetunerModel:
 
     start_time: float
     start_datetime: str
-    old_start_datetime: str
 
     checkpoints_dir: str
     log_output_dir: str
@@ -149,8 +145,6 @@ class FinetunerModel:
         if self.test_experiment:
             path = (f"{CHECKPOINTS}/{self.test_experiment.experiment}/{self.test_experiment.dataset}"
                     f"/val_type_{validation_type}-model_{self.current_dataset.__str__()}.jsonl")
-        elif self.on_test:
-            path = (f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/{self.test_dataset}.jsonl")
         else:
             path = f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/epoch-{epoch}_val_type-{validation_type}.jsonl"
         os.makedirs(os.path.dirname(path), exist_ok=True)

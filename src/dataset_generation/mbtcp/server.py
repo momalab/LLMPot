@@ -33,7 +33,6 @@ class MbtcpServer:
         try:
             update_logic_thread.start()
 
-            StartTcpServer(context=self._context, identity=self._identity, address=(self._ip, self._port))
         except KeyboardInterrupt:
             print("Server stopped by user.")
             update_logic_thread.terminate()
