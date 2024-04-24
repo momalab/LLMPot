@@ -63,14 +63,14 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
             args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
             server_inst = server_class(ip, port, *args)
 
-            server_thread = Process()
-            update_thread = Process()
-            if finetuner_model.datasets[0].protocol == "mbtcp":
-                server_thread = Process(target=server, args=[ip, port, finetuner_model, args, server_class], daemon=True)
-                server_thread.start()
+            # server_thread = Process()
+            # update_thread = Process()
+            # if finetuner_model.datasets[0].protocol == "mbtcp":
+            #     server_thread = Process(target=server, args=[ip, port, finetuner_model, args, server_class], daemon=True)
+            #     server_thread.start()
 
-                update_thread = Process(target=server_inst._update_control_logic, daemon=True)
-                update_thread.start()
+            #     update_thread = Process(target=server_inst._update_control_logic, daemon=True)
+            #     update_thread.start()
 
             time.sleep(5)
 
@@ -86,12 +86,12 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
             thread.start()
             thread.join()
 
-            if finetuner_model.datasets[0].protocol == "mbtcp":
-                update_thread.terminate()
-                update_thread.join()
+            # if finetuner_model.datasets[0].protocol == "mbtcp":
+            #     update_thread.terminate()
+            #     update_thread.join()
 
-                server_thread.terminate()
-                server_thread.join()
+            #     server_thread.terminate()
+            #     server_thread.join()
 
             time.sleep(1)
 
@@ -112,9 +112,9 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
 def init():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="127.0.0.1", type=str, required=False)
-    parser.add_argument('-p', default=5020, type=int, required=False)
-    parser.add_argument('-intrf', default="lo0", type=str, required=False)
-    parser.add_argument('-exp', default="honeypot.json", type=str, required=False)
+    parser.add_argument('-p', default=10200, type=int, required=False)
+    parser.add_argument('-intrf', default="lo", type=str, required=False)
+    parser.add_argument('-exp', default="s7comm-protocol-emulation.json", type=str, required=False)
     parser.add_argument('-o', default=True, type=bool, required=False)
     args = parser.parse_args()
 

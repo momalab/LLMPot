@@ -105,33 +105,34 @@ class Finetuner:
         )
 
     def train(self, loggers: List[Logger]):
-        checkpoint_callback = ModelCheckpoint(
-            monitor=self._finetuner_model.val_loss_const,
-            filename='best-{epoch}',
-            save_top_k=1,
-            save_last=True,
-            mode='min',
-            auto_insert_metric_name=False
-        )
-        callbacks = [checkpoint_callback, MetricsLogger()]
+        with open(f"{self._finetuner_model.log_output_dir}/{self._finetuner_model.__str__()}", "a") as f:
+            checkpoint_callback = ModelCheckpoint(
+                monitor=self._finetuner_model.val_loss_const,
+                filename='best-{epoch}',
+                save_top_k=1,
+                save_last=True,
+                mode='min',
+                auto_insert_metric_name=False
+            )
+            callbacks = [checkpoint_callback, MetricsLogger()]
 
-        if self._finetuner_model.patience > 0:
-            early_stop_callback = EarlyStopping(monitor=self._finetuner_model.val_loss_const, min_delta=0.00,
-                                                patience=self._finetuner_model.patience, verbose=True, mode="min",
-                                                log_rank_zero_only=True)
+            if self._finetuner_model.patience > 0:
+                early_stop_callback = EarlyStopping(monitor=self._finetuner_model.val_loss_const, min_delta=0.00,
+                                                    patience=self._finetuner_model.patience, verbose=True, mode="min",
+                                                    log_rank_zero_only=True)
 
-            callbacks.append(early_stop_callback)
+                callbacks.append(early_stop_callback)
 
-        trainer = Trainer(logger=loggers,
-                          callbacks=callbacks,
-                          max_epochs=self._finetuner_model.max_epochs,
-                          precision=self._finetuner_model.precision,
-                          log_every_n_steps=1,
-                          accelerator=self._finetuner_model.accelerator,
-                          devices=self._finetuner_model.devices,
-                          strategy="ddp")
-        if os.path.exists(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}"):
-            trainer.fit(self._custom_module, self._data_module,
-                        ckpt_path=f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.start_datetime}/checkpoints/last.ckpt")
-        else:
-            trainer.fit(self._custom_module, self._data_module)
+            trainer = Trainer(logger=loggers,
+                              callbacks=callbacks,
+                              max_epochs=self._finetuner_model.max_epochs,
+                              precision=self._finetuner_model.precision,
+                              log_every_n_steps=1,
+                              accelerator=self._finetuner_model.accelerator,
+                              devices=self._finetuner_model.devices,
+                              strategy="ddp")
+            if os.path.exists(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}"):
+                trainer.fit(self._custom_module, self._data_module,
+                            ckpt_path=f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.start_datetime}/checkpoints/last.ckpt")
+            else:
+                trainer.fit(self._custom_module, self._data_module)

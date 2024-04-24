@@ -21,38 +21,8 @@
     },
     {
       "protocol": "mbtcp",
-      "size": 200,
-      "functions": [1,15,3,16],
-      "values": {"low": 0, "high": 65535},
-      "addresses": {"low": 0, "high": 39},
-      "client": "boundaries_client",
-      "server": {
-        "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
-      },
-      "context": 0,
-      "multi_elements": 3
-    },
-    {
-      "protocol": "mbtcp",
       "size": 400,
       "functions": [1,5,15,3,6,16],
-      "values": {"low": 0, "high": 65535},
-      "addresses": {"low": 0, "high": 39},
-      "client": "boundaries_client",
-      "server": {
-        "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
-      },
-      "context": 0,
-      "multi_elements": 3
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 400,
-      "functions": [1,15,3,16],
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 39},
       "client": "boundaries_client",
@@ -81,38 +51,8 @@
     },
     {
       "protocol": "mbtcp",
-      "size": 800,
-      "functions": [1,15,3,16],
-      "values": {"low": 0, "high": 65535},
-      "addresses": {"low": 0, "high": 39},
-      "client": "boundaries_client",
-      "server": {
-        "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
-      },
-      "context": 0,
-      "multi_elements": 3
-    },
-    {
-      "protocol": "mbtcp",
       "size": 1600,
       "functions": [1,5,15,3,6,16],
-      "values": {"low": 0, "high": 65535},
-      "addresses": {"low": 0, "high": 39},
-      "client": "boundaries_client",
-      "server": {
-        "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
-      },
-      "context": 0,
-      "multi_elements": 3
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 1600,
-      "functions": [1,15,3,16],
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 39},
       "client": "boundaries_client",
@@ -141,38 +81,8 @@
     },
     {
       "protocol": "mbtcp",
-      "size": 3200,
-      "functions": [1,15,3,16],
-      "values": {"low": 0, "high": 65535},
-      "addresses": {"low": 0, "high": 39},
-      "client": "boundaries_client",
-      "server": {
-        "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
-      },
-      "context": 0,
-      "multi_elements": 3
-    },
-    {
-      "protocol": "mbtcp",
       "size": 6400,
       "functions": [1,5,15,3,6,16],
-      "values": {"low": 0, "high": 65535},
-      "addresses": {"low": 0, "high": 39},
-      "client": "boundaries_client",
-      "server": {
-        "name": "no_logic_server",
-        "coils": 40,
-        "registers": 40
-      },
-      "context": 0,
-      "multi_elements": 3
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 6400,
-      "functions": [1,15,3,16],
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 39},
       "client": "boundaries_client",
@@ -184,9 +94,5 @@
       "context": 0,
       "multi_elements": 3
     }
-  ],
-  "test_datasets": [
-    "mbtcp-random_client-c0-s1000-f1_5_15_3_6_16-v0_65535-a0_65535-sc40-sr40",
-    "mbtcp-random_client-c0-s1000-f1_5_15_3_6_16-v0_65535-a0_65535-sc65000-sr65000"
   ]
 }

@@ -7,7 +7,7 @@ from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 import pdb
 
 SERVER_HOST = "10.224.33.30"
-# SERVER_HOST = "localhost"
+SERVER_HOST = "localhost"
 
 client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 502)
 
