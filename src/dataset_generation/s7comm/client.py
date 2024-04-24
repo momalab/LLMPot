@@ -2,7 +2,7 @@ import argparse
 import logging
 import sys
 import time
-from typing import Tuple, List
+from typing import Callable, Tuple, List
 
 from snap7.client import Client
 from snap7.types import Areas
@@ -36,7 +36,7 @@ class S7Client(Client):
         self.connect(self.ip, 0, 0, self.port)
         self.get_connected()
 
-    def func_wrapper(self, func: callable, *args):
+    def func_wrapper(self, func: Callable, *args):
         try:
             if func.__name__ == self.read_area.__name__:
                 block_name, block_num, address, num_bytes = args[0], args[1], args[2], args[3]

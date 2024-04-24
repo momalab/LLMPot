@@ -19,30 +19,30 @@ class BoundariesClient(S7Client):
         functions = []
         while len(functions) < self._samples_num:
 
-            mk_functions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
+            mk_functions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 1 in self._codes and 5 in self._codes:
                 address_range = value_generator.generate_triplet_value(self._addresses)
                 markers_block = random.randint(0, S7Client.MAX_NUM_BLOCKS)
                 for address in address_range:
                     mk_functions.extend([
-                        (self.write_area, [Areas.MK, markers_block, address, bytearray([0b00000001])], []),
-                        (self.read_area, [Areas.MK, markers_block, address, 1], []),
-                        (self.write_area, [Areas.MK, markers_block, address, bytearray([0b00000000])], []),
-                        (self.read_area, [Areas.MK, markers_block, address, 1], [])
+                        (self.write_area, [Areas.MK, markers_block, address, bytearray([0b00000001])], {}),
+                        (self.read_area, [Areas.MK, markers_block, address, 1], {}),
+                        (self.write_area, [Areas.MK, markers_block, address, bytearray([0b00000000])], {}),
+                        (self.read_area, [Areas.MK, markers_block, address, 1], {})
                     ])
 
-            mk_functions_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
+            mk_functions_exceptions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 1 in self._codes and 5 in self._codes:
                 exception_range = value_generator.generate_exception_ranges(self._addresses, S7Client.MAX_ADDRESS)
                 markers_block = random.randint(0, S7Client.MAX_NUM_BLOCKS)
                 for address in exception_range:
                     mk_functions_exceptions.extend([
-                        (self.read_area, [Areas.MK, markers_block, address, 1], []),
-                        (self.write_area, [Areas.MK, markers_block, address, bytearray([0b00000001])], []),
-                        (self.write_area, [Areas.MK, markers_block, address, bytearray([0b00000000])], [])
+                        (self.read_area, [Areas.MK, markers_block, address, 1], {}),
+                        (self.write_area, [Areas.MK, markers_block, address, bytearray([0b00000001])], {}),
+                        (self.write_area, [Areas.MK, markers_block, address, bytearray([0b00000000])], {})
                     ])
 
-            db_functions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
+            db_functions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 3 in self._codes and 6 in self._codes:
                 address_range = value_generator.generate_triplet_value(self._addresses)
                 data_block = random.randint(0, S7Client.MAX_NUM_BLOCKS)
@@ -50,22 +50,22 @@ class BoundariesClient(S7Client):
                     single_data_to_write = value_generator.generate_triplet_value(self._values)
                     for data in single_data_to_write:
                         db_functions.extend([
-                            (self.write_area, [Areas.DB, data_block, address, set_word(bytearray(2), 0, data)], []),
-                            (self.read_area, [Areas.DB, data_block, address, 1], [])
+                            (self.write_area, [Areas.DB, data_block, address, set_word(bytearray(2), 0, data)], {}),
+                            (self.read_area, [Areas.DB, data_block, address, 1], {})
                         ])
 
-            db_functions_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
+            db_functions_exceptions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 3 in self._codes and 6 in self._codes:
                 exception_range = value_generator.generate_exception_ranges(self._addresses, S7Client.MAX_ADDRESS)
                 data_block = random.randint(0, S7Client.MAX_NUM_BLOCKS)
                 for address in exception_range:
                     random_value = random.randrange(0, S7Client.MAX_VALUE)
                     db_functions_exceptions.extend([
-                        (self.read_area, [Areas.DB, data_block, address, 1], []),
-                        (self.write_area, [Areas.DB, data_block, address, set_word(bytearray(2), 0, random_value)], []),
+                        (self.read_area, [Areas.DB, data_block, address, 1], {}),
+                        (self.write_area, [Areas.DB, data_block, address, set_word(bytearray(2), 0, random_value)], {}),
                     ])
 
-            db_functions_multiple: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
+            db_functions_multiple: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 3 in self._codes and 16 in self._codes:
                 for elements in range(1, self._max_elements):
                     address_range = value_generator.generate_triplet_value(self._addresses, elements)
@@ -74,11 +74,11 @@ class BoundariesClient(S7Client):
                         combinations = value_generator.generate_combinations(self._values, elements)
                         for combination in combinations.values():
                             db_functions_multiple.extend([
-                                (self.write_area, [Areas.DB, data_block, address, value_generator.generate_words(combination)], []),
-                                (self.read_area, [Areas.DB, data_block, address, elements], [])
+                                (self.write_area, [Areas.DB, data_block, address, value_generator.generate_words(combination)], {}),
+                                (self.read_area, [Areas.DB, data_block, address, elements], {})
                             ])
 
-            db_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
+            db_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 3 in self._codes and 16 in self._codes:
                 for elements in range(1, self._max_elements):
                     exception_range = value_generator.generate_exception_ranges(self._addresses, S7Client.MAX_ADDRESS, elements)
@@ -87,11 +87,11 @@ class BoundariesClient(S7Client):
                     for combination in combinations.values():
                         for address in exception_range:
                             db_functions_multiple_exceptions.extend([
-                                (self.read_area, [Areas.DB, data_block, address, elements], []),
-                                (self.write_area, [Areas.DB, data_block, address, value_generator.generate_words(combination)], [])
+                                (self.read_area, [Areas.DB, data_block, address, elements], {}),
+                                (self.write_area, [Areas.DB, data_block, address, value_generator.generate_words(combination)], {})
                             ])
 
-            mk_functions_multiple: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
+            mk_functions_multiple: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 1 in self._codes and 15 in self._codes:
                 for elements in range(1, self._max_elements):
                     address_range = value_generator.generate_triplet_value(self._addresses, elements)
@@ -100,11 +100,11 @@ class BoundariesClient(S7Client):
                         mk_combinations = value_generator.generate_multiple_requests(elements, [bytearray([0b00000001]), bytearray([0b00000000])])
                         for mk_values in mk_combinations:
                             mk_functions_multiple.extend([
-                                (self.read_area, [Areas.MK, markers_block, address, elements], []),
-                                (self.write_area, [Areas.MK, markers_block, address, value_generator.generate_words_from_bytearrays(mk_values)], [])
+                                (self.read_area, [Areas.MK, markers_block, address, elements], {}),
+                                (self.write_area, [Areas.MK, markers_block, address, value_generator.generate_words_from_bytearrays(mk_values)], {})
                             ])
 
-            mk_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
+            mk_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 1 in self._codes and 15 in self._codes:
                 for elements in range(1, self._max_elements):
                     exception_range = value_generator.generate_exception_ranges(self._addresses, S7Client.MAX_ADDRESS, elements)
@@ -113,8 +113,8 @@ class BoundariesClient(S7Client):
                     for mk_values in mk_combinations:
                         for address in exception_range:
                             mk_functions_multiple_exceptions.extend([
-                                (self.read_area, [Areas.MK, markers_block, address, elements], []),
-                                (self.write_area, [Areas.MK, markers_block, address, value_generator.generate_words_from_bytearrays(mk_values)], [])
+                                (self.read_area, [Areas.MK, markers_block, address, elements], {}),
+                                (self.write_area, [Areas.MK, markers_block, address, value_generator.generate_words_from_bytearrays(mk_values)], {})
                             ])
 
             functions.extend(mk_functions)
