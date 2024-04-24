@@ -58,19 +58,19 @@ class Plots:
             config = cfg.read()
             config = json.loads(config)
             finetuner_model = FinetunerModel(**config)
-            finetuner_model.experiment = f"{experiment}"
+            finetuner_model.experiment = f"{experiment}.old"
 
             return finetuner_model
 
     def accuracy_with_random_dataset(self):
         dfs = pd.DataFrame()
         for index, dataset in enumerate(self._finetuner.datasets):
-            start_datetime = glob.glob(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}")[0]
-            if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{start_datetime}/metrics.csv"):
+            the_dir  = f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}"
+            start_datetime_path = [name for name in os.listdir(the_dir) if os.path.isdir(os.path.join(the_dir, name))][0]
+            if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics2.csv"):
                 continue
 
-            df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{start_datetime}/metrics.csv")
-            assert dataset.server is not None
+            df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics2.csv")
             df.loc[:, 'test_dataset'] = dataset.server.coils
             df.loc[:, 'server_cfg'] = df['test_dataset'].apply(lambda x: "same" if x == 40 else "different")
             df.loc[:, 'size'] = df['dataset'].apply(lambda x: f"{x.split('-')[3]}")
@@ -79,15 +79,16 @@ class Plots:
 
         for metric in self._test_metrics:
             validation_type = metric.split("/")[1]
+            df = dfs.query(f"functions == '1_5_15_3_6_16'")
             fig = px.bar(df, x='size', y=metric, color='server_cfg', barmode='group',
-                            color_discrete_sequence=['darkgreen', 'purple'])
+                            color_discrete_sequence=['#EDB88B', '#545E75'])
 
             fig.update_layout(
                 barmode='group',
                 # title=f'Protocol: {self._protocol}, Model: {self._finetuner.model_name}, Validation: {validation_type}',
-                title_font_size=28,
+                # title_font_size=28,
                 xaxis_title='Model Version',
-                yaxis_title='Accuracy',
+                yaxis_title='BCA' if validation_type == 'exact' else 'PVA',
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 margin=dict(l=0, r=0, b=0, t=60, pad=0),
@@ -103,16 +104,15 @@ class Plots:
 
     def accuracy_per_epoch(self):
         dfs = pd.DataFrame()
+        colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
         for dataset in self._finetuner.datasets:
-            # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
-            colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
             start_datetime_path = os.listdir(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}")[0]
             if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics.csv"):
                 continue
 
             df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics.csv")
             df.drop(columns=['csv-val_loss_step', 'csv-val_loss_epoch', 'csv-train_loss_step', 'csv-train_loss_epoch'], inplace=True)
-            # df.dropna(subset=["csv-accuracy/validator", "csv-accuracy/exact"], inplace=True)
+            df.dropna(subset=["csv-accuracy/validator", "csv-accuracy/exact"], inplace=True)
             df.loc[:, 'dataset'] = dataset.__str__()
             dfs = pd.concat([dfs, df])
 
@@ -239,12 +239,12 @@ class Plots:
 
 
 if __name__ == '__main__':
-    # plot = Plots("mbtcp-protocol-test.json")
-    # plot.accuracy_with_random_dataset()
+    plot = Plots("mbtcp-protocol-test.json")
+    plot.accuracy_with_random_dataset()
 
-    plot = Plots("s7comm-protocol-emulation.json")
-    plot.accuracy_per_epoch()
-    plot.loss_per_epoch()
+    # plot = Plots("s7comm-protocol-emulation.json")
+    # plot.accuracy_per_epoch()
+    # plot.loss_per_epoch()
     # plot.barchart_best_accuracy_of_each()
 
     # plot = Plots("mbtcp-protocol-emulation.json")
