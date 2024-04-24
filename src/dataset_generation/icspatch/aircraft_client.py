@@ -8,7 +8,7 @@ from pymodbus.payload import BinaryPayloadBuilder
 
 from client import MbtcpClient, retrieve_args
 
-in_1 = np.arange(-49, 51, 14) #test: (-50, 52, 14)
+in_1 = np.arange(-15249, 15251, 4100) #(-49, 51, 14) // test: (-50, 52, 14)
 in_2 = in_1 + 3
 in_3 = in_1 - 2
 in_4 = in_1 + 1
@@ -74,6 +74,7 @@ class ProcessClient(MbtcpClient):
 def main():
     ip, port, samples_num = retrieve_args()
     samples_num = total_combinations
+    print(samples_num)
     client = ProcessClient(ip, port, samples_num)
     try:
         client.start_client()

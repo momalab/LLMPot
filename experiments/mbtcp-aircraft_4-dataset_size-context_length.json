@@ -1,0 +1,19 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 30,
+  "target_max_token_len": 4192,
+  "source_max_token_len": 4192,
+  "batch_size": 1,
+  "datasets": [
+    {
+      "protocol": "mbtcp",
+      "size": 4096,
+      "client": "aircraft_4",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    }
+  ]
+}
