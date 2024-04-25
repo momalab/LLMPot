@@ -1,0 +1,19 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 30,
+  "patience": 5,
+  "datasets": [
+    {
+      "protocol": "mbtcp",
+      "size": 4096,
+      "client": "aircraft_test",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    }
+  ],
+  "experiment_filename": "mbtcp-aircraft-dataset_size-context_length.json"
+}
+
