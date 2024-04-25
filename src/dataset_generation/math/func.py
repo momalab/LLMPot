@@ -13,10 +13,6 @@ from cfg import ASSETS, DATASET_PARSED
 from numpy.polynomial import Polynomial
 
 FONT_FAMILY = "Times New Roman"
-SAMPLES = 5000
-LOW = -2
-HIGH = 2
-
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -39,37 +35,37 @@ def func(x):
 def derivative(x):
     return DF(x)
 
-def func_values():
-    x = np.linspace(LOW, HIGH, SAMPLES)
+def func_values(low, high, samples):
+    x = np.linspace(low, high, samples)
     y = func(x)
     return x, y
 
-def func_values_sampled(x):
+def func_values_sampled(x, samples):
     derivative_values = derivative(x)
 
     power = 0.7
     pdf = np.power(abs(derivative_values), power)
     pdf /= np.sum(pdf * np.diff(x)[0])
-    
+
     mix_ratio = 0.1
     uniform_pdf = np.ones_like(pdf) / len(pdf)
     adjusted_pdf = (1 - mix_ratio) * pdf + mix_ratio * uniform_pdf
     adjusted_pdf /= np.sum(adjusted_pdf * np.diff(x)[0])
     cdf = cumtrapz(adjusted_pdf, x, initial=0)
     cdf /= cdf[-1]
-    
-    uniform_random_samples = np.random.rand(SAMPLES)
+
+    uniform_random_samples = np.random.rand(samples)
     inverse_cdf = interp1d(cdf, x, kind='linear')
     sampled_x_values = inverse_cdf(uniform_random_samples)
     sampled_x_values = np.sort(sampled_x_values)
-    
+
     y = [func(x) for x in sampled_x_values]
     y_orig = [func(x) for x in x]
-    
+
     scale_factor_pdf = max(y) / max(pdf)
 
     fig_combined = go.Figure()
-    
+
     NATURE = ['#C03221', '#87BCDE', '#EDB88B', '#545E75', '#3F826D', '#88498F']
 
     fig_combined.add_trace(go.Scatter(x=x, y=y_orig, mode='lines', name=THE_FUNC.__name__, line=dict(color=NATURE[0])))
@@ -105,11 +101,10 @@ def func_values_sampled(x):
     os.makedirs(f"{ASSETS}/math_functions/", exist_ok=True)
     fig_combined.write_image(f"{ASSETS}/math_functions/{THE_FUNC.__name__}.png")
 
-    
     return sampled_x_values, y
 
-def func_values_with_noise(x):
-    noise = np.random.uniform(-0.0005, 0.0005, SAMPLES)
+def func_values_with_noise(x, samples):
+    noise = np.random.uniform(-0.0005, 0.0005, samples)
     x_noise = x + noise
     y_noise = [func(x) for x in x_noise]
 
@@ -117,14 +112,14 @@ def func_values_with_noise(x):
 
 
 def main():
-    x, y = func_values()
-    x_sampled, y_sampled = func_values_sampled(x)
-    x_noise, y_noise = func_values_with_noise(x)
-    
+    x, y = func_values(-2, 2, 5000)
+    x_sampled, y_sampled = func_values_sampled(x, 5000)
+    x_noise, y_noise = func_values_with_noise(x, 5000)
+
     x, y = remove_decimals(x, y)
     x_sampled, y_sampled = remove_decimals(x_sampled, y_sampled)
     x_noise, y_noise = remove_decimals(x_noise, y_noise)
-    
+
     df = pd.DataFrame({'source_text': x, 'target_text': y})
     df_sampled = pd.DataFrame({'source_text': x_sampled, 'target_text': y_sampled})
     df_noise = pd.DataFrame({'source_text': x_noise, 'target_text': y_noise})

@@ -1,16 +1,17 @@
-import numpy as np
 import time
 from client import MbtcpClient, retrieve_args
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadBuilder
-
+from dataset_generation.math import func
 class Sigmoid_Client(MbtcpClient):
     def start_client(self):
         functions = []
         while len(functions) < self._samples_num:
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
-            input_1 = np.random.uniform(-100, 30)
-            builder.add_32bit_float(float(input_1))
+            x = 
+            input_x, input_y = func.func_values_sampled(x)
+
+            builder.add_32bit_float(float(input_x))
             inputs = builder.build()
             functions.extend([
                 (self.write_registers, [0, inputs], {"skip_encode": True}),
