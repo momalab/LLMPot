@@ -14,19 +14,39 @@ from numpy.polynomial import Polynomial
 
 FONT_FAMILY = "Times New Roman"
 
+def sgn(x):
+    return np.sign(x)
+
+def sgn_derivative(x): #2*Dirac delta function
+    if x == 0:
+        return np.inf  # Represents the Dirac delta spike at x = 0
+    else:
+        return 0
+
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
 def sigmoid_derivative(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
-THE_FUNC = np.cosh
-DF = np.sinh
+def expo10(x):
+    return  np.power(10, x)
+
+def expo10_derivative(x):
+    return np.power(10, x) * np.log(10)
+
+def cosh(x): #NOTE NEEDS UPDATING ON CODESYS "OSCAT.COSH()"
+    return np.cosh(x)
+
+def cosh_derivative(x):
+    return np.sinh(x)
+
+THE_FUNC = cosh #sgn/ sigmoid/ expo10
+DF = cosh_derivative #sgn_derivative/ sigmoid_derivative/ expo10_derivative
 
 def remove_decimals(x, y, dec_num = 4):
     x = [round(x, dec_num) for x in x]
     y = [round(x, dec_num) for x in y]
-
     return x, y
 
 def func(x):
