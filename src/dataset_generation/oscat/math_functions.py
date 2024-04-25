@@ -15,7 +15,7 @@ class MathClient(MbtcpClient):
             x, y = func.func_values(-10, 10, self._samples_num)
         if self._function_name == "expo10":
             x, y = func.func_values(-4.816, 4.816, self._samples_num)
-        if self._function_name == "cosh": 
+        if self._function_name == "cosh":
             x, y = func.func_values(-10, 10, self._samples_num) # NOTE NEEDS UPDATING ON CODESYS "OSCAT.COSH()"
 
         input_x, input_y = func.func_values_sampled(x, self._samples_num)
