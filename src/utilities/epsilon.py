@@ -13,13 +13,14 @@ def calculate_error_margin(path: str, file: str) -> Tuple[float, float, float]:
 def calculate(df: pd.DataFrame, path, file):
 
     results_data = []
-    for i, row in df.iterrows():
+    for _, row in df.iterrows():
+        distance = -1
+        percentage = -1
         try:
-            response: str = row['response']
             request: str = row['request']
+            response: str = row['response']
             expected_response = row['expected_response']
 
-            distance = -1
             try:
                 distance = abs(float(response) - float(expected_response))
                 percentage = distance / float(response)
@@ -28,14 +29,15 @@ def calculate(df: pd.DataFrame, path, file):
                 distance = int(distance_hex, 16)
                 percentage = int(distance_hex, 16) / int(response, 16)
 
+        except:
+            pass
+        finally:
             results_data.append({'request': request,
                                  'response': response,
                                  'expected_response': expected_response,
                                  'distance': distance,
                                  'percentage': percentage})
-            
-        except:
-            print(f"Error in row {i} {traceback.format_exc()}")
+
 
     results = pd.DataFrame(results_data)
     results.to_json(f"{path}/epsilon-{file}.jsonl", orient='records', lines=True)
