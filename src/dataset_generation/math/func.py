@@ -17,8 +17,14 @@ SAMPLES = 5000
 LOW = -10
 HIGH = 10
 
-def expo10(x):
-    return np.power(10, x)
+def sgn(x):
+    return np.sign(x)
+
+def sgn_derivative(x): #2*Dirac delta function
+    if x == 0:
+        return np.inf  # Represents the Dirac delta spike at x = 0
+    else:
+        return 0
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -26,12 +32,18 @@ def sigmoid(x):
 def sigmoid_derivative(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
-THE_FUNC = expo10
-DF = expo10
+def expo10(x):
+    return  np.power(10, x)
+
+def expo10_derivative(x):
+    return np.power(10, x) * np.log(10)
+
+THE_FUNC = np.cosh
+DF = np.sinh
 
 def remove_decimals(x, y, dec_num = 4):
     x = [round(x, dec_num) for x in x]
-    y = [round(x, dec_num) for x in y]
+    y = [round(y, dec_num) for y in y]
     return x, y
 
 def func(x):

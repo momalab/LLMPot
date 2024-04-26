@@ -74,4 +74,4 @@ def calculate(df: pd.DataFrame, path, file):
 
 
 if __name__ == "__main__":
-    calculate_error_margin("/media/shared/ICSPot/checkpoints/mbtcp-sigmoid-test.json/mbtcp-sigmoid_test-c1-s4096", "val_type_exact-model_mbtcp-sigmoid-c1-s4096")
+    calculate_error_margin("/media/shared/ICSPot/checkpoints/mbtcp-expo10-test.json/mbtcp-expo10_test-c1-s4096", "val_type_exact-model_mbtcp-expo10-c1-s4096")
