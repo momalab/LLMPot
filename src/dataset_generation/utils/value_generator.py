@@ -6,7 +6,7 @@ from finetune.model.finetuner_model import RangeModel
 
 
 def generate_random_value(values: RangeModel, elements=0):
-    return random.randrange(values.low, values.high - elements)
+    return random.randrange(values.low + 1, values.high - elements - 1)
 
 
 def generate_multiple_requests(elements: int, values: List):
@@ -14,7 +14,7 @@ def generate_multiple_requests(elements: int, values: List):
 
 
 def generate_combinations(values: RangeModel, elements):
-    nums = [values.low, random.randrange(values.low + 1, values.high), values.high]
+    nums = [values.low + 1, random.randrange(values.low + 1, values.high - 1), values.high - 1]
 
     combinations = itertools.product(nums, repeat=elements + 1)
     return {i: list(t) for i, t in enumerate(combinations)}
@@ -33,13 +33,15 @@ def generate_words_from_bytearrays(bytearrays_list: List[bytearray]) -> bytearra
         combined += ba
     return combined
 
+def generate_triplet_blocks(low: int, high: int):
+    return [low, random.randrange(low, high - 1), high - 1]
 
 def generate_triplet_value(values: RangeModel, elements=0):
     return [values.low, random.randrange(values.low, values.high - elements - 1), values.high - elements]
 
 
 def generate_exception_ranges(addresses: RangeModel, max_address: int, elements=0):
-    return [addresses.high + 1, random.randrange(addresses.high, max_address - elements - 1), max_address - elements]
+    return [addresses.high + 1, random.randrange(addresses.high, max_address - elements - 2), max_address - elements - 1]
 
 
 
