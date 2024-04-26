@@ -41,8 +41,8 @@ def cosh(x): #NOTE NEEDS UPDATING ON CODESYS "OSCAT.COSH()"
 def cosh_derivative(x):
     return np.sinh(x)
 
-THE_FUNC = cosh #sgn/ sigmoid/ expo10
-DF = cosh_derivative #sgn_derivative/ sigmoid_derivative/ expo10_derivative
+THE_FUNC = cosh
+DF = cosh_derivative
 
 def remove_decimals(x, y, dec_num = 4):
     x = [round(x, dec_num) for x in x]
@@ -63,11 +63,11 @@ def func_values(low, high, samples):
 def func_values_sampled(x, samples):
     derivative_values = derivative(x)
 
-    power = 0.7
+    power = 0.6
     pdf = np.power(abs(derivative_values), power)
     pdf /= np.sum(pdf * np.diff(x)[0])
 
-    mix_ratio = 0.1
+    mix_ratio = 0.6
     uniform_pdf = np.ones_like(pdf) / len(pdf)
     adjusted_pdf = (1 - mix_ratio) * pdf + mix_ratio * uniform_pdf
     adjusted_pdf /= np.sum(adjusted_pdf * np.diff(x)[0])
@@ -132,9 +132,9 @@ def func_values_with_noise(x, samples):
 
 
 def main():
-    x, y = func_values(-2, 2, 5000)
-    x_sampled, y_sampled = func_values_sampled(x, 5000)
-    x_noise, y_noise = func_values_with_noise(x, 5000)
+    x, y = func_values(-3, 3, 4096)
+    x_sampled, y_sampled = func_values_sampled(x, 4096)
+    x_noise, y_noise = func_values_with_noise(x, 4096)
 
     x, y = remove_decimals(x, y)
     x_sampled, y_sampled = remove_decimals(x_sampled, y_sampled)

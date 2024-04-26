@@ -7,7 +7,7 @@ from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 import pdb
 
 SERVER_HOST = "10.224.33.30"
-SERVER_HOST = "localhost"
+# SERVER_HOST = "localhost"
 
 client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 502)
 
@@ -61,6 +61,8 @@ def read_data(data_type, address, func_code, num_elements):
         if result.isError():
             print(f"Failed to read {num_elements} from {data_type} at {address} . Error: {result}")
         else:
+            decoder = BinaryPayloadDecoder.fromRegisters(result.registers, Endian.BIG, wordorder=Endian.LITTLE)
+            print("read_holding_registers:" +str(decoder.decode_32bit_float()))
             print(f"{data_type} at address {address}: {result.registers}")
     return result
 
@@ -80,7 +82,11 @@ def write_multiple_data(data_type, address, data_to_write, func_code):
     if func_code == 15:
         result = client.write_coils(address, data_to_write, unit=0x01)
     if func_code == 16:
-        result = client.write_registers(address, data_to_write, unit=0x01)
+        builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
+        input_x = data_to_write
+        builder.add_32bit_float(float(input_x))
+        inputs = builder.build()
+        result = client.write_registers(address, inputs, unit=0x01)
     if result.isError():
         print(f"Failed to write {num_elements} from {data_type} at {address} . Error: {result}")
     else:
@@ -94,7 +100,7 @@ log = logging.getLogger()
 log.setLevel(logging.DEBUG)
 
 try:
-    function_code, address, num_elements, data_to_write, single_data_to_write = 1, 0, 1, 0, 1
+    function_code, address, num_elements, data_to_write, single_data_to_write = 16, 0, 2, [-1], 1
 
     if function_code == 1:  # Read Coils (FC 01)
         read_data("Coils", address, 1, num_elements)

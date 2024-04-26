@@ -23,7 +23,7 @@ def retrieve_args() -> Tuple[str, int, int]:
     parser.add_argument('-ip', default="10.224.33.30", required=False)
     parser.add_argument('-p', default=502, required=False)
     parser.add_argument('-num', default=4096, required=False)
-    parser.add_argument('-func', default="sigmoid", required=False)
+    parser.add_argument('-func', default="sgn", required=False)
     args = parser.parse_args()
 
-    return args.ip, int(args.p), int(args.num), str(args.func)
+    return args.ip, int(args.p), int(args.num), args.func
