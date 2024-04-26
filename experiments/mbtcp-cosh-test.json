@@ -10,7 +10,7 @@
     {
       "protocol": "mbtcp",
       "size": 4096,
-      "client": "sigmoid_test",
+      "client": "cosh_test",
       "server": {
         "name": "no_logic_server"
       },
