@@ -10,8 +10,7 @@ class Validator:
         hex_chunks_response = [self.response[i:i + 2] for i in range(0, len(self.response), 2)]
         self.query_header = hex_chunks_query[:10]
         self.query_payload = hex_chunks_query[10:]
-        # self.address = int(self.query_payload[1] + self.query_payload[2], base=16) #NOTE: FIXX
-        self.response_header = hex_chunks_response[:12] #NOTE EXCEPTIONS ARE ADDED HERE
+        self.response_header = hex_chunks_response[:12]
         self.response_payload = hex_chunks_response[12:]
 
     def check_header_ids(self):
@@ -20,40 +19,46 @@ class Validator:
         if r_pid != q_pid:
             raise ValueError(f"Protocol_ID: {r_pid}, expected: {q_pid}")
 
-        parameter_length = int(self.query_header[7:9], base=16)
+        parameter_length = int(self.query_header[8], base=16)
         expected_length = len(self.query_payload)+1
         if parameter_length != expected_length:
-            raise ValueError(f"length: {parameter_length}, expected: {expected_length}")
+            raise ValueError(f"parameter_length: {parameter_length}, expected: {expected_length}")
 
     def check_payload(self):
         fc = self.response_payload[0]
         q_fc = self.query_payload[0]
         r_fc = self.response_payload[0]
-        
-        if self.response_header[-1] != 0:
-            error = self.response_header[-2]
-            error_class = error[0]
-            error_code = error[1]
-            raise ValueError("This is an exception response")
 
-        data_length = int(self.query_header[9:11], base=16) #either 0 for read or a number for write
+        data_length = int(self.query_header[10], base=16)
         if (data_length == 0) and (q_fc != "04"):
             raise ValueError(f"{q_fc} supposed to be read 0x04")
         if (data_length != 0) and (q_fc != "05"):
             raise ValueError(f"{q_fc} supposed to be write 0x05")
+
+        q_item_count = int(self.query_payload[2], base=16)
+        r_item_count = int(self.response_payload[2], base=16)
+        if r_item_count != q_item_count:
+            raise ValueError(f"item_count {r_item_count} expected: {q_item_count}")
 
         if r_fc == q_fc:
             if fc == "04":
                 self._read_function()
             elif fc == "05":
                 self._write_function()
+        else:
+            raise ValueError(f"Unexpected condition! {fc} - {q_fc} - {r_fc}")
 
     def _read_function(self):
-        
+        data = self.response_payload[3:]
+        data_length = int(self.response_header[10], base=16)
+        if len(data) != data_length:
+            raise ValueError(f"data_length: {data_length}, expected: {len(data)}")
 
     def _write_function(self):
-        
-
+        data = self.query_payload[14:]
+        data_length = int(self.query_header[10], base=16)
+        if len(data) != data_length:
+            raise ValueError(f"data_length: {data_length}, expected: {len(data)}")
 
 
 if __name__ == '__main__':

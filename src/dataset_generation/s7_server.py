@@ -15,7 +15,7 @@ def start_server():
     server = Server()
 
     size = 2
-    DBdata = (wordlen_to_ctypes[WordLen.Byte.value] * size)() #Byte x size = 2 byte > word
+    DBdata = (wordlen_to_ctypes[WordLen.Byte.value] * 4)() #Byte x size = 2 byte > word
     PAdata = (wordlen_to_ctypes[WordLen.Byte.value] * size)()
     TMdata = (wordlen_to_ctypes[WordLen.Byte.value] * size)()
     CTdata = (wordlen_to_ctypes[WordLen.Byte.value] * size)()

@@ -3,7 +3,6 @@ import time
 import itertools
 import numpy as np
 from pymodbus.constants import Endian
-from typing import List, Callable, Any
 from pymodbus.payload import BinaryPayloadBuilder
 
 from client import MbtcpClient, retrieve_args
@@ -29,7 +28,6 @@ class ProcessClient(MbtcpClient):
             in_1 = np.arange(-4096, 4096, 2) #test: (-4095, 4095, 2)
             in_1.tolist()
             all_inputs = [in_1]
-        #CHEMICAL-  hr_ir_addresses = 4 - coil_di_addresses = 0 - read 4 
         if self._process_name == "chemical":
             in_1 = np.arange(-49, 15, 1) #test: (-50, 16, 1)
             in_2 = in_1 + 3
@@ -56,23 +54,6 @@ class ProcessClient(MbtcpClient):
                     (self.write_registers, [0, inputs], {"skip_encode": True}),
                     (self.read_input_registers, [0, 4], {})])
 
-                register_functions_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
-                exception_range = generate_exception_ranges(8, self.MAX_ADDRESS) # hr_addresses = 8
-                for address in exception_range:
-                    register_functions_exceptions.extend([
-                        (self.write_registers, [address, random.randrange(0, self.MAX_REG_VALUE)], {})])
-
-                exception_range = generate_exception_ranges(4, self.MAX_ADDRESS) # ir_addresses = 4
-                for address in exception_range:
-                    register_functions_exceptions.extend([
-                        (self.read_input_registers, [address, 1], {})])
-
-                exception_range = generate_exception_ranges(0, self.MAX_ADDRESS) # coil_di_addresses = 0
-                for address in exception_range:
-                    register_functions_exceptions.extend([
-                        (self.write_coil, [address, random.choice([True, False])], {}),
-                        (self.read_discrete_inputs, [address, 1], {})])
-
             if (self._process_name == "anaerobic") or (self._process_name == "smartgrid"):
                 input_1 = combination[0]
                 builder.add_32bit_int(input_1)
@@ -80,19 +61,6 @@ class ProcessClient(MbtcpClient):
                 functions.extend([
                     (self.write_registers, [0, inputs], {"skip_encode": True}),
                     (self.read_input_registers, [0, 2], {})])
-
-                register_functions_exceptions: List[tuple[Callable[..., Any], List[Any]]] = []
-                exception_range = generate_exception_ranges(2, self.MAX_ADDRESS) # hr_ir_addresses = 2
-                for address in exception_range:
-                    register_functions_exceptions.extend([
-                        (self.write_registers, [address, random.randrange(0, self.MAX_REG_VALUE)], {})])
-
-                exception_range = generate_exception_ranges(0, self.MAX_ADDRESS) # coil_di_addresses = 0
-                for address in exception_range:
-                    register_functions_exceptions.extend([
-                        (self.write_coil, [address, random.choice([True, False])], {}),
-                        (self.read_discrete_inputs, [address, 1], {})])
-
 
             if self._process_name == "chemical":
                 input_1 = combination[0]
@@ -104,18 +72,6 @@ class ProcessClient(MbtcpClient):
                     (self.write_registers, [0, inputs], {"skip_encode": True}),
                     (self.read_input_registers, [0, 4], {})])
 
-                exception_range = generate_exception_ranges(4, self.MAX_ADDRESS) # hr_ir_addresses = 4
-                for address in exception_range:
-                    register_functions_exceptions.extend([
-                        (self.read_input_registers, [address, 1], {})])
-
-                exception_range = generate_exception_ranges(0, self.MAX_ADDRESS) # coil_di_addresses = 0
-                for address in exception_range:
-                    register_functions_exceptions.extend([
-                        (self.write_coil, [address, random.choice([True, False])], {}),
-                        (self.read_discrete_inputs, [address, 1], {})])
-
-        functions.extend(register_functions_exceptions)
         for function, args, kwargs in functions:
             response = function(*args, **kwargs)
             print(response)
