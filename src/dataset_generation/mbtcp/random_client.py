@@ -4,6 +4,7 @@ from typing import List, Callable, Any
 
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
 from finetune.model.finetuner_model import RangeModel
+from dataset_generation.utils import value_generator
 
 MAX_ADDRESS = 65535
 MAX_REG_VALUE = 65535
@@ -23,7 +24,7 @@ class RandomClient(MbtcpClient):
 
             coil_functions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 5 in self._codes:
-                address = self.generate_random_value(self._addresses)
+                address = value_generator.generate_random_value(self._addresses)
                 coil_functions.extend([
                     (self.read_coils, [address, 1], []),
                     (self.write_coil, [address, True], []),
@@ -32,8 +33,8 @@ class RandomClient(MbtcpClient):
 
             register_functions: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 6 in self._codes:
-                address = self.generate_random_value(self._addresses)
-                data = self.generate_random_value(self._values)
+                address = value_generator.generate_random_value(self._addresses)
+                data = value_generator.generate_random_value(self._values)
                 register_functions.extend([
                     (self.read_holding_registers, [address, 1], []),
                     (self.write_register, [address, data], []),
@@ -42,8 +43,8 @@ class RandomClient(MbtcpClient):
             register_functions_multiple: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 3 in self._codes and 16 in self._codes:
                 for elements in range(1, self._max_elements):
-                    address = self.generate_random_value(self._addresses, elements)
-                    combinations = self.generate_combinations(self._values, elements)
+                    address = value_generator.generate_random_value(self._addresses, elements)
+                    combinations = value_generator.generate_combinations(self._values, elements)
                     for combination in combinations.values():
                         register_functions_multiple.extend([
                             (self.read_holding_registers, [address, elements], []),
@@ -53,8 +54,8 @@ class RandomClient(MbtcpClient):
             coils_functions_multiple: List[tuple[Callable[..., Any], List[Any], List[Any]]] = []
             if 1 in self._codes and 15 in self._codes:
                 for elements in range(1, self._max_elements):
-                    address = self.generate_random_value(self._addresses, elements)
-                    coils_combinations = self.generate_multiple_coil_requests(elements)
+                    address = value_generator.generate_random_value(self._addresses, elements)
+                    coils_combinations = value_generator.generate_multiple_coil_requests(elements)
                     for coil_values in coils_combinations:
                         coils_functions_multiple.extend([
                             (self.read_coils, [address, elements], []),

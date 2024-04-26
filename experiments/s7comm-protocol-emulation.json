@@ -1,7 +1,7 @@
 {
   "model_type": "google",
   "model_name": "byt5-small",
-  "max_epochs": 30,
+  "max_epochs": 100,
   "patience": 5,
   "datasets": [
     {

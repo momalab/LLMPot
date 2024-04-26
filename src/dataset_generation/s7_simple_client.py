@@ -24,7 +24,7 @@ def start_client(server_address, server_port, samples_num):
                 print("----------------")
 
                 value = 28
-                area = 1
+                area = 31
                 b = set_word(bytearray(2), 0, value)
                 data = client.write_area(Areas.DB, area, 0, b)
                 print(f"DataDB written is: {get_word(b, 0)} on {area}")
@@ -57,7 +57,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="127.0.0.1", required=False)
-    parser.add_argument('-p', default=102, required=False)
+    parser.add_argument('-p', default=10200, required=False)
     parser.add_argument('-num', default=1, required=False)
     args = parser.parse_args()
 

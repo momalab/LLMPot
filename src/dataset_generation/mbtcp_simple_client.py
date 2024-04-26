@@ -1,5 +1,8 @@
 import random
 import logging
+import time
+import traceback
+from unittest import skip
 from pymodbus.constants import Endian
 from pymodbus.client import ModbusTcpClient
 from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
@@ -86,7 +89,12 @@ def write_multiple_data(data_type, address, data_to_write, func_code):
         input_x = data_to_write
         builder.add_32bit_float(float(input_x))
         inputs = builder.build()
+<<<<<<< Updated upstream
         result = client.write_registers(address, inputs, unit=0x01)
+=======
+        result = client.write_registers(address, inputs, unit=0x01, skip_encode=True)
+        # result = client.write_registers(address, data_to_write, unit=0x01)
+>>>>>>> Stashed changes
     if result.isError():
         print(f"Failed to write {num_elements} from {data_type} at {address} . Error: {result}")
     else:
@@ -100,7 +108,40 @@ log = logging.getLogger()
 log.setLevel(logging.DEBUG)
 
 try:
+<<<<<<< Updated upstream
     function_code, address, num_elements, data_to_write, single_data_to_write = 16, 0, 2, [-1], 1
+=======
+    function_code, address, num_elements, data_to_write, single_data_to_write = 16, 0, 2, -10, 1
+
+    if function_code == 1:  # Read Coils (FC 01)
+        read_data("Coils", address, 1, num_elements)
+
+    elif function_code == 2:  # Read Discrete Inputs (FC 02)
+        res = read_data("Discrete Inputs", address, 2, num_elements)
+
+    elif function_code == 3:  # Read Holding Registers (FC 03)
+        res = read_data("Holding Registers", address, 3, num_elements)
+        # device_model = read_ascii_from_registers(client, address, num_elements)
+        # print(f"Device Model: {device_model}")
+
+    elif function_code == 4:  # Read Input Registers (FC 04)
+        res = read_data("Input Registers", address, 4, num_elements)
+
+    elif function_code == 5:  # Write Single Coil (FC 5)
+        write_single_data("Single Coil", address, single_data_to_write, 5)
+
+    elif function_code == 6:  # Write Single Register (FC 6)
+        # pdb.set_trace()
+        write_single_data("Single Register", address, single_data_to_write, 6)
+
+    elif function_code == 15:  # Write Multiple Coils (FC 15)
+        write_multiple_data("Multiple Coils", address, data_to_write, 15)
+
+    elif function_code == 16:  # Write Multiple Registers (FC 16)
+        write_multiple_data("Multiple Registers", address, data_to_write, 16)
+
+    function_code, address, num_elements, data_to_write, single_data_to_write = 4, 0, 2, -10, 1
+>>>>>>> Stashed changes
 
     if function_code == 1:  # Read Coils (FC 01)
         read_data("Coils", address, 1, num_elements)
@@ -130,6 +171,5 @@ try:
         write_multiple_data("Multiple Registers", address, data_to_write, 16)
 except:
     pass
-
 finally:
     client.close()

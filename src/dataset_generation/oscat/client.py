@@ -18,7 +18,7 @@ class MbtcpClient(ModbusTcpClient):
         pass
 
 
-def retrieve_args() -> Tuple[str, int, int]:
+def retrieve_args() -> Tuple[str, int, int, str]:
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="10.224.33.30", required=False)
     parser.add_argument('-p', default=502, required=False)

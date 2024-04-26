@@ -16,13 +16,14 @@ class ServerModel:
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-    
+
     def __str__(self) -> str:
         if hasattr(self, 'coils'):
             return f"a-{self.coils}_d-{self.registers}"
-        else:
+        elif hasattr(self, 'markers'):
             return f"a-{self.markers}_d-{self.datablock}"
-            
+        return f"a-{self.coils}_d-{self.registers}"
+
 
 
 class RangeModel:

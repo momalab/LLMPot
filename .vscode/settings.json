@@ -17,5 +17,6 @@
         "**/.idea": true,
         "**/.git": true,
         "**/__pycache__": true
-    }
+    },
+    "files.trimTrailingWhitespace": true
 }

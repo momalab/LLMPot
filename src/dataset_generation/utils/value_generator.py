@@ -1,5 +1,6 @@
 import itertools
 import random
+from typing import List
 
 from finetune.model.finetuner_model import RangeModel
 
@@ -8,7 +9,7 @@ def generate_random_value(values: RangeModel, elements=0):
     return random.randrange(values.low, values.high - elements)
 
 
-def generate_multiple_requests(elements: int, values: []):
+def generate_multiple_requests(elements: int, values: List):
     return itertools.product(values, repeat=elements + 1)
 
 
@@ -19,14 +20,14 @@ def generate_combinations(values: RangeModel, elements):
     return {i: list(t) for i, t in enumerate(combinations)}
 
 
-def generate_words(values: [int]) -> bytearray:
+def generate_words(values: List[int]) -> bytearray:
     encoded_bytes = bytearray()
     for number in values:
         encoded_bytes += number.to_bytes(2, byteorder='big')
     return encoded_bytes
 
 
-def generate_words_from_bytearrays(bytearrays_list: [bytearray]) -> bytearray:
+def generate_words_from_bytearrays(bytearrays_list: List[bytearray]) -> bytearray:
     combined = bytearray(len(bytearrays_list) * 2)
     for ba in bytearrays_list:
         combined += ba

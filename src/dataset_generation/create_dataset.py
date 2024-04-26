@@ -26,11 +26,11 @@ def parse_packets(port: int, protocol: str, context_length: int, output_filename
     split(output_filename)
 
 
-def server(ip: str, port: int, finetuner_model: FinetunerModel, args: Any, server_class: Any):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
-    server_inst = server_class(ip, port, *args)
+# def server(ip: str, port: int, finetuner_model: FinetunerModel, args: Any, server_class: Any):
+#     loop = asyncio.new_event_loop()
+#     asyncio.set_event_loop(loop)
+#     args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
+#     server_inst = server_class(ip, port, *args)
 
 
 async def main(ip: str, port: int, interface: str, experiment: str, overwrite: bool = False):
@@ -52,16 +52,16 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
 
             finetuner_model.current_dataset = dataset
             if finetuner_model.current_dataset.server:
-                server_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.server.name.split('_'))
+                # server_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.server.name.split('_'))
                 client_class_str = ''.join(word.title() for word in finetuner_model.current_dataset.client.split('_'))
 
-                server_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.server.name}"), server_class_str)
+                # server_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.server.name}"), server_class_str)
                 client_class = getattr(importlib.import_module(f"dataset_generation.{finetuner_model.current_dataset.protocol}.{finetuner_model.current_dataset.client}"), client_class_str)
 
             tcpdump_process = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
 
             args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
-            server_inst = server_class(ip, port, *args)
+            # server_inst = server_class(ip, port, *args)
 
             # server_thread = Process()
             # update_thread = Process()
@@ -72,7 +72,7 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
             #     update_thread = Process(target=server_inst._update_control_logic, daemon=True)
             #     update_thread.start()
 
-            time.sleep(5)
+            time.sleep(2)
 
             client_inst = client_class(ip, port,
                                        finetuner_model.current_dataset.size,
@@ -115,7 +115,7 @@ def init():
     parser.add_argument('-p', default=10200, type=int, required=False)
     parser.add_argument('-intrf', default="lo", type=str, required=False)
     parser.add_argument('-exp', default="s7comm-protocol-emulation.json", type=str, required=False)
-    parser.add_argument('-o', default=True, type=bool, required=False)
+    parser.add_argument('-o', default=False, type=bool, required=False)
     args = parser.parse_args()
 
     server_address = args.ip

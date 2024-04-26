@@ -26,17 +26,18 @@ class Plots:
         self._metrics = ['csv-accuracy/validator', 'csv-accuracy/exact']
         self._test_metrics = ['accuracy/validator', 'accuracy/exact']
         self._finetuner = self._load_experiment(experiment)
-        
+
         self._protocol = set(map(lambda x: x.protocol, self._finetuner.datasets)).pop()
         self._sizes = list(set(map(lambda x: x.size, self._finetuner.datasets)))
 
-        self._server_cfg = set(map(lambda x: x.server.__str__(), self._finetuner.datasets))
+        # self._server_cfg = set(map(lambda x: x.server.__str__(), self._finetuner.datasets))
 
         palette = qualitative.Alphabet
-        
+
         self._color_map = {dataset.size: palette[i] for i, dataset in enumerate(self._finetuner.datasets)}
-        self._server_cfg_map = {server_cfg: SYMBOL[i] for i, server_cfg in enumerate(self._server_cfg)}
+        # self._server_cfg_map = {server_cfg: SYMBOL[i] for i, server_cfg in enumerate(self._server_cfg)}
         self._dataset_size_map = {dataset.size: SYMBOL[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        self._client_map = {dataset.client: SYMBOL[i] for i, dataset in enumerate(self._finetuner.datasets)}
 
     @staticmethod
     def get_symbol(key: str, keys: List, options: List):
@@ -58,7 +59,7 @@ class Plots:
             config = cfg.read()
             config = json.loads(config)
             finetuner_model = FinetunerModel(**config)
-            finetuner_model.experiment = f"{experiment}.old"
+            finetuner_model.experiment = f"{experiment}"
 
             return finetuner_model
 
@@ -102,9 +103,11 @@ class Plots:
             os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
             fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{validation_type}.png")
 
-    def accuracy_per_epoch(self):
+    def accuracy_per_epoch(self, ):
         dfs = pd.DataFrame()
-        colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
         for dataset in self._finetuner.datasets:
             start_datetime_path = os.listdir(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}")[0]
             if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics.csv"):
@@ -123,9 +126,9 @@ class Plots:
                 df = dfs.query(f"dataset == '{dataset}'")
                 fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df[metric],
                                          mode='lines+markers',
-                                         name=f"{dataset.size}",
-                                         line=dict(width=1.5, color=colors[dataset.size], shape='spline'),
-                                         marker=dict(size=6, symbol=self._dataset_size_map[dataset.size])
+                                         name=f"{dataset.client}",
+                                         line=dict(width=1.5, color=colors[dataset.client], shape='spline'),
+                                         marker=dict(size=6, symbol=self._client_map[dataset.client])
                                          )
                               )
 
@@ -239,8 +242,8 @@ class Plots:
 
 
 if __name__ == '__main__':
-    plot = Plots("mbtcp-protocol-test.json")
-    plot.accuracy_with_random_dataset()
+    # plot = Plots("mbtcp-protocol-test.json")
+    # plot.accuracy_with_random_dataset()
 
     # plot = Plots("s7comm-protocol-emulation.json")
     # plot.accuracy_per_epoch()
@@ -254,3 +257,6 @@ if __name__ == '__main__':
 
     # plot = Plots("mbtcp-protocol-emulation-ablation-addresses.json")
     # plot.accuracy_per_epoch()
+
+    plot = Plots("mbtcp-aircraft-variations.json")
+    plot.accuracy_per_epoch()

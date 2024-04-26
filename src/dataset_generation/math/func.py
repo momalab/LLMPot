@@ -13,15 +13,12 @@ from cfg import ASSETS, DATASET_PARSED
 from numpy.polynomial import Polynomial
 
 FONT_FAMILY = "Times New Roman"
+SAMPLES = 5000
+LOW = -10
+HIGH = 10
 
-def sgn(x):
-    return np.sign(x)
-
-def sgn_derivative(x): #2*Dirac delta function
-    if x == 0:
-        return np.inf  # Represents the Dirac delta spike at x = 0
-    else:
-        return 0
+def expo10(x):
+    return np.power(10, x)
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -29,20 +26,8 @@ def sigmoid(x):
 def sigmoid_derivative(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
-def expo10(x):
-    return  np.power(10, x)
-
-def expo10_derivative(x):
-    return np.power(10, x) * np.log(10)
-
-def cosh(x): #NOTE NEEDS UPDATING ON CODESYS "OSCAT.COSH()"
-    return np.cosh(x)
-
-def cosh_derivative(x):
-    return np.sinh(x)
-
-THE_FUNC = cosh
-DF = cosh_derivative
+THE_FUNC = expo10
+DF = expo10
 
 def remove_decimals(x, y, dec_num = 4):
     x = [round(x, dec_num) for x in x]
@@ -63,18 +48,18 @@ def func_values(low, high, samples):
 def func_values_sampled(x, samples):
     derivative_values = derivative(x)
 
-    power = 0.6
+    power = 0.5
     pdf = np.power(abs(derivative_values), power)
     pdf /= np.sum(pdf * np.diff(x)[0])
 
-    mix_ratio = 0.6
+    mix_ratio = 0.9
     uniform_pdf = np.ones_like(pdf) / len(pdf)
     adjusted_pdf = (1 - mix_ratio) * pdf + mix_ratio * uniform_pdf
     adjusted_pdf /= np.sum(adjusted_pdf * np.diff(x)[0])
     cdf = cumtrapz(adjusted_pdf, x, initial=0)
     cdf /= cdf[-1]
 
-    uniform_random_samples = np.random.rand(samples)
+    uniform_random_samples = np.random.rand(SAMPLES)
     inverse_cdf = interp1d(cdf, x, kind='linear')
     sampled_x_values = inverse_cdf(uniform_random_samples)
     sampled_x_values = np.sort(sampled_x_values)
@@ -90,8 +75,8 @@ def func_values_sampled(x, samples):
 
     fig_combined.add_trace(go.Scatter(x=x, y=y_orig, mode='lines', name=THE_FUNC.__name__, line=dict(color=NATURE[0])))
     fig_combined.add_trace(go.Scatter(x=x, y=pdf * scale_factor_pdf, mode='lines', name='PDF', line=dict(color=NATURE[1], dash='dash')))
-    fig_combined.add_trace(go.Histogram(x=sampled_x_values, nbinsx=100, name='PDF sampling', opacity=0.8, marker_color=NATURE[2], yaxis='y2'))
-    fig_combined.add_trace(go.Histogram(x=x, nbinsx=100, name='Linear sampling', opacity=0.6, marker_color=NATURE[3], yaxis='y2'))
+    fig_combined.add_trace(go.Histogram(x=sampled_x_values, nbinsx=200, name='PDF sampling', opacity=0.8, marker_color=NATURE[2], yaxis='y2'))
+    # fig_combined.add_trace(go.Histogram(x=x, nbinsx=10, name='Linear sampling', opacity=0.6, marker_color=NATURE[3], yaxis='y2'))
 
     fig_combined.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
@@ -132,9 +117,9 @@ def func_values_with_noise(x, samples):
 
 
 def main():
-    x, y = func_values(-3, 3, 4096)
-    x_sampled, y_sampled = func_values_sampled(x, 4096)
-    x_noise, y_noise = func_values_with_noise(x, 4096)
+    x, y = func_values()
+    x_sampled, y_sampled = func_values_sampled(x)
+    x_noise, y_noise = func_values_with_noise(x)
 
     x, y = remove_decimals(x, y)
     x_sampled, y_sampled = remove_decimals(x_sampled, y_sampled)

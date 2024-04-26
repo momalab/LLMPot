@@ -9,7 +9,7 @@ class NoLogicServer(S7Comm):
 
 def main():
     ip, port = retrieve_args()
-    server = NoLogicServer(ip, port, 1, 2)
+    server = NoLogicServer(ip, port, 1, 40)
     server.start()
 
 

@@ -1,0 +1,21 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 30,
+  "patience": 5,
+  "target_max_token_len": 512,
+  "source_max_token_len": 512,
+  "batch_size": 1,
+  "datasets": [
+    {
+      "protocol": "mbtcp",
+      "size": 4096,
+      "client": "sigmoid_test",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    }
+  ],
+  "experiment_filename": "mbtcp-math-functions.json"
+}

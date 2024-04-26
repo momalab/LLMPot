@@ -4,20 +4,27 @@ import plotly.graph_objects as go
 
 # Example data
 x = np.linspace(0, 10, 50)
-y = np.sin(x) + np.log(x + 1)
+# y = np.sin(x) + np.log(x + 1)
+y = np.exp(x)
 
 # Compute the derivative
 dydx = np.gradient(y, x)
 
-# Determine where the derivatives are large
-threshold = np.percentile(np.abs(dydx), 75)  # Example: 75th percentile
-high_change_indices = np.where(np.abs(dydx) > threshold)[0]
+# Normalize the derivative
+norm_dydx = np.abs(dydx) / np.sum(np.abs(dydx))
 
-# Generate new sample points in these high-change regions
+# Minimum number of points between each original point
+min_points = 3
+# Additional points based on the normalized derivative
+additional_points = (norm_dydx * 200).astype(int)  # Scale factor to adjust density
+
+# Generate new sample points considering the derivative magnitude
 new_x_points = []
-for idx in high_change_indices:
-    if idx < len(x) - 1:
-        new_x_points.extend(np.linspace(x[idx], x[idx + 1], 5))  # Adding 5 points between samples
+new_y_points = []
+for i in range(len(x)-1):
+    num_points = min_points + additional_points[i]
+    new_xs = np.linspace(x[i], x[i+1], num=num_points)
+    new_x_points.extend(new_xs)
 
 # Interpolate to find new y values at these x points
 f = interp1d(x, y, kind='cubic')
@@ -32,7 +39,7 @@ fig.add_trace(go.Scatter(x=x, y=y, mode='lines+markers', name='Original Points',
 # Newly interpolated points
 fig.add_trace(go.Scatter(x=new_x_points, y=new_y_points, mode='markers', name='New Points', marker=dict(color='red')))
 
-fig.update_layout(title='Data Points and Interpolated Points in Regions of Rapid Change',
+fig.update_layout(title='Data Points and Interpolated Points Based on Derivative Magnitude',
                   xaxis_title='X',
                   yaxis_title='Y',
                   legend_title='Legend')
