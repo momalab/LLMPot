@@ -3,8 +3,8 @@
   "model_name": "byt5-small",
   "max_epochs": 30,
   "patience": 5,
-  "target_max_token_len": 4192,
-  "source_max_token_len": 4192,
+  "target_max_token_len": 512,
+  "source_max_token_len": 512,
   "batch_size": 1,
   "datasets": [
     {
