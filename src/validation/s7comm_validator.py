@@ -22,10 +22,20 @@ class Validator:
         self.response_payload = self.response_s7comm[12:]
 
     def check_header_ids(self):
-        q_pid = self.query_header[:2]
-        r_pid = self.response_header[:2]
+        q_pid = self.query_header[1]
+        r_pid = self.response_header[1]
         if r_pid != q_pid:
             raise ValueError(f"Protocol_ID: {r_pid}, expected: {q_pid}")
+        if (q_pid != "32") or (r_pid != "32"):
+            raise ValueError(f"{q_pid} PID, expected 32")
+
+        job = self.query_header[2]
+        if job != "01":
+            raise ValueError(f"{job} Job ID, expected 01")
+
+        ack_data = self.response_header[2]
+        if ack_data != "03":
+            raise ValueError(f"{ack_data} ACK_Data ID, expected 03")
 
         parameter_length = int(self.query_header[8], base=16)
         expected_length = len(self.query_payload)+1
