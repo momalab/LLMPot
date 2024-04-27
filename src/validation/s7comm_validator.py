@@ -8,10 +8,18 @@ class Validator:
         self._end_address = end_address
         hex_chunks_query = [self.request[i:i + 2] for i in range(0, len(self.request), 2)]
         hex_chunks_response = [self.response[i:i + 2] for i in range(0, len(self.response), 2)]
-        self.query_header = hex_chunks_query[:10]
-        self.query_payload = hex_chunks_query[10:]
-        self.response_header = hex_chunks_response[:12]
-        self.response_payload = hex_chunks_response[12:]
+
+        self.query_tpkt = hex_chunks_query[:4] #4 bytes
+        self.query_iso = hex_chunks_query[4:7] #3 bytes
+        self.query_s7comm = hex_chunks_query[7:]
+        self.response_tpkt = hex_chunks_response[:4] #4 bytes
+        self.response_iso = hex_chunks_response[4:7] #3 bytes
+        self.response_s7comm = hex_chunks_response[7:]
+
+        self.query_header = self.query_s7comm[:10]
+        self.query_payload = self.query_s7comm[10:]
+        self.response_header = self.response_s7comm[:12]
+        self.response_payload = self.response_s7comm[12:]
 
     def check_header_ids(self):
         q_pid = self.query_header[:2]
