@@ -82,4 +82,4 @@ def calculate(df: pd.DataFrame, path, file):
 
 
 if __name__ == "__main__":
-    calculate_error_margin("/media/shared/ICSPot/checkpoints/mbtcp-math-functions.json/mbtcp-expo10-c1-s1024/20240427T1511/", "epoch-29_val_type-validator")
+    calculate_error_margin("/media/shared/dam10098/ICSPot/checkpoints/mbtcp-icspatch-processes.json/mbtcp-aircraft-c1-s4096/20240427T1142/", "epoch-13_val_type-validator")
