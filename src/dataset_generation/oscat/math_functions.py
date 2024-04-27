@@ -1,7 +1,7 @@
 import time
 
 import numpy
-from oscat.client import MbtcpClient, retrieve_args
+from dataset_generation.oscat.client import MbtcpClient, retrieve_args
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadBuilder
 from dataset_generation.math import func
@@ -10,19 +10,17 @@ from dataset_generation.math import func
 class MathClient(MbtcpClient):
     def start_client(self):
         functions = []
+        x = []
         if self._function_name == "sgn":
             x = numpy.linspace(-3, 3, self._samples_num)
-            x_sampled_input = x
-            print(x_sampled_input)
-            print(len(x_sampled_input))
         else:
-            x, y = func.func_values(-3, 3, self._samples_num) #sigmoid (-30,30)
-            x_sampled, y_sampled = func.func_values_sampled(x, self._samples_num)
-            x_sampled_input, y_sampled_input = func.remove_decimals(x_sampled, y_sampled)
+            x, y = func.func_values(-10, 10, self._samples_num)
+            # x, y = func.func_values_sampled(x, self._samples_num)
+            x, y = func.remove_decimals(x, y)
 
-        for input_x in x_sampled_input:
+        for input_x in x:
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
-            builder.add_32bit_float(float(input_x))
+            builder.add_32bit_float(input_x)
             inputs = builder.build()
             functions.extend([
                 (self.write_registers, [0, inputs], {"skip_encode": True}),

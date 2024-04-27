@@ -10,7 +10,7 @@ def parse_jsonl(file_path):
                 continue
 
             context = line.split(':')[0][-8:]
-            response = line.rsplit(',')[2][-9:-1]
+            response = line.rsplit(',')[1][-9:-1]
 
             context_parts = [context[:4], context[4:]]
             response_parts = [response[:4], response[4:]]
@@ -37,4 +37,4 @@ def parse_jsonl(file_path):
             new_file.write(json.dumps(line) + '\n')
 
 
-parse_jsonl('/media/shared/ICSPot/outputs/datasets/train/mbtcp-expo10-c1-s4096.csv')
+parse_jsonl('/media/shared/ICSPot/outputs/datasets/parsed/mbtcp-expo10-c1-s1024.csv')

@@ -10,7 +10,7 @@ from transformers import PreTrainedModel, PreTrainedTokenizer
 import torch.distributed as dist
 
 from finetune.model.finetuner_model import FinetunerModel
-from validation.mbtcp_validator import Validator
+from validation.s7comm_validator import Validator
 from validation.model.result import Result
 
 

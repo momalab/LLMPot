@@ -1,6 +1,7 @@
 import dis
 import json
 import traceback
+from unittest import result
 
 import pandas as pd
 from typing import Tuple
@@ -45,8 +46,8 @@ def calculate(df: pd.DataFrame, path, file):
             r_dec = r_dec.decode_32bit_float()
             er_dec = er_dec.decode_32bit_float()
 
-            distance = r_dec - er_dec
-            percentage = abs(distance) / er_dec
+            distance = abs(r_dec - er_dec)
+            percentage = distance / er_dec
         except:
             traceback.print_exc()
             pass
@@ -64,9 +65,16 @@ def calculate(df: pd.DataFrame, path, file):
 
     results = pd.DataFrame(results_data)
     results.to_json(f"{path}/epsilon-{file}.jsonl", orient='records', lines=True)
-    mean_value = results['distance'].mean()
+    mean_value = results['distance'].sum() / len(results['distance'])
     std_dev = results['distance'].std()
     mean_percentage = results['percentage'].mean()
+
+    print(results['distance'])
+    print(results['distance'].sum())
+
+    for _, row in results.iterrows():
+        if row['distance'] > 0.1:
+            print(f"X: {row['x']}, Y: {row['y']}, Y_orig: {row['y_orig']}, distance: {row['distance']}, percentage: {row['percentage']}")
 
     print(f"Mean: {mean_value}, std: {std_dev}, mean_percentage: {mean_percentage}")
 
@@ -74,4 +82,4 @@ def calculate(df: pd.DataFrame, path, file):
 
 
 if __name__ == "__main__":
-    calculate_error_margin("/media/shared/ICSPot/checkpoints/mbtcp-expo10-test.json/mbtcp-expo10_test-c1-s4096", "val_type_exact-model_mbtcp-expo10-c1-s4096")
+    calculate_error_margin("/media/shared/ICSPot/checkpoints/mbtcp-math-functions.json/mbtcp-expo10-c1-s1024/20240427T1511/", "epoch-29_val_type-validator")

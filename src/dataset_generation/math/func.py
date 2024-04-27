@@ -13,9 +13,6 @@ from cfg import ASSETS, DATASET_PARSED
 from numpy.polynomial import Polynomial
 
 FONT_FAMILY = "Times New Roman"
-SAMPLES = 5000
-LOW = -10
-HIGH = 10
 
 def sgn(x):
     return np.sign(x)
@@ -38,8 +35,8 @@ def expo10(x):
 def expo10_derivative(x):
     return np.power(10, x) * np.log(10)
 
-THE_FUNC = np.cosh
-DF = np.sinh
+THE_FUNC = sigmoid
+DF = sigmoid_derivative
 
 def remove_decimals(x, y, dec_num = 4):
     x = [round(x, dec_num) for x in x]
@@ -71,7 +68,7 @@ def func_values_sampled(x, samples):
     cdf = cumtrapz(adjusted_pdf, x, initial=0)
     cdf /= cdf[-1]
 
-    uniform_random_samples = np.random.rand(SAMPLES)
+    uniform_random_samples = np.random.rand(samples)
     inverse_cdf = interp1d(cdf, x, kind='linear')
     sampled_x_values = inverse_cdf(uniform_random_samples)
     sampled_x_values = np.sort(sampled_x_values)

@@ -1,10 +1,10 @@
 class Validator:
 
     def __init__(self, request, response, end_address):
-        self.request = request
+        self.request = request[10:]
         if ":" in request:
             self.request = request[:-1]
-        self.response = response
+        self.response = response[10:]
         self._end_address = end_address
         hex_chunks_query = [self.request[i:i + 2] for i in range(0, len(self.request), 2)]
         hex_chunks_response = [self.response[i:i + 2] for i in range(0, len(self.response), 2)]
@@ -47,7 +47,7 @@ class Validator:
         q_fc = self.query_payload[0]
         r_fc = self.response_payload[0]
 
-        data_length = int(self.query_header[10], base=16)
+        data_length = int(self.query_header[8], base=16)
         if (data_length == 0) and (q_fc != "04"):
             raise ValueError(f"{q_fc} supposed to be read 0x04")
         if (data_length != 0) and (q_fc != "05"):
@@ -80,5 +80,5 @@ class Validator:
 
 
 if __name__ == '__main__':
-    val = Validator("000100000006000100050001", "00010000000400010100", 3)
+    val = Validator("0300001902f080320300002f0000020004000004010a000004", "0300001902f080320300002f0000020004000004010a000004", 3)
     val.check_payload()

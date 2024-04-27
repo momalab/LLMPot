@@ -12,9 +12,10 @@ from plotly.colors import qualitative
 
 from cfg import EXPERIMENTS, CHECKPOINTS, ASSETS, TEST_METRICS, TRAINING_METRICS
 from finetune.model.finetuner_model import FinetunerModel
+import plotly.io as pio
+pio.kaleido.scope.mathjax = None
 
-
-FONT_FAMILY = "Times New Roman"
+FONT_FAMILY = "Serif"
 SYMBOL = ['cross', 'diamond-open', 'circle-dot', 'triangle-up-open', 'diamond-open', 'star-triangle-up']
 
 VIOLET_PALETTE = ['#caa8f5', '#592e83', '#b27c66']
@@ -105,9 +106,9 @@ class Plots:
 
     def accuracy_per_epoch(self, ):
         dfs = pd.DataFrame()
-        # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
-        # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
-        colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
         for dataset in self._finetuner.datasets:
             start_datetime_path = os.listdir(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}")[0]
             if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics.csv"):
@@ -125,31 +126,39 @@ class Plots:
             for dataset in self._finetuner.datasets:
                 df = dfs.query(f"dataset == '{dataset}'")
                 fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df[metric],
-                                         mode='lines+markers',
-                                         name=f"{dataset.client}",
-                                         line=dict(width=1.5, color=colors[dataset.client], shape='spline'),
-                                         marker=dict(size=6, symbol=self._client_map[dataset.client])
+                                         mode='lines',
+                                         name=f"{dataset.server}",
+                                         line=dict(width=5, color=colors[dataset.server.__str__()], shape='spline'),
+                                        #  marker=dict(size=6, symbol=self._dataset_size_map[dataset.size])
                                          )
                               )
 
             fig.update_layout(
                 # title=f'Protocol: {self._protocol}, Model: {self._finetuner.model_name}, Validation: {self._metric.split("/")[1]}',
-                title_font_size=28,
-                xaxis_title='Epoch',
-                yaxis_title='BCA' if validation_type == 'exact' else 'PVA',
+                # title_font_size=28,
+                xaxis_title='<b>Epoch</b>',
+                yaxis_title='<b>BCA</b>' if validation_type == 'exact' else '<b>PVA</b>',
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 margin=dict(l=0, r=0, b=0, pad=0),
-                font=dict(family=FONT_FAMILY, size=26, color="Black"),
-                legend=dict(yanchor="bottom", y=1, xanchor="right", x=1, orientation='h', font=dict(family=FONT_FAMILY, size=26)),
-                xaxis=dict(showgrid=False, showline=False),
-                yaxis=dict(showgrid=False, showline=False, range=[0, 1.05])
+                # font=dict(family=f"{FONT_FAMILY}, bold", size=28, color="Black", ),
+                font=dict(family=FONT_FAMILY, size=32, color="Black", ),
+                legend=dict(yanchor="bottom", y=1, xanchor="right", x=1, orientation='h', font=dict(family=FONT_FAMILY, size=28)),
+            )
+
+            fig.update_xaxes(showline=True, linewidth=1.5, linecolor='gray',
+                  gridcolor='gray', gridwidth=1, griddash="dot",
+                  zeroline=False, zerolinewidth=3, zerolinecolor='black',
+                 )
+            fig.update_yaxes(showline=True, linewidth=1.5, linecolor='gray',
+                  gridcolor='gray', gridwidth=1, griddash="dot",
+                   zeroline=False, zerolinewidth=3, zerolinecolor='black', range=[0, 1]
             )
 
             fig.show()
 
             os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
-            fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{validation_type}.png")
+            fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{validation_type}.pdf")
 
     def loss_per_epoch(self):
         dfs = pd.DataFrame()
@@ -255,8 +264,8 @@ if __name__ == '__main__':
     # plot.loss_per_epoch()
     # plot.barchart_best_accuracy_of_each()
 
-    # plot = Plots("mbtcp-protocol-emulation-ablation-addresses.json")
-    # plot.accuracy_per_epoch()
-
-    plot = Plots("mbtcp-aircraft-variations.json")
+    plot = Plots("mbtcp-protocol-emulation-ablation-addresses.json")
     plot.accuracy_per_epoch()
+
+    # plot = Plots("mbtcp-aircraft-variations.json")
+    # plot.accuracy_per_epoch()
