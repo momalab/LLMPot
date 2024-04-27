@@ -21,7 +21,7 @@ def retrieve_args() -> Tuple[str, int, int]:
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="10.224.33.30", required=False)
     parser.add_argument('-p', default=502, required=False)
-    parser.add_argument('-process', default="aircraft", required=False)
+    parser.add_argument('-process', default="smartgrid", required=False)
     args = parser.parse_args()
 
     return args.ip, int(args.p), args.process
