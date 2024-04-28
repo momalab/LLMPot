@@ -15,62 +15,56 @@ class ProcessClient(MbtcpClient):
     MAX_REG_VALUE = 65535
     def start_client(self):
         if (self._process_name == "aircraft") or (self._process_name == "desalination"):
-            in_1 = np.arange(-49, 51, 14) #test: (-50, 52, 14)
+            in_1 = np.arange(-2048, 2048, 1)
             in_2 = in_1 + 3
             in_3 = in_1 - 2
             in_4 = in_1 + 1
-            in_1.tolist()
-            in_2.tolist()
-            in_3.tolist()
-            in_4.tolist()
             all_inputs = [in_1, in_2, in_3, in_4]
-        if (self._process_name == "anaerobic") or (self._process_name == "smartgrid"):
-            in_1 = np.arange(-4096, 4096, 2) #test: (-4095, 4095, 2)
-            in_1.tolist()
+        elif self._process_name == "smartgrid":
+            in_1 = np.arange(-2048, 2048, 1)
             all_inputs = [in_1]
-        if self._process_name == "chemical":
-            in_1 = np.arange(-49, 15, 1) #test: (-50, 16, 1)
+        elif (self._process_name == "anaerobic"):
+            in_1 = np.linspace(-30, 30, 4096)
+            all_inputs = [in_1]
+        elif self._process_name == "chemical":
+            in_1 = np.arange(-2048, 2048, 1)
             in_2 = in_1 + 3
-            in_1.tolist()
-            in_2.tolist()
             all_inputs = [in_1, in_2]
 
-        all_combinations = list(itertools.product(*all_inputs))
-        all_comb = {i: list(t) for i, t in enumerate(all_combinations)}
         functions = []
-        for index, combination in all_comb.items():
+        for index in range(len(all_inputs[0])):
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
             if (self._process_name == "aircraft") or (self._process_name == "desalination"):
-                input_1 = combination[0]
-                input_2 = combination[1]
-                input_3 = combination[2]
-                input_4 = combination[3]
+                input_1 = all_inputs[0][index]
+                input_2 = all_inputs[1][index]
+                input_3 = all_inputs[2][index]
+                input_4 = all_inputs[3][index]
                 builder.add_32bit_int(input_1)
                 builder.add_32bit_int(input_2)
                 builder.add_32bit_int(input_3)
                 builder.add_32bit_int(input_4)
                 inputs = builder.build()
-                functions.extend([
-                    (self.write_registers, [0, inputs], {"skip_encode": True}),
-                    (self.read_input_registers, [0, 4], {})])
 
-            if (self._process_name == "anaerobic") or (self._process_name == "smartgrid"):
-                input_1 = combination[0]
+            elif (self._process_name == "anaerobic"):
+                input_1 = all_inputs[0][index]
+                builder.add_32bit_float(input_1)
+                inputs = builder.build()
+
+            elif(self._process_name == "smartgrid"):
+                input_1 = all_inputs[0][index]
                 builder.add_32bit_int(input_1)
                 inputs = builder.build()
-                functions.extend([
-                    (self.write_registers, [0, inputs], {"skip_encode": True}),
-                    (self.read_input_registers, [0, 2], {})])
 
-            if self._process_name == "chemical":
-                input_1 = combination[0]
-                input_2 = combination[1]
+            elif self._process_name == "chemical":
+                input_1 = all_inputs[0][index]
+                input_2 = all_inputs[1][index]
                 builder.add_32bit_int(input_1)
                 builder.add_32bit_int(input_2)
                 inputs = builder.build()
-                functions.extend([
-                    (self.write_registers, [0, inputs], {"skip_encode": True}),
-                    (self.read_input_registers, [0, 4], {})])
+
+            functions.extend([
+                (self.write_registers, [0, inputs], {"skip_encode": True}),
+                (self.read_input_registers, [0, 4], {})])
 
         for function, args, kwargs in functions:
             response = function(*args, **kwargs)

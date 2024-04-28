@@ -35,8 +35,8 @@ def expo10(x):
 def expo10_derivative(x):
     return np.power(10, x) * np.log(10)
 
-THE_FUNC = sigmoid
-DF = sigmoid_derivative
+THE_FUNC = expo10
+DF = expo10_derivative
 
 def remove_decimals(x, y, dec_num = 4):
     x = [round(x, dec_num) for x in x]
@@ -57,11 +57,11 @@ def func_values(low, high, samples):
 def func_values_sampled(x, samples):
     derivative_values = derivative(x)
 
-    power = 0.5
+    power = 0.3
     pdf = np.power(abs(derivative_values), power)
     pdf /= np.sum(pdf * np.diff(x)[0])
 
-    mix_ratio = 0.9
+    mix_ratio = 0.1
     uniform_pdf = np.ones_like(pdf) / len(pdf)
     adjusted_pdf = (1 - mix_ratio) * pdf + mix_ratio * uniform_pdf
     adjusted_pdf /= np.sum(adjusted_pdf * np.diff(x)[0])
@@ -84,7 +84,7 @@ def func_values_sampled(x, samples):
 
     fig_combined.add_trace(go.Scatter(x=x, y=y_orig, mode='lines', name=THE_FUNC.__name__, line=dict(color=NATURE[0])))
     fig_combined.add_trace(go.Scatter(x=x, y=pdf * scale_factor_pdf, mode='lines', name='PDF', line=dict(color=NATURE[1], dash='dash')))
-    fig_combined.add_trace(go.Histogram(x=sampled_x_values, nbinsx=200, name='PDF sampling', opacity=0.8, marker_color=NATURE[2], yaxis='y2'))
+    fig_combined.add_trace(go.Histogram(x=sampled_x_values, nbinsx=300, name='PDF sampling', opacity=0.8, marker_color=NATURE[2], yaxis='y2'))
     # fig_combined.add_trace(go.Histogram(x=x, nbinsx=10, name='Linear sampling', opacity=0.6, marker_color=NATURE[3], yaxis='y2'))
 
     fig_combined.update_layout(
@@ -118,7 +118,7 @@ def func_values_sampled(x, samples):
     return sampled_x_values, y
 
 def func_values_with_noise(x, samples):
-    noise = np.random.uniform(-0.0005, 0.0005, samples)
+    noise = np.random.uniform(-0.5, 0.5, samples)
     x_noise = x + noise
     y_noise = [func(x) for x in x_noise]
 
@@ -126,17 +126,17 @@ def func_values_with_noise(x, samples):
 
 
 def main():
-    x, y = func_values()
-    x_sampled, y_sampled = func_values_sampled(x)
-    x_noise, y_noise = func_values_with_noise(x)
+    x, y = func_values(-3, 3, 4096)
+    x_sampled, y_sampled = func_values_sampled(x, 4096)
+    # x_noise, y_noise = func_values_with_noise(x)
 
     x, y = remove_decimals(x, y)
     x_sampled, y_sampled = remove_decimals(x_sampled, y_sampled)
-    x_noise, y_noise = remove_decimals(x_noise, y_noise)
+    # x_noise, y_noise = remove_decimals(x_noise, y_noise)
 
     df = pd.DataFrame({'source_text': x, 'target_text': y})
     df_sampled = pd.DataFrame({'source_text': x_sampled, 'target_text': y_sampled})
-    df_noise = pd.DataFrame({'source_text': x_noise, 'target_text': y_noise})
+    # df_noise = pd.DataFrame({'source_text': x_noise, 'target_text': y_noise})
 
     # df.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid-simple-c0-s{SAMPLES}.csv", index=False)
     # df_sampled.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid-sampled3-c0-s{SAMPLES}.csv", index=False)
