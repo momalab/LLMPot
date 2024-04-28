@@ -16,9 +16,9 @@ class S7Comm:
         for block_code, size in block_dict.items():
             for index in range(size):
                 if block_code == srvAreaDB:
-                    setattr(self, f"_DBdata_{index}", (wordlen_to_ctypes[WordLen.Byte.value] * 2)()) # change 2 to define addresses
+                    setattr(self, f"_DBdata_{index}", (wordlen_to_ctypes[WordLen.Byte.value] * 40)())
                 if block_code == srvAreaMK:
-                    setattr(self, f"_MKdata_{index}", (wordlen_to_ctypes[WordLen.Byte.value] * 2)())
+                    setattr(self, f"_MKdata_{index}", (wordlen_to_ctypes[WordLen.Byte.value] * 40)())
 
     def start(self):
         logging.info("Starting S7comm Server..")
