@@ -23,7 +23,7 @@ def generate_combinations(values: RangeModel, elements):
 def generate_words(values: List[int]) -> bytearray:
     encoded_bytes = bytearray()
     for number in values:
-        encoded_bytes += number.to_bytes(2, byteorder='big')
+        encoded_bytes += number.to_bytes(2, byteorder='big') #set_word(bytearray(2), 0, value) ?
     return encoded_bytes
 
 
