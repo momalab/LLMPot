@@ -22,25 +22,25 @@ class BoundariesClient(S7Client):
             db_functions_multiple: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 3 in self._codes or 16 in self._codes or 6 in self._codes:
                 for elements in range(1, self._max_elements):
-                    data_blocks = value_generator.generate_triplet_blocks(40, S7Client.MAX_NUM_BLOCKS) #(0, 40), else exception
+                    data_blocks = value_generator.generate_triplet_blocks(0, 40)
                     for data_block in data_blocks:
-                        combinations = value_generator.generate_combinations(self._values, elements)
+                        combinations = value_generator.generate_combinations(self._values, elements - 1)
                         for combination in combinations.values():
                             db_functions_multiple.extend([
                                 (self.write_area, [Areas.DB, data_block, 0, value_generator.generate_words(combination)], {}),
-                                (self.read_area, [Areas.DB, data_block, 0, elements], {})
+                                (self.read_area, [Areas.DB, data_block, 0, elements * 2], {})
                             ])
 
             db_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 3 in self._codes or 16 in self._codes or 6 in self._codes:
-                for elements in range(1, self._max_elements): # should always be 2 bytes based on defined word in server
+                for elements in range(1, self._max_elements):
                     combinations = value_generator.generate_combinations(self._values, elements)
-                    data_blocks = value_generator.generate_triplet_blocks(40, S7Client.MAX_NUM_BLOCKS) # exceptions with addresses based on defined size in server
+                    data_blocks = value_generator.generate_triplet_blocks(40, S7Client.MAX_NUM_BLOCKS)
                     for data_block in data_blocks:
                         for combination in combinations.values():
                             db_functions_multiple_exceptions.extend([
-                                (self.read_area, [Areas.DB, data_block, 0, elements], {}),
-                                (self.write_area, [Areas.DB, data_block, 0, value_generator.generate_words(combination)], {})
+                                (self.write_area, [Areas.DB, data_block, 0, value_generator.generate_words(combination)], {}),
+                                (self.read_area, [Areas.DB, data_block, 0, elements * 2], {})
                             ])
 
             mk_functions_multiple: List[tuple[Callable[..., Any], List[Any], dict]] = []
@@ -50,8 +50,8 @@ class BoundariesClient(S7Client):
                     mk_combinations = value_generator.generate_multiple_requests(elements, [bytearray([0b00000001]), bytearray([0b00000000])])
                     for mk_values in mk_combinations:
                         mk_functions_multiple.extend([
-                            (self.read_area, [Areas.MK, markers_block, 0, elements], {}),
-                            (self.write_area, [Areas.MK, markers_block, 0, value_generator.generate_words_from_bytearrays(mk_values)], {})
+                            (self.write_area, [Areas.MK, markers_block, 0, value_generator.generate_words_from_bytearrays(mk_values)], {}),
+                            (self.read_area, [Areas.MK, markers_block, 0, elements * 2], {})
                         ])
 
             mk_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], dict]] = []
@@ -62,14 +62,14 @@ class BoundariesClient(S7Client):
                     for markers_block in markers_blocks:
                         for mk_values in mk_combinations:
                             mk_functions_multiple_exceptions.extend([
-                                (self.read_area, [Areas.MK, markers_block, 0, elements], {}),
-                                (self.write_area, [Areas.MK, markers_block, 0, value_generator.generate_words_from_bytearrays(mk_values)], {})
+                                (self.write_area, [Areas.MK, markers_block, 0, value_generator.generate_words_from_bytearrays(mk_values)], {}),
+                                (self.read_area, [Areas.MK, markers_block, 0, elements * 2], {})
                             ])
 
-            functions.extend(mk_functions_multiple)
             functions.extend(db_functions_multiple)
-            functions.extend(mk_functions_multiple_exceptions)
             functions.extend(db_functions_multiple_exceptions)
+            functions.extend(mk_functions_multiple)
+            functions.extend(mk_functions_multiple_exceptions)
 
         random.shuffle(functions)
         functions = functions[:self._samples_num]
