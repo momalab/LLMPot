@@ -1,6 +1,7 @@
 class Validator:
 
     def __init__(self, request, response, end_address):
+
         self.request = request
         if ":" in request:
             self.request = request[:-1]
@@ -36,15 +37,6 @@ class Validator:
         if ack_data != "03":
             raise ValueError(f"{ack_data} ACK_Data ID, expected 03")
 
-        q_parameter_length = int(self.query_header[7], base=16)
-        r_parameter_length = int(self.response_header[7], base=16)
-        q_expected_length = len(self.query_payload)+1
-        r_expected_length = len(self.response_payload)+1
-        if q_parameter_length != q_expected_length:
-            raise ValueError(f"q_parameter_length: {q_parameter_length}, expected: {q_expected_length}")
-        if r_parameter_length != r_expected_length:
-            raise ValueError(f"r_parameter_length: {r_parameter_length}, expected: {r_expected_length}")
-
     def check_payload(self):
         fc = self.response_payload[0]
         q_fc = self.query_payload[0]
@@ -52,12 +44,6 @@ class Validator:
 
         if r_fc != q_fc:
             raise ValueError(f"Unexpected condition! {fc} - {q_fc} - {r_fc}")
-
-        q_data_length = int(self.query_header[9], base=16)
-        if (q_data_length == "00") and (q_fc != "04"):
-            raise ValueError(f"{q_fc} supposed to be read 0x04")
-        if (q_data_length != "00") and (q_fc != "05"):
-            raise ValueError(f"{q_fc} supposed to be write 0x05")
 
         r_data_length = int(self.response_header[9], base=16)
         data = self.response_payload[2:]
