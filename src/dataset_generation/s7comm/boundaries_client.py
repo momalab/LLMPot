@@ -22,7 +22,7 @@ class BoundariesClient(S7Client):
             db_functions_multiple: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 3 in self._codes or 16 in self._codes or 6 in self._codes:
                 for elements in range(1, self._max_elements):
-                    data_blocks = value_generator.generate_triplet_blocks(40, S7Client.MAX_NUM_BLOCKS)
+                    data_blocks = value_generator.generate_triplet_blocks(40, S7Client.MAX_NUM_BLOCKS) #(0, 40), else exception
                     for data_block in data_blocks:
                         combinations = value_generator.generate_combinations(self._values, elements)
                         for combination in combinations.values():
@@ -33,9 +33,9 @@ class BoundariesClient(S7Client):
 
             db_functions_multiple_exceptions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 3 in self._codes or 16 in self._codes or 6 in self._codes:
-                for elements in range(1, self._max_elements):
+                for elements in range(1, self._max_elements): # should always be 2 bytes based on defined word in server
                     combinations = value_generator.generate_combinations(self._values, elements)
-                    data_blocks = value_generator.generate_triplet_blocks(40, S7Client.MAX_NUM_BLOCKS)
+                    data_blocks = value_generator.generate_triplet_blocks(40, S7Client.MAX_NUM_BLOCKS) # exceptions with addresses based on defined size in server
                     for data_block in data_blocks:
                         for combination in combinations.values():
                             db_functions_multiple_exceptions.extend([
