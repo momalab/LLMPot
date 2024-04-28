@@ -12,7 +12,7 @@ import plotly.graph_objects as go
 from cfg import ASSETS, DATASET_PARSED
 from numpy.polynomial import Polynomial
 
-FONT_FAMILY = "Times New Roman"
+FONT_FAMILY = "Serif"
 
 def sgn(x):
     return np.sign(x)
@@ -35,8 +35,8 @@ def expo10(x):
 def expo10_derivative(x):
     return np.power(10, x) * np.log(10)
 
-THE_FUNC = expo10
-DF = expo10_derivative
+THE_FUNC = np.cosh
+DF = np.sinh
 
 def remove_decimals(x, y, dec_num = 4):
     x = [round(x, dec_num) for x in x]
@@ -57,11 +57,11 @@ def func_values(low, high, samples):
 def func_values_sampled(x, samples):
     derivative_values = derivative(x)
 
-    power = 0.3
+    power = 0.7
     pdf = np.power(abs(derivative_values), power)
     pdf /= np.sum(pdf * np.diff(x)[0])
 
-    mix_ratio = 0.1
+    mix_ratio = 0.2
     uniform_pdf = np.ones_like(pdf) / len(pdf)
     adjusted_pdf = (1 - mix_ratio) * pdf + mix_ratio * uniform_pdf
     adjusted_pdf /= np.sum(adjusted_pdf * np.diff(x)[0])
@@ -84,30 +84,31 @@ def func_values_sampled(x, samples):
 
     fig_combined.add_trace(go.Scatter(x=x, y=y_orig, mode='lines', name=THE_FUNC.__name__, line=dict(color=NATURE[0])))
     fig_combined.add_trace(go.Scatter(x=x, y=pdf * scale_factor_pdf, mode='lines', name='PDF', line=dict(color=NATURE[1], dash='dash')))
-    fig_combined.add_trace(go.Histogram(x=sampled_x_values, nbinsx=300, name='PDF sampling', opacity=0.8, marker_color=NATURE[2], yaxis='y2'))
-    # fig_combined.add_trace(go.Histogram(x=x, nbinsx=10, name='Linear sampling', opacity=0.6, marker_color=NATURE[3], yaxis='y2'))
+    fig_combined.add_trace(go.Histogram(x=sampled_x_values, nbinsx=100, name='PDF', opacity=0.8, marker_color=NATURE[2], yaxis='y2'))
+    fig_combined.add_trace(go.Histogram(x=x, nbinsx=100, name='uniform', opacity=0.6, marker_color=NATURE[3], yaxis='y2'))
 
     fig_combined.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        xaxis_title='x',
+        xaxis_title='<b>x</b>',
         yaxis=dict(
-            title=f'{THE_FUNC.__name__} Value / Scaled Density',
+            title=f'<b>{THE_FUNC.__name__} / scaled density</b>',
             side='left',
             showgrid=False
         ),
         yaxis2=dict(
-            title='X values Histogram',
+            title='<b># x samples</b>',
             overlaying='y',
             side='right',
             showgrid=False,
         ),
-        font=dict(family=FONT_FAMILY, size=26, color="black"),
+        font=dict(family=FONT_FAMILY, size=34, color="black"),
         legend=dict(
             orientation="h",
-            xanchor="center",
-            x=0.5,
-            y=1.1
+            xanchor="right",
+            x=1,
+            y=1.1,
+            font=dict(family=FONT_FAMILY, size=28, color="black"),
         )
     )
 
@@ -126,7 +127,7 @@ def func_values_with_noise(x, samples):
 
 
 def main():
-    x, y = func_values(-3, 3, 4096)
+    x, y = func_values(-10, 10, 4096)
     x_sampled, y_sampled = func_values_sampled(x, 4096)
     # x_noise, y_noise = func_values_with_noise(x)
 
