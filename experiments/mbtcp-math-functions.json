@@ -69,6 +69,24 @@
         "name": "no_logic_server"
       },
       "context": 1
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 4096,
+      "client": "cauchy",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 4096,
+      "client": "cauchy_linear",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
     }
   ]
 }

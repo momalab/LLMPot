@@ -35,8 +35,16 @@ def expo10(x):
 def expo10_derivative(x):
     return np.power(10, x) * np.log(10)
 
-THE_FUNC = np.cosh
-DF = np.sinh
+def cauchy(x):
+    return 1 / (np.pi * (1 + x ** 2))
+
+def cauchy_derivative(x, x0=0, gamma=1):
+    numerator = -2 * (x - x0)
+    denominator = np.pi * gamma**3 * (1 + ((x - x0) / gamma) ** 2) ** 2
+    return numerator / denominator
+
+THE_FUNC = cauchy
+DF = cauchy_derivative
 
 def remove_decimals(x, y, dec_num = 4):
     x = [round(x, dec_num) for x in x]
