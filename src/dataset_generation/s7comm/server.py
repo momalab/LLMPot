@@ -15,10 +15,11 @@ class S7Comm:
 
         for block_code, size in block_dict.items():
             for index in range(size):
+                addresses = 100
                 if block_code == srvAreaDB:
-                    setattr(self, f"_DBdata_{index}", (wordlen_to_ctypes[WordLen.Byte.value] * 40)())
+                    setattr(self, f"_DBdata_{index}", (wordlen_to_ctypes[WordLen.Byte.value] * addresses)())
                 if block_code == srvAreaMK:
-                    setattr(self, f"_MKdata_{index}", (wordlen_to_ctypes[WordLen.Byte.value] * 40)())
+                    setattr(self, f"_MKdata_{index}", (wordlen_to_ctypes[WordLen.Byte.value] * addresses)())
 
     def start(self):
         logging.info("Starting S7comm Server..")
