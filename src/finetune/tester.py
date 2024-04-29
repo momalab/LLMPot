@@ -54,7 +54,7 @@ def main():
             model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_test.base_model_id())
 
             tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{experiment}", name=test_dataset.__str__(), version=finetuner_test.start_datetime)
-            csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=f"{test_dataset}", version=f"{finetuner_test.start_datetime}/csv")
+            csv_logger = CSVLogger(f"{CHECKPOINTS}/{experiment}", name=f"{test_dataset}", version=f"csv/{finetuner_test.start_datetime}")
 
             for dataset in finetuner_orig_exp.datasets:
                 if os.path.exists(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/val_type_exact-model_{dataset}.jsonl"):
@@ -83,14 +83,16 @@ def main():
 
                 trainer.test(model=model, dataloaders=dataloader)
 
-                mean, std, percentage = calculate_error_margin(f"{CHECKPOINTS}/{finetuner_test.experiment}/{finetuner_test.current_dataset}", file=f"val_type_exact-model_{finetuner_orig_exp.current_dataset}")
+                mean, std, percentage = calculate_error_margin(
+                    f"{CHECKPOINTS}/{finetuner_test.experiment}/{finetuner_test.current_dataset}",
+                    f"val_type_exact-model_{finetuner_orig_exp.current_dataset}", 2)
 
                 print(f"mean: {mean}, std: {std}, percentage: {percentage}")
 
-            df = pd.read_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/{finetuner_test.start_datetime}/csv/metrics.csv")
+            df = pd.read_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/csv/{finetuner_test.start_datetime}/metrics.csv")
             for index, dataset in enumerate(finetuner_orig_exp.datasets):
                 df.loc[index, 'dataset'] = dataset.__str__()
-            df.to_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/{finetuner_test.start_datetime}/csv/metrics2.csv", index=False)
+            df.to_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/csv/{finetuner_test.start_datetime}/metrics2.csv", index=False)
 
     except:
         print(traceback.format_exc())

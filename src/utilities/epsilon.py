@@ -7,9 +7,10 @@ import pandas as pd
 from typing import Tuple
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
+import sys
 
 def calculate_error_margin(path: str, file: str, registers: int) -> Tuple[float, float, float]:
-    with open(f"{path}/{file}.jsonl", "r") as data:
+    with open(f"{path}/{file}", "r") as data:
         data = [json.loads(line) for line in data]
 
     return calculate(pd.DataFrame(data), path, file, registers)
@@ -18,8 +19,9 @@ def calculate(df: pd.DataFrame, path: str, file: str, registers: int) -> Tuple[f
 
     results_data = []
     for _, row in df.iterrows():
-        distance = "Invalid"
-        percentage = -1
+        distance = "invalid"
+        percentage = "invalid"
+        x, y, y_orig = "invalid", "invalid", "invalid"
         try:
             context: str = row['context']
             request: str = row['request']
@@ -56,7 +58,7 @@ def calculate(df: pd.DataFrame, path: str, file: str, registers: int) -> Tuple[f
             else:
                 percentage = 0
         except:
-            traceback.print_exc()
+            # traceback.print_exc()
             pass
         finally:
             results_data.append({
@@ -73,7 +75,7 @@ def calculate(df: pd.DataFrame, path: str, file: str, registers: int) -> Tuple[f
 
     results = pd.DataFrame(results_data)
     results.to_json(f"{path}/epsilon-{file}.jsonl", orient='records', lines=True)
-    results.query(f"distance != 'Invalid'", inplace=True)
+    results.query(f"distance != 'invalid'", inplace=True)
     mean_value = results['distance'].sum() / len(results['distance'])
     std_dev = results['distance'].std()
     mean_percentage = results['percentage'].mean()
@@ -89,4 +91,13 @@ def calculate(df: pd.DataFrame, path: str, file: str, registers: int) -> Tuple[f
 
 
 if __name__ == "__main__":
-    calculate_error_margin("/media/shared/dam10098/ICSPot/checkpoints/mbtcp-icspatch-processes.json/mbtcp-aircraft-c1-s4096/20240427T1142/", "epoch-13_val_type-validator", 2)
+    if len(sys.argv) != 4:
+        print("Usage: python epsilon.py <experiment> <function> <epoch>")
+        sys.exit(1)
+
+    experiment = sys.argv[1]
+    function = sys.argv[2]
+    epoch = sys.argv[3]
+
+    # calculate_error_margin(f"/media/shared/ICSPot/checkpoints/{experiment}.json/mbtcp-{function}-c1-s1024/20240429T0321/", f"epoch-{epoch}_val_type-exact.jsonl", 2)
+    calculate_error_margin(f"/media/shared/ICSPot/checkpoints/{experiment}.json/mbtcp-{function}-c1-s4096", "val_type_exact-model_mbtcp-expo10_linear-c1-s1024.jsonl", 2)

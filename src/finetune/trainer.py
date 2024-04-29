@@ -19,7 +19,7 @@ def main(finetuner_model: FinetunerModel):
         log.info(f"Start time: {finetuner_model.start_time} - {datetime.datetime.fromtimestamp(finetuner_model.start_time)}")
 
         tensor_logger = TensorBoardLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime)
-        csv_logger = CSVLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=finetuner_model.start_datetime, prefix="csv")
+        csv_logger = CSVLogger(f"{CHECKPOINTS}/{finetuner_model.experiment}", name=finetuner_model.the_name, version=f"csv/{finetuner_model.start_datetime}", prefix="csv")
 
         if finetuner_model.model_type == "meta-llama":
             llama2 = Llama2(finetuner_model)

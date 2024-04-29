@@ -63,13 +63,14 @@ class MathPlots:
             df.sort_values(by='distance', inplace=True)
             df['distance'] = df['distance'].abs()
 
+
             mean = df['distance'].mean()
             std_dev = df['distance'].std()
 
-            print(mean, std_dev)
-
             # df = df[(df['distance'] > (mean - 0.1 * std_dev)) & (df['distance'] < (mean + 0.1 * std_dev))]
-            df = df[(df['distance'] < (mean + 0.1 * std_dev))]
+            df = df[(df['x'] > 1) & (df['x'] < 5)]
+            df = df[(df['distance'] < (mean + 1 * std_dev))]
+            print(mean, std_dev)
 
 
             df['percintile'] = df['distance'].apply(lambda x: (df['distance'] <= x).mean() * 100)

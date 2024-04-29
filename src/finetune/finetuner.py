@@ -131,8 +131,8 @@ class Finetuner:
                               accelerator=self._finetuner_model.accelerator,
                               devices=self._finetuner_model.devices,
                               strategy="ddp")
-            # if os.path.exists(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}"):
-            #     trainer.fit(self._custom_module, self._data_module,
-            #                 ckpt_path=f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.start_datetime}/checkpoints/last.ckpt")
-            # else:
-            trainer.fit(self._custom_module, self._data_module)
+            if os.path.exists(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}"):
+                trainer.fit(self._custom_module, self._data_module,
+                            ckpt_path=f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.start_datetime}/checkpoints/last.ckpt")
+            else:
+                trainer.fit(self._custom_module, self._data_module)
