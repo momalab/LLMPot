@@ -31,10 +31,10 @@ def parse_jsonl(file_path):
 
             new_lines.append(new_data)
 
-    new_file_path = './test.jsonl'
+    new_file_path = './sigmoid_linear.jsonl'
     with open(new_file_path, 'w') as new_file:
         for line in new_lines:
             new_file.write(json.dumps(line) + '\n')
 
 
-parse_jsonl('/media/shared/ICSPot/outputs/datasets/parsed/mbtcp-expo10-c1-s1024.csv')
+parse_jsonl('/media/shared/ICSPot/outputs/datasets/parsed/mbtcp-sigmoid_linear-c1-s4096.csv')
