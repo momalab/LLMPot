@@ -5,20 +5,40 @@ from unittest import result
 
 import pandas as pd
 from typing import Tuple
+from param import Callable
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 import sys
 
-def calculate_error_margin(path: str, file: str, registers: int) -> Tuple[float, float, float]:
+def calculate_error_margin(path: str, file: str, output_registers: int, input_registers: int, func) -> Tuple[float, float, float]:
     with open(f"{path}/{file}.jsonl", "r") as data:
         data = [json.loads(line) for line in data]
 
-    return calculate(pd.DataFrame(data), path, file, registers)
+    return calculate(pd.DataFrame(data), path, file, output_registers, input_registers, func)
 
-def calculate(df: pd.DataFrame, path: str, file: str, registers: int) -> Tuple[float, float, float]:
+def calculate(df: pd.DataFrame, path: str, file: str, output_registers: int, input_registers: int, func) -> Tuple[float, float, float]:
 
     results_data = []
     for _, row in df.iterrows():
+        if func == "int":
+            if input_registers == 4:
+                input_func = BinaryPayloadDecoder.decode_64bit_int
+            else:
+                input_func = BinaryPayloadDecoder.decode_32bit_int
+            if output_registers == 4:
+                output_func = BinaryPayloadDecoder.decode_64bit_int
+            else:
+                output_func = BinaryPayloadDecoder.decode_32bit_int
+        else:
+            if input_registers == 4:
+                input_func = BinaryPayloadDecoder.decode_64bit_float
+            else:
+                input_func = BinaryPayloadDecoder.decode_32bit_float
+            if output_registers == 4:
+                output_func = BinaryPayloadDecoder.decode_64bit_float
+            else:
+                output_func = BinaryPayloadDecoder.decode_32bit_float
+
         distance = "invalid"
         percentage = "invalid"
         x, y, y_orig = "invalid", "invalid", "invalid"
@@ -30,15 +50,15 @@ def calculate(df: pd.DataFrame, path: str, file: str, registers: int) -> Tuple[f
 
             bytes.fromhex(response) # just check if it is a valid packet
 
-            reg_values = context.split(":")[0][-4*registers:]
+            reg_values = context.split(":")[0][-4*input_registers:]
             context_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
             context_chunks = [int(chunk, 16) for chunk in context_chunks]
 
-            reg_values = response[-4*registers:]
+            reg_values = response[-4*output_registers:]
             response_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
             response_chunks = [int(chunk, 16) for chunk in response_chunks]
 
-            reg_values = expected_response[-4*registers:]
+            reg_values = expected_response[-4*output_registers:]
             e_response_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
             e_response_chunks = [int(chunk, 16) for chunk in e_response_chunks]
 
@@ -46,15 +66,15 @@ def calculate(df: pd.DataFrame, path: str, file: str, registers: int) -> Tuple[f
             y = BinaryPayloadDecoder.fromRegisters(response_chunks, Endian.BIG, wordorder=Endian.LITTLE)
             y_orig = BinaryPayloadDecoder.fromRegisters(e_response_chunks, Endian.BIG, wordorder=Endian.LITTLE)
 
-            x = x.decode_32bit_float()
-            y = y.decode_32bit_float()
-            y_orig = y_orig.decode_32bit_float()
+            x = input_func(x)
+            y = output_func(y)
+            y_orig = output_func(y_orig)
 
             distance = abs(y - y_orig)
             if y_orig != 0:
-                percentage = distance / y_orig
+                percentage = abs(distance / y_orig)
             elif y != 0:
-                percentage = distance / y
+                percentage = abs(distance / y)
             else:
                 percentage = 0
         except:
@@ -76,7 +96,8 @@ def calculate(df: pd.DataFrame, path: str, file: str, registers: int) -> Tuple[f
     results = pd.DataFrame(results_data)
     results.to_json(f"{path}/epsilon-{file}.jsonl", orient='records', lines=True)
     results.query(f"distance != 'invalid'", inplace=True)
-    mean_value = results['distance'].sum() / len(results['distance'])
+    print(f"Total: {len(results)}")
+    mean_value = results['distance'].mean()
     std_dev = results['distance'].std()
     mean_percentage = results['percentage'].mean()
 
@@ -85,19 +106,10 @@ def calculate(df: pd.DataFrame, path: str, file: str, registers: int) -> Tuple[f
     #     if row['distance'] > 0.1:
     #         print(f"X: {row['x']}, Y: {row['y']}, Y_orig: {row['y_orig']}, distance: {row['distance']}, percentage: {row['percentage']}")
 
-    print(f"Mean: {round(mean_value, 4)}, std: {round(std_dev, 4)}, mean_percentage: {mean_percentage}")
+    print(f"Mean: {mean_value}, std: {std_dev}, mean_percentage: {mean_percentage}")
 
     return mean_value, std_dev, mean_percentage
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: python epsilon.py <experiment> <function> <epoch>")
-        sys.exit(1)
-
-    experiment = sys.argv[1]
-    function = sys.argv[2]
-    epoch = sys.argv[3]
-
-    # calculate_error_margin(f"/media/shared/ICSPot/checkpoints/{experiment}.json/mbtcp-{function}-c1-s1024/20240429T0321/", f"epoch-{epoch}_val_type-exact", 2)
-    calculate_error_margin(f"/media/shared/ICSPot/checkpoints/{experiment}.json/mbtcp-{function}-c1-s4096", "val_type_exact-model_mbtcp-expo10-c1-s1024", 2)
+    calculate_error_margin(f"/media/shared/ICSPot/checkpoints/mbtcp-math-functions.json/mbtcp-cosh-c1-s4096/20240427T1812", "epoch-29_val_type-exact", 2, 2, "float")

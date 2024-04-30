@@ -9,11 +9,26 @@
       "size": 1600,
       "functions": [1,5,15,3,6,16],
       "values": {"low": 0, "high": 27648},
+      "addresses": {"low": 0, "high": 40},
+      "client": "boundaries_client",
+      "server": {
+        "name": "no_logic_server",
+        "markers": 40,
+        "datablock": 40
+      },
+      "context": 0,
+      "multi_elements": 3
+    },
+    {
+      "protocol": "s7comm",
+      "size": 1600,
+      "functions": [1,5,15,3,6,16],
+      "values": {"low": 0, "high": 27648},
       "addresses": {"low": 0, "high": 100},
       "client": "boundaries_client",
       "server": {
         "name": "no_logic_server",
-        "markers": 1,
+        "markers": 100,
         "datablock": 100
       },
       "context": 0,
@@ -28,7 +43,7 @@
       "client": "boundaries_client",
       "server": {
         "name": "no_logic_server",
-        "markers": 1,
+        "markers": 5000,
         "datablock": 5000
       },
       "context": 0,

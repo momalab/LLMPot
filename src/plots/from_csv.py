@@ -4,6 +4,7 @@ import os
 from typing import List
 
 from matplotlib import legend
+from matplotlib.patches import Shadow
 import plotly
 import plotly.express as px
 
@@ -69,13 +70,13 @@ class Plots:
     def accuracy_with_random_dataset(self):
         dfs = pd.DataFrame()
         for dataset in self._finetuner.datasets:
-            the_dir  = f"{CHECKPOINTS}/{self._finetuner.experiment}.old/{dataset}"
-            start_datetime_path = [name for name in os.listdir(the_dir) if os.path.isdir(os.path.join(the_dir, name))][0]
-            if not os.path.exists(f"{the_dir}/{start_datetime_path}/metrics2.csv"):
+            the_dir = f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}"
+            start_datetime_path = [name for name in os.listdir(the_dir) if os.path.isdir(os.path.join(the_dir, name))][1]
+            if not os.path.exists(f"{the_dir}/csv/{start_datetime_path}/metrics2.csv"):
                 continue
 
-            df = pd.read_csv(f"{the_dir}/{start_datetime_path}/metrics2.csv")
-            df.loc[:, 'test_dataset'] = dataset.server.coils
+            df = pd.read_csv(f"{the_dir}/csv/{start_datetime_path}/metrics2.csv")
+            df.loc[:, 'test_dataset'] = dataset.server.datablock
             df.loc[:, 'plc_cfg'] = df['test_dataset'].apply(lambda x: "same" if x == 40 else "different")
             df.loc[:, 'size'] = df['dataset'].apply(lambda x: f"{x.split('-')[3]}")
             df.loc[:, 'functions'] = df['dataset'].apply(lambda x: f"{x.split('-')[4].split('f')[1]}")
@@ -96,14 +97,14 @@ class Plots:
                 margin=dict(l=0, r=0, b=0, t=0, pad=0),
                 font=dict(family=FONT_FAMILY, size=34, color="Black"),
                 xaxis=dict(type='category', categoryorder='array'),
-                legend=dict(yanchor="bottom", y=0.7, xanchor="right", x=0.3, orientation='v', font=dict(family=FONT_FAMILY, size=28)),
+                legend=dict(yanchor="bottom", y=0.7, xanchor="right", x=0.2, orientation='v', font=dict(family=FONT_FAMILY, size=28)),
 
             )
             fig.update_xaxes(showline=True, linewidth=1.5, linecolor='gray', gridcolor='gray', gridwidth=1, griddash="dot",
                              zeroline=False, zerolinewidth=3, zerolinecolor='black',
                              )
             fig.update_yaxes(showline=True, linewidth=1.5, linecolor='gray',gridcolor='gray', gridwidth=1, griddash="dot",
-                             zeroline=False, zerolinewidth=3, zerolinecolor='black',
+                             zeroline=False, zerolinewidth=3, zerolinecolor='black', range=[0, 1.002]
                              )
 
             fig.show()
@@ -112,16 +113,19 @@ class Plots:
             fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{validation_type}.pdf")
 
     def accuracy_per_epoch(self, ):
+        # names =["[-120, -60]", "[-90, -30]", "[30, 90]", "[60, 120]"]
+        names =["a-40_d-40", "a-100_d-100", "a-5000_d-5000"]
         dfs = pd.DataFrame()
         # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
         # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
-        colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        colors = {name: NATURE[i] for i, name in enumerate(names)}
         for dataset in self._finetuner.datasets:
             start_datetime_path = os.listdir(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}")[0]
-            if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics.csv"):
+            if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv"):
                 continue
 
-            df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics.csv")
+            df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv")
             df.drop(columns=['csv-val_loss_step', 'csv-val_loss_epoch', 'csv-train_loss_step', 'csv-train_loss_epoch'], inplace=True)
             df.dropna(subset=["csv-accuracy/validator", "csv-accuracy/exact"], inplace=True)
             df.loc[:, 'dataset'] = dataset.__str__()
@@ -130,12 +134,12 @@ class Plots:
         for metric in self._metrics:
             validation_type = metric.split("/")[1]
             fig = go.Figure()
-            for dataset in self._finetuner.datasets:
+            for index, dataset in enumerate(self._finetuner.datasets):
                 df = dfs.query(f"dataset == '{dataset}'")
                 fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df[metric],
                                          mode='lines',
-                                         name=f"{dataset.client}",
-                                         line=dict(width=5, color=colors[dataset.client], shape='spline'),
+                                         name=names[index],
+                                         line=dict(width=5, color=colors[names[index]], shape='spline'),
                                          )
                               )
 
@@ -194,7 +198,7 @@ class Plots:
 
             fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df['csv-train_loss_epoch'],
                                      mode='lines',
-                                     name=f" t-{dataset.size}",
+                                     name=f"{dataset.size}",
                                      line=dict(width=5, color=colors[dataset.size], shape='spline'),
                                      legend="legend2"
                                      )
@@ -219,6 +223,16 @@ class Plots:
                          zeroline=False, zerolinewidth=3, zerolinecolor='black',
                          )
 
+        fig.add_annotation(text='solid: training loss, dot: validation loss',
+                    align='left',
+                    showarrow=False,
+                    xref='paper',
+                    yref='paper',
+                    x=1,
+                    y=0.9,
+                    bordercolor='gray',
+                    borderwidth=2)
+
         fig.show()
 
         os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
@@ -227,6 +241,9 @@ class Plots:
 
 if __name__ == '__main__':
     # plot = Plots("mbtcp-protocol-test.json")
+    # plot.accuracy_with_random_dataset()
+
+    # plot = Plots("s7comm-protocol-test.json")
     # plot.accuracy_with_random_dataset()
 
     # plot = Plots("s7comm-protocol-emulation.json")
@@ -240,5 +257,8 @@ if __name__ == '__main__':
     # plot = Plots("mbtcp-protocol-emulation-ablation-addresses.json")
     # plot.accuracy_per_epoch()
 
-    plot = Plots("mbtcp-anaerobic-variations.json")
+    plot = Plots("s7comm-protocol-generalization.json")
     plot.accuracy_per_epoch()
+
+    # plot = Plots("mbtcp-anaerobic-variations.json")
+    # plot.accuracy_per_epoch()

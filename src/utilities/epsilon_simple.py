@@ -60,4 +60,4 @@ def calculate(df: pd.DataFrame, path: str, file: str) -> Tuple[float, float, flo
 
 
 if __name__ == "__main__":
-    calculate_error_margin(f"/media/shared/ICSPot/checkpoints/mbtcp-expo10_m.json/mbtcp-expo10_m-c0-s1024/20240429T1534", f"epoch-90_val_type-exact")
+    calculate_error_margin(f"/media/shared/ICSPot/checkpoints/mbtcp-expo10_m-test.json/mbtcp-expo10_m_noise-c0-s1024/", "val_type_exact-model_mbtcp-expo10_m-c0-s1024")

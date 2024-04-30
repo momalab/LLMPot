@@ -14,7 +14,7 @@ from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 from cfg import EXPERIMENTS, CHECKPOINTS, DATASET_PARSED
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel, TestExperiment
-from utilities.epsilon_simple import calculate_error_margin
+from utilities.epsilon import calculate_error_margin
 
 
 def main():
@@ -35,7 +35,7 @@ def main():
             finetuner_test.current_dataset = test_dataset
             if os.path.exists(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}"):
                 the_dir  = f"{CHECKPOINTS}/{experiment}/{test_dataset}"
-                start_datetime = [name for name in os.listdir(the_dir) if os.path.isdir(os.path.join(the_dir, name))][0]
+                start_datetime = [name for name in os.listdir(the_dir) if os.path.isdir(os.path.join(the_dir, name))][1]
                 finetuner_test.start_datetime = start_datetime
 
             with open(f"{EXPERIMENTS}/{finetuner_test.experiment_filename}", "r") as cfg:
@@ -66,7 +66,10 @@ def main():
                     continue
 
                 finetuner_orig_exp.current_dataset = dataset
-                finetuner_orig_exp.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")[0]
+                folders = os.listdir(f"{CHECKPOINTS}/{finetuner_test.experiment_filename}/{dataset}")
+                for folder in folders:
+                    if "csv" not in folder:
+                        finetuner_orig_exp.start_datetime = folder
                 finetuner_orig_exp.test_experiment = TestExperiment(experiment=finetuner_test.experiment, dataset=test_dataset)
 
                 best_model_path = glob.glob(f"{CHECKPOINTS}/{finetuner_orig_exp.experiment}/{finetuner_orig_exp.current_dataset}/{finetuner_orig_exp.start_datetime}/checkpoints/best-*")[0]
@@ -87,11 +90,11 @@ def main():
 
                 trainer.test(model=model, dataloaders=dataloader)
 
-                mean, std, percentage = calculate_error_margin(
-                    f"{CHECKPOINTS}/{finetuner_test.experiment}/{finetuner_test.current_dataset}",
-                    f"val_type_exact-model_{finetuner_orig_exp.current_dataset}")
+                # mean, std, percentage = calculate_error_margin(
+                #     f"{CHECKPOINTS}/{finetuner_test.experiment}/{finetuner_test.current_dataset}",
+                #     f"val_type_exact-model_{finetuner_orig_exp.current_dataset}", 2, 2, "float")
 
-                print(f"mean: {mean}, std: {std}, percentage: {percentage}")
+                # print(f"mean: {mean}, std: {std}, percentage: {percentage}")
 
             df = pd.read_csv(f"{CHECKPOINTS}/{finetuner_test.experiment}/{test_dataset}/csv/{finetuner_test.start_datetime}/metrics.csv")
             for index, dataset in enumerate(finetuner_orig_exp.datasets):

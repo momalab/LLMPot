@@ -4,6 +4,7 @@ import os
 from typing import List
 
 from matplotlib import legend
+from matplotlib.axis import YAxis
 import plotly
 import plotly.express as px
 
@@ -16,10 +17,11 @@ from cfg import EXPERIMENTS, CHECKPOINTS, ASSETS, TEST_METRICS, TRAINING_METRICS
 from finetune.model.finetuner_model import FinetunerModel
 import plotly.io as pio
 pio.kaleido.scope.mathjax = None
+pd.options.mode.copy_on_write = True
 
 FONT_FAMILY = "Serif"
 SYMBOL = ['cross', 'diamond-open', 'circle-dot', 'triangle-up-open', 'diamond-open', 'star-triangle-up']
-NATURE = ['#C03221', '#87BCDE', '#EDB88B', '#545E75', '#3F826D', '#88498F', '#88498F']
+NATURE = ['#C03221', '#87BCDE', '#EDB88B', '#545E75', '#3F826D', '#C03221', '#87BCDE', '#EDB88B', '#545E75']
 
 
 class MathPlots:
@@ -39,7 +41,6 @@ class MathPlots:
     def rva_e(self):
         dfs = pd.DataFrame()
         colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
-        data = []
         for dataset in self._finetuner.datasets:
             the_dir = f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}"
             the_datetime = os.listdir(f"{the_dir}")[0]
@@ -47,6 +48,7 @@ class MathPlots:
             epsilon_file = glob.glob(f"{the_dir}/epsilon*.jsonl")[0]
 
             with open(epsilon_file, 'r') as file:
+                data = []
                 for line in file:
                     data.append(json.loads(line))
 
@@ -54,41 +56,36 @@ class MathPlots:
             df.loc[:, 'dataset'] = dataset.client
             dfs = pd.concat([dfs, df])
 
-        dfs['distance'] = dfs['distance'].astype(float)
-
         fig = go.Figure()
         for dataset in self._finetuner.datasets:
-            df = dfs.query(f"dataset == '{dataset.client}'")
+            df2 = dfs.query(f"dataset == '{dataset.client}' and distance != 'invalid'")
 
-            df.sort_values(by='distance', inplace=True)
-            df['distance'] = df['distance'].abs()
+            df2.sort_values(by='distance', inplace=True)
 
+            # df = df[(df['distance'] > (mean - 2 * std_dev)) & (df['distance'] < (mean + 2 * std_dev))]
+            # df = df[(df['distance'] < (mean + 0.1 * std_dev))]
+            # df = df[(df['distance'] > 0)]
+            # df2 = df2[(df2['distance'] < 0.001)]
 
-            mean = df['distance'].mean()
-            std_dev = df['distance'].std()
+            mean = df2['distance'].mean()
+            std_dev = df2['distance'].std()
+            print(f"Dataset: {dataset} Mean: {mean} Std Dev: {std_dev}")
 
-            # df = df[(df['distance'] > (mean - 0.1 * std_dev)) & (df['distance'] < (mean + 0.1 * std_dev))]
-            df = df[(df['x'] > 1) & (df['x'] < 5)]
-            df = df[(df['distance'] < (mean + 1 * std_dev))]
-            print(mean, std_dev)
+            df2['percintile'] = df2['distance'].apply(lambda x: (df2['distance'] <= x).mean())
 
-
-            df['percintile'] = df['distance'].apply(lambda x: (df['distance'] <= x).mean() * 100)
-
-            fig.add_trace(go.Scatter(x=df['distance'], y=df['percintile'],
-                                        mode='lines',
-                                        name=f"{dataset.client}",
-                                        line=dict(width=5, color=colors[dataset.client], shape='spline'),
-                                        )
-                            )
-
+            fig.add_trace(go.Scatter(x=df2['distance'], y=df2['percintile'],
+                                     mode='lines',
+                                     name=f"{dataset.client}",
+                                     line=dict(width=5, color=colors[dataset.client], shape='spline'),
+                                     )
+                          )
 
 
         fig.update_layout(
-            # xaxis_type="log",
             xaxis_title='<b>Epsilon</b>',
             yaxis_title='<b>RVA-ε</b>',
-            yaxis=dict(type='log', dtick=1),
+            yaxis=dict(range=[0.5, 1.02]),
+            # yaxis=dict(type='log', dtick=1),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
             margin=dict(l=0, r=0, b=0, pad=0),
@@ -105,8 +102,9 @@ class MathPlots:
 
         fig.show()
 
-        # os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
-        # fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/losses.pdf")
+        name = "-".join([dataset.client for dataset in self._finetuner.datasets])
+        os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
+        fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{name}.pdf")
 
 
 if __name__ == '__main__':

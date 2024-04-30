@@ -1,3 +1,4 @@
+from enum import auto
 import json
 from tkinter import font
 from numpy import size
@@ -33,12 +34,15 @@ fig.update_annotations(font=dict(size=32))
 
 fig.update_layout(
     margin=dict(pad=0, r=0, b=0),
-    font=dict(family='Serif', size=18),
+    font=dict(family='Serif', size=26),
     yaxis=dict(tickfont=dict(size=26)),
     yaxis2=dict(tickfont=dict(size=26)),
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
-    showlegend=False
+    showlegend=False,
+    width=1200,
+    height=400,
+    autosize=False,
 )
 
 fig.show()

@@ -9,15 +9,6 @@
       {
         "protocol": "mbtcp",
         "size": 4096,
-        "client": "anaerobic",
-        "server": {
-          "name": "no_logic_server"
-        },
-        "context": 1
-      },
-      {
-        "protocol": "mbtcp",
-        "size": 4096,
         "client": "anaerobic_2",
         "server": {
           "name": "no_logic_server"
