@@ -5,7 +5,7 @@ import os
 import traceback
 
 import pandas as pd
-from datasets import load_dataset
+from datasets import load_dataset, Features, Value
 from lightning import Trainer
 from lightning.pytorch.loggers import TensorBoardLogger, CSVLogger
 from torch.utils.data import DataLoader
@@ -14,7 +14,7 @@ from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 from cfg import EXPERIMENTS, CHECKPOINTS, DATASET_PARSED
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel, TestExperiment
-from utilities.epsilon import calculate_error_margin
+from utilities.epsilon_simple import calculate_error_margin
 
 
 def main():
@@ -45,7 +45,11 @@ def main():
                 finetuner_orig_exp = FinetunerModel(**config_orig_experiment)
                 finetuner_orig_exp.experiment = finetuner_test.experiment_filename
 
-            dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{test_dataset}.csv"})
+            features = Features({
+                'source_text': Value('string'),
+                'target_text': Value('string')
+            })
+            dataset = load_dataset('csv', data_files={'test': f"{DATASET_PARSED}/{test_dataset}.csv"}, features=features)
             dataset = dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
 
             dataloader = DataLoader(dataset["test"], batch_size=finetuner_test.batch_size, shuffle=False, num_workers=finetuner_test.workers)
@@ -85,7 +89,7 @@ def main():
 
                 mean, std, percentage = calculate_error_margin(
                     f"{CHECKPOINTS}/{finetuner_test.experiment}/{finetuner_test.current_dataset}",
-                    f"val_type_exact-model_{finetuner_orig_exp.current_dataset}", 2)
+                    f"val_type_exact-model_{finetuner_orig_exp.current_dataset}")
 
                 print(f"mean: {mean}, std: {std}, percentage: {percentage}")
 

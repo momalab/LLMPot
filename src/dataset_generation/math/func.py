@@ -127,7 +127,7 @@ def func_values_sampled(x, samples):
     return sampled_x_values, y
 
 def func_values_with_noise(x, samples):
-    noise = np.random.uniform(-0.5, 0.5, samples)
+    noise = np.random.uniform(-0.05, 0.05, samples)
     x_noise = x + noise
     y_noise = [func(x) for x in x_noise]
 
@@ -135,21 +135,22 @@ def func_values_with_noise(x, samples):
 
 
 def main():
-    x, y = func_values(-10, 10, 4096)
-    x_sampled, y_sampled = func_values_sampled(x, 4096)
-    # x_noise, y_noise = func_values_with_noise(x)
+    samples = 1024
+    x, y = func_values(0, 2, samples)
+    x_sampled, y_sampled = func_values_sampled(x, samples)
+    x_noise, y_noise = func_values_with_noise(x, samples)
 
     x, y = remove_decimals(x, y)
     x_sampled, y_sampled = remove_decimals(x_sampled, y_sampled)
-    # x_noise, y_noise = remove_decimals(x_noise, y_noise)
+    x_noise, y_noise = remove_decimals(x_noise, y_noise)
 
     df = pd.DataFrame({'source_text': x, 'target_text': y})
     df_sampled = pd.DataFrame({'source_text': x_sampled, 'target_text': y_sampled})
-    # df_noise = pd.DataFrame({'source_text': x_noise, 'target_text': y_noise})
+    df_noise = pd.DataFrame({'source_text': x_noise, 'target_text': y_noise})
 
-    # df.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid-simple-c0-s{SAMPLES}.csv", index=False)
-    # df_sampled.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid-sampled3-c0-s{SAMPLES}.csv", index=False)
-    # df_noise.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid-noise-c0-s{SAMPLES}-test.csv", index=False)
+    df.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid_m_linear-c0-s{samples}.csv", index=False)
+    df_sampled.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid_m-c0-s{samples}.csv", index=False)
+    df_noise.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid_m_noise-c0-s{samples}-test.csv", index=False)
 
 
 if __name__ == '__main__':

@@ -5,6 +5,17 @@ from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
 from dataset_generation.utils import value_generator
 from finetune.model.finetuner_model import RangeModel
 
+# def execute(m_elem, addr_low, addr_high, max_addr, val_low, val_high):
+#     i = 0
+#     for elem in range(1, m_elem + 1):
+#         bounds = value_generator.generate_triplet_value2(addr_low, addr_high, elem)
+#         e_bounds =  value_generator.generate_triplet_value2(addr_high + 1, max_addr, elem)
+
+#         for addr in [bounds, e_bounds]:
+#             combinations = value_generator.generate_combinations2(val_low, val_high, elem)
+#             for data in combinations:
+#                 i += 2
+#     print(i)
 
 class BoundariesClient(MbtcpClient):
 
@@ -13,6 +24,8 @@ class BoundariesClient(MbtcpClient):
         self._addresses = addresses
         self._values = values
         self._max_elements = max_elements
+
+
 
     def start_client(self):
         functions = []

@@ -9,13 +9,13 @@
   "datasets": [
     {
       "protocol": "mbtcp",
-      "size": 4096,
-      "client": "sigmoid",
+      "size": 1024,
+      "client": "expo10_m_noise",
       "server": {
         "name": "no_logic_server"
       },
-      "context": 1
+      "context": 0
     }
   ],
-  "experiment_filename": "mbtcp-math-functions.json"
+  "experiment_filename": "mbtcp-expo10_m.json"
 }

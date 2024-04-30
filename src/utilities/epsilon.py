@@ -10,7 +10,7 @@ from pymodbus.payload import BinaryPayloadDecoder
 import sys
 
 def calculate_error_margin(path: str, file: str, registers: int) -> Tuple[float, float, float]:
-    with open(f"{path}/{file}", "r") as data:
+    with open(f"{path}/{file}.jsonl", "r") as data:
         data = [json.loads(line) for line in data]
 
     return calculate(pd.DataFrame(data), path, file, registers)
@@ -99,5 +99,5 @@ if __name__ == "__main__":
     function = sys.argv[2]
     epoch = sys.argv[3]
 
-    # calculate_error_margin(f"/media/shared/ICSPot/checkpoints/{experiment}.json/mbtcp-{function}-c1-s1024/20240429T0321/", f"epoch-{epoch}_val_type-exact.jsonl", 2)
-    calculate_error_margin(f"/media/shared/ICSPot/checkpoints/{experiment}.json/mbtcp-{function}-c1-s4096", "val_type_exact-model_mbtcp-expo10_linear-c1-s1024.jsonl", 2)
+    # calculate_error_margin(f"/media/shared/ICSPot/checkpoints/{experiment}.json/mbtcp-{function}-c1-s1024/20240429T0321/", f"epoch-{epoch}_val_type-exact", 2)
+    calculate_error_margin(f"/media/shared/ICSPot/checkpoints/{experiment}.json/mbtcp-{function}-c1-s4096", "val_type_exact-model_mbtcp-expo10-c1-s1024", 2)
