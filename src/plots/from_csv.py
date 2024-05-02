@@ -118,14 +118,16 @@ class Plots:
         dfs = pd.DataFrame()
         # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
         # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
-        # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
-        colors = {name: NATURE[i] for i, name in enumerate(names)}
+        colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        # colors = {name: NATURE[i] for i, name in enumerate(names)}
         for dataset in self._finetuner.datasets:
             start_datetime_path = os.listdir(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}")[0]
-            if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv"):
+            if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics.csv"):
+            # if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv"):
                 continue
 
-            df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv")
+            df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics.csv")
+            # df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv")
             df.drop(columns=['csv-val_loss_step', 'csv-val_loss_epoch', 'csv-train_loss_step', 'csv-train_loss_epoch'], inplace=True)
             df.dropna(subset=["csv-accuracy/validator", "csv-accuracy/exact"], inplace=True)
             df.loc[:, 'dataset'] = dataset.__str__()
@@ -138,8 +140,8 @@ class Plots:
                 df = dfs.query(f"dataset == '{dataset}'")
                 fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df[metric],
                                          mode='lines',
-                                         name=names[index],
-                                         line=dict(width=5, color=colors[names[index]], shape='spline'),
+                                         name=dataset.client,
+                                         line=dict(width=5, color=colors[dataset.client], shape='spline'),
                                          )
                               )
 
@@ -168,7 +170,8 @@ class Plots:
     def loss_per_epoch(self):
         dfs = pd.DataFrame()
         self._symbol_map = {name: SYMBOL[i] for i, name in enumerate(['train', 'val'])}
-        colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
+        # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
         for dataset in self._finetuner.datasets:
             start_datetime_path = os.listdir(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}")[0]
             if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/{start_datetime_path}/metrics.csv"):
@@ -189,8 +192,8 @@ class Plots:
             df = dfs.query(f"dataset == '{dataset.__str__()}'")
             fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df['csv-val_loss_epoch'],
                                      mode='lines',
-                                     name=f"v-{dataset.size}",
-                                     line=dict(width=5, color=colors[dataset.size], shape='spline', dash="dot"),
+                                     name=f"v-{dataset.client}",
+                                     line=dict(width=5, color=colors[dataset.client], shape='spline', dash="dot"),
                                      legend="legend1",
                                      showlegend=False
                                      )
@@ -198,8 +201,8 @@ class Plots:
 
             fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df['csv-train_loss_epoch'],
                                      mode='lines',
-                                     name=f"{dataset.size}",
-                                     line=dict(width=5, color=colors[dataset.size], shape='spline'),
+                                     name=f"{dataset.client}",
+                                     line=dict(width=5, color=colors[dataset.client], shape='spline'),
                                      legend="legend2"
                                      )
                           )
@@ -207,7 +210,7 @@ class Plots:
         fig.update_layout(
             xaxis_title='<b>Epoch</b>',
             yaxis_title='<b>Loss</b>',
-            yaxis=dict(type='log', dtick=1),
+            # yaxis=dict(type='log', dtick=1),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
             margin=dict(l=0, r=0, b=0, pad=0),
@@ -254,11 +257,15 @@ if __name__ == '__main__':
     # plot.accuracy_per_epoch()
     # plot.loss_per_epoch()
 
+    plot = Plots("mbtcp-icspatch-processes.json")
+    plot.accuracy_per_epoch()
+    plot.loss_per_epoch()
+
     # plot = Plots("mbtcp-protocol-emulation-ablation-addresses.json")
     # plot.accuracy_per_epoch()
 
-    plot = Plots("s7comm-protocol-generalization.json")
-    plot.accuracy_per_epoch()
+    # plot = Plots("s7comm-protocol-generalization.json")
+    # plot.accuracy_per_epoch()
 
     # plot = Plots("mbtcp-anaerobic-variations.json")
     # plot.accuracy_per_epoch()

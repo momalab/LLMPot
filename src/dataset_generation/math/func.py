@@ -11,6 +11,8 @@ import plotly.graph_objects as go
 
 from cfg import ASSETS, DATASET_PARSED
 from numpy.polynomial import Polynomial
+import plotly.io as pio
+pio.kaleido.scope.mathjax = None
 
 FONT_FAMILY = "Serif"
 
@@ -65,11 +67,11 @@ def func_values(low, high, samples):
 def func_values_sampled(x, samples):
     derivative_values = derivative(x)
 
-    power = 0.7
+    power = 0.8
     pdf = np.power(abs(derivative_values), power)
     pdf /= np.sum(pdf * np.diff(x)[0])
 
-    mix_ratio = 0.2
+    mix_ratio = 0.5
     uniform_pdf = np.ones_like(pdf) / len(pdf)
     adjusted_pdf = (1 - mix_ratio) * pdf + mix_ratio * uniform_pdf
     adjusted_pdf /= np.sum(adjusted_pdf * np.diff(x)[0])
@@ -122,7 +124,7 @@ def func_values_sampled(x, samples):
 
     fig_combined.show()
     os.makedirs(f"{ASSETS}/math_functions/", exist_ok=True)
-    fig_combined.write_image(f"{ASSETS}/math_functions/{THE_FUNC.__name__}.png")
+    fig_combined.write_image(f"{ASSETS}/math_functions/{THE_FUNC.__name__}.pdf")
 
     return sampled_x_values, y
 
@@ -135,22 +137,22 @@ def func_values_with_noise(x, samples):
 
 
 def main():
-    samples = 1024
-    x, y = func_values(0, 2, samples)
+    samples = 10000
+    x, y = func_values(-10, 10, samples)
     x_sampled, y_sampled = func_values_sampled(x, samples)
     x_noise, y_noise = func_values_with_noise(x, samples)
 
-    x, y = remove_decimals(x, y)
-    x_sampled, y_sampled = remove_decimals(x_sampled, y_sampled)
-    x_noise, y_noise = remove_decimals(x_noise, y_noise)
+    # x, y = remove_decimals(x, y)
+    # x_sampled, y_sampled = remove_decimals(x_sampled, y_sampled)
+    # x_noise, y_noise = remove_decimals(x_noise, y_noise)
 
-    df = pd.DataFrame({'source_text': x, 'target_text': y})
-    df_sampled = pd.DataFrame({'source_text': x_sampled, 'target_text': y_sampled})
-    df_noise = pd.DataFrame({'source_text': x_noise, 'target_text': y_noise})
+    # df = pd.DataFrame({'source_text': x, 'target_text': y})
+    # df_sampled = pd.DataFrame({'source_text': x_sampled, 'target_text': y_sampled})
+    # df_noise = pd.DataFrame({'source_text': x_noise, 'target_text': y_noise})
 
-    df.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid_m_linear-c0-s{samples}.csv", index=False)
-    df_sampled.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid_m-c0-s{samples}.csv", index=False)
-    df_noise.to_csv(f"{DATASET_PARSED}/mbtcp-sigmoid_m_noise-c0-s{samples}-test.csv", index=False)
+    # df.to_csv(f"{DATASET_PARSED}/mbtcp-expo10_m_linear-c0-s{samples}.csv", index=False)
+    # df_sampled.to_csv(f"{DATASET_PARSED}/mbtcp-expo10_m-c0-s{samples}.csv", index=False)
+    # df_noise.to_csv(f"{DATASET_PARSED}/mbtcp-expo10_m_noise-c0-s{samples}.csv", index=False)
 
 
 if __name__ == '__main__':

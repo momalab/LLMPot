@@ -65,7 +65,7 @@ class MathPlots:
             # df = df[(df['distance'] > (mean - 2 * std_dev)) & (df['distance'] < (mean + 2 * std_dev))]
             # df = df[(df['distance'] < (mean + 0.1 * std_dev))]
             # df = df[(df['distance'] > 0)]
-            # df2 = df2[(df2['distance'] < 0.001)]
+            # df2 = df2[(df2['distance'] < 0.05)]
 
             mean = df2['distance'].mean()
             std_dev = df2['distance'].std()
@@ -75,7 +75,7 @@ class MathPlots:
 
             fig.add_trace(go.Scatter(x=df2['distance'], y=df2['percintile'],
                                      mode='lines',
-                                     name=f"{dataset.client}",
+                                     name="uniform" if dataset.client.__contains__("linear") else "adjusted",
                                      line=dict(width=5, color=colors[dataset.client], shape='spline'),
                                      )
                           )

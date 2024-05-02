@@ -1,5 +1,6 @@
 import json
 import os
+import time
 
 import torch
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
@@ -20,16 +21,16 @@ def load_model(finetuner_model: FinetunerModel):
         tokenizer=tokenizer,
         model=model,
         test_dataset=None,
-        device_map="cpu"
+        device_map="cuda:0"
     )
     model.eval()
-    model = model.to("cpu")
+    model = model.to("cuda:0")
     return model, tokenizer
 
 
 def predict(request: str, model, tokenizer):
     input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True)
-    input_ids = input_ids.to("cpu")
+    input_ids = input_ids.to("cuda:0")
     with torch.no_grad():
         logits = model.model.generate(input_ids,
                                       num_beams=2,
@@ -41,7 +42,7 @@ def predict(request: str, model, tokenizer):
                                       top_k=50,
                                       num_return_sequences=1,
                                       do_sample=True
-                                      ).to("cpu")
+                                      ).to("cuda:0")
         return tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
 
@@ -56,7 +57,22 @@ def main():
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.the_name}")[0]
 
     model, tokenizer = load_model(finetuner_model)
+    before = time.time_ns()
     result = predict("00610000000d00102025000306000063146314", model, tokenizer)
+    after = time.time_ns()
+    print(f"Time: {(after - before) / 1e6} ms")
+    before = time.time_ns()
+    result = predict("00610000000d00102025000306000063146314", model, tokenizer)
+    after = time.time_ns()
+    print(f"Time: {(after - before) / 1e6} ms")
+    before = time.time_ns()
+    result = predict("00610000000d00102025000306000063146314", model, tokenizer)
+    after = time.time_ns()
+    print(f"Time: {(after - before) / 1e6} ms")
+    before = time.time_ns()
+    result = predict("00610000000d00102025000306000063146314", model, tokenizer)
+    after = time.time_ns()
+    print(f"Time: {(after - before) / 1e6} ms")
     print(result)
 
 
