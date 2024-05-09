@@ -1,0 +1,5 @@
+{"valid": false, "error": "Uni_ID: 03, expected: 00", "context": "", "request": "014600000006000300260001", "response": "0146000000000300260000", "expected_response": "0146000000050003027ce8"}
+{"valid": false, "error": "Trans_ID: ['00', '60'], expected: ['00', '66']", "context": "", "request": "00660000000600052a0cff00", "response": "00600052a0cff0038000000007000000004000000900000000010000000000", "expected_response": "006600000003008502"}
+{"valid": false, "error": "Trans_ID: ['00', 'b0'], expected: ['00', '0b']", "context": "", "request": "000b00000006000300220002", "response": "00b000000400030022000", "expected_response": "000b0000000700030400000000"}
+{"valid": false, "error": "Trans_ID: ['00', '30'], expected: ['00', 'cb']", "context": "", "request": "00cb00000006000300000002", "response": "0030000000cb00000002", "expected_response": "00cb0000000700030400006801"}
+{"valid": false, "error": "Trans_ID: ['00', '01'], expected: ['01', '2d']", "context": "", "request": "012d00000006000591ccff00", "response": "00012d0000006000591", "expected_response": "012d00000003008502"}

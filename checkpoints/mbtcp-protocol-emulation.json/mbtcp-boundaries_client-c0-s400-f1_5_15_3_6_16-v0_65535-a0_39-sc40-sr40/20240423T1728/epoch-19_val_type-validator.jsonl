@@ -1,0 +1,5 @@
+{"valid": true, "context": "", "request": "014600000006000300260001", "response": "014600000003008302", "expected_response": "0146000000050003027ce8"}
+{"valid": true, "context": "", "request": "00660000000600052a0cff00", "response": "006600000003008502", "expected_response": "006600000003008502"}
+{"valid": false, "error": "Trans_ID: ['00', 'b0'], expected: ['00', '0b']", "context": "", "request": "000b00000006000300220002", "response": "00b0000000600030222", "expected_response": "000b0000000700030400000000"}
+{"valid": false, "error": "num_registers: 1, expected: 2", "context": "", "request": "00cb00000006000300000002", "response": "00cb00000006000302affff", "expected_response": "00cb0000000700030400006801"}
+{"valid": true, "context": "", "request": "012d00000006000591ccff00", "response": "012d00000003008502", "expected_response": "012d00000003008502"}

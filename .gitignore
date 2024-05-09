@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+*.ckpt
 .ipynb_checkpoints
 
 .env
@@ -16,8 +16,6 @@ ENV/
 .ics-pot/
 
 models/
-checkpoints/
-checkpoints_*/
 
 nohup.out
 outputs/datasets/dumps_old

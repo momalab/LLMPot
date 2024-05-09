@@ -1,0 +1,2 @@
+accuracy/exact,step,epoch,accuracy/validator,dataset
+0.0,0,0,0.0,mbtcp-sigmoid_linear-c1-s4096

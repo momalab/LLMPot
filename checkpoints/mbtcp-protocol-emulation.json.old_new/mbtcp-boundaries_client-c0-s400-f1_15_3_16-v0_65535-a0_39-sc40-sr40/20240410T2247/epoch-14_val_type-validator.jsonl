@@ -1,0 +1,40 @@
+{"valid": false, "error": "Should have thrown an exception since requested address: 33380 exceeds: 39", "context": "", "request": "00c10000000d00108264000306fffd6d450000", "response": "00c10000000d001082640003", "expected_response": "00c100000003009002"}
+{"valid": true, "context": "", "request": "010200000006000100280001", "response": "010200000003008102", "expected_response": "010200000003008102"}
+{"valid": false, "error": "Uni_ID: 50, expected: 00", "context": "", "request": "006f0000000d00100025000306000000000000", "response": "006f0000000250003", "expected_response": "006f00000006001000250003"}
+{"valid": true, "context": "", "request": "016100000006000300280002", "response": "016100000003008302", "expected_response": "016100000003008302"}
+{"valid": true, "context": "", "request": "017c000000060001fffe0001", "response": "017c00000003008102", "expected_response": "017c00000003008102"}
+{"valid": false, "error": "FC: 84, expected: 10", "context": "", "request": "004a0000000d001082640003066d450000fffd", "response": "004a0000000300840000002", "expected_response": "004a00000003009002"}
+{"valid": false, "error": "byte_count: 0, expected: 1", "context": "", "request": "00a700000006000100250002", "response": "00a7000000060001002", "expected_response": "00a70000000400010100"}
+{"valid": false, "error": "num_registers: 2, expected: 1", "context": "", "request": "014b00000006000300000001", "response": "014b000000060003008300000", "expected_response": "014b000000050003020000"}
+{"valid": true, "context": "", "request": "002c000000060001fffd0002", "response": "002c00000003008102", "expected_response": "002c00000003008102"}
+{"valid": true, "context": "", "request": "00f5000000060001fffe0001", "response": "00f500000003008102", "expected_response": "00f500000003008102"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 42889 exceeds: 39", "context": "", "request": "010f000000060001a7890001", "response": "010f000000060001a78900", "expected_response": "010f00000003008102"}
+{"valid": true, "context": "", "request": "0150000000060005fffdff00", "response": "015000000003008502", "expected_response": "015000000003008502"}
+{"valid": true, "context": "", "request": "00640000000600050028ff00", "response": "006400000003008502", "expected_response": "006400000003008502"}
+{"valid": false, "error": "FC: 81, expected: 10", "context": "", "request": "010d0000000d001000280003066d4500006d45", "response": "010d00000003008102", "expected_response": "010d00000003009002"}
+{"valid": true, "context": "", "request": "0129000000060003fffd0002", "response": "012900000003008302", "expected_response": "012900000003008302"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 27711 exceeds: 39", "context": "", "request": "01420000000600016c3f0002", "response": "01420000000600016c3", "expected_response": "014200000003008102"}
+{"valid": true, "context": "", "request": "00a600000006000300070002", "response": "00a600000003008302", "expected_response": "00a60000000700030486038603"}
+{"valid": true, "context": "", "request": "008100000008000f002500030103", "response": "008100000003008f00250003", "expected_response": "008100000006000f00250003"}
+{"valid": true, "context": "", "request": "014900000006000300070002", "response": "014900000003008302", "expected_response": "014900000007000304fffd0000"}
+{"valid": true, "context": "", "request": "013600000006000382640002", "response": "013600000003008302", "expected_response": "013600000003008302"}
+{"valid": false, "error": "Uni_ID: 30, expected: 00", "context": "", "request": "012b0000000d0010826400030600006d450000", "response": "012b000000003009001082", "expected_response": "012b00000003009002"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 23807 exceeds: 39", "context": "", "request": "003c0000000b00105cff000204760d760d", "response": "003c0000000300105cfffd", "expected_response": "003c00000003009002"}
+{"valid": true, "context": "", "request": "006b00000006000300280001", "response": "006b00000003008302", "expected_response": "006b00000003008302"}
+{"valid": false, "error": "Bit_Count: ['00', '2'], expected: ['00', '02']", "context": "", "request": "015100000008000f000000020103", "response": "015100000008000f0000002", "expected_response": "015100000006000f00000002"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 65534 exceeds: 39", "context": "", "request": "009b000000060001fffe0001", "response": "009b000000060001fffe000", "expected_response": "009b00000003008102"}
+{"valid": false, "error": "num_registers: 0, expected: 2", "context": "", "request": "007f00000006000300070002", "response": "007f0000000600030082", "expected_response": "007f00000007000304fffd8603"}
+{"valid": true, "context": "", "request": "00ce000000060005a789ff00", "response": "00ce00000003008502", "expected_response": "00ce00000003008502"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 23807 exceeds: 39", "context": "", "request": "013f0000000b00105cff000204fffefffe", "response": "013f0000000b00105cfffd", "expected_response": "013f00000003009002"}
+{"valid": false, "error": "Uni_ID: 02, expected: 00", "context": "", "request": "01100000000d00108264000306fffd00000000", "response": "01100000000302640003", "expected_response": "011000000003009002"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 42889 exceeds: 39", "context": "", "request": "007e000000060001a7890001", "response": "007e000000060001a789000", "expected_response": "007e00000003008102"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 65534 exceeds: 39", "context": "", "request": "00a9000000060005fffeff00", "response": "00a9000000060005000500050005", "expected_response": "00a900000003008502"}
+{"valid": false, "error": "FC: 82, expected: 10", "context": "", "request": "00bd0000000d00100025000306fffd0000d3ff", "response": "00bd00000003008250003", "expected_response": "00bd00000006001000250003"}
+{"valid": true, "context": "", "request": "016d0000000600050028ff00", "response": "016d00000003008502", "expected_response": "016d00000003008502"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 40 exceeds: 39", "context": "", "request": "008900000006000100280002", "response": "0089000000060001002", "expected_response": "008900000003008102"}
+{"valid": true, "context": "", "request": "00ca0000000600035cff0001", "response": "00ca00000003008302", "expected_response": "00ca00000003008302"}
+{"valid": false, "error": "Uni_ID: 02, expected: 00", "context": "", "request": "01150000000d0010826400030600006d456d45", "response": "01150000000302640003", "expected_response": "011500000003009002"}
+{"valid": true, "context": "", "request": "00530000000d00100007000306000086038603", "response": "00530000000d001000070003", "expected_response": "005300000006001000070003"}
+{"valid": true, "context": "", "request": "00d300000006000382640002", "response": "00d300000003008302", "expected_response": "00d300000003008302"}
+{"valid": true, "context": "", "request": "00270000000d0010000700030686030000fffd", "response": "002700000003001000070003", "expected_response": "002700000006001000070003"}
+{"valid": true, "context": "", "request": "004900000006000100280002", "response": "004900000003008102", "expected_response": "004900000003008102"}

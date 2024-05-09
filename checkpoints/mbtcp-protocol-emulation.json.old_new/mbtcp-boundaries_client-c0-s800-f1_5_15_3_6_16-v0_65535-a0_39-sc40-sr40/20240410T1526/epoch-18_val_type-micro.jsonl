@@ -1,0 +1,80 @@
+{"valid": true, "context": "", "request": "01220000000d0010000000030600000000fffd", "response": "012200000003009002", "expected_response": "012200000006001000000003"}
+{"valid": true, "context": "", "request": "014b00000006000577e0ff00", "response": "014b00000003008502", "expected_response": "014b00000003008502"}
+{"valid": true, "context": "", "request": "024f000000060001fffd0002", "response": "024f00000003008102", "expected_response": "024f00000003008102"}
+{"valid": true, "context": "", "request": "02db0000000d00100000000306fffd00000000", "response": "02db00000003009002", "expected_response": "02db00000006001000000003"}
+{"valid": true, "context": "", "request": "01dd00000008000f000d00030106", "response": "01dd00000003008f02", "expected_response": "01dd00000006000f000d0003"}
+{"valid": true, "context": "", "request": "02bb000000060001fffd0002", "response": "02bb00000003008102", "expected_response": "02bb00000003008102"}
+{"valid": true, "context": "", "request": "02cb00000006000100080001", "response": "02cb00000003008102", "expected_response": "02cb0000000400010100"}
+{"valid": true, "context": "", "request": "02040000000d001000250003060000fffd1ed1", "response": "020400000003009002", "expected_response": "020400000006001000250003"}
+{"valid": true, "context": "", "request": "019c00000008000f000000030105", "response": "019c00000003008f02", "expected_response": "019c00000006000f00000003"}
+{"valid": true, "context": "", "request": "00bd0000000b001000260002040000fffe", "response": "00bd00000003009002", "expected_response": "00bd00000006001000260002"}
+{"valid": true, "context": "", "request": "01020000000b00100000000204fffe9b61", "response": "010200000003009002", "expected_response": "010200000006001000000002"}
+{"valid": true, "context": "", "request": "01eb000000060005f3daff00", "response": "01eb00000003008502", "expected_response": "01eb00000003008502"}
+{"valid": true, "context": "", "request": "015a0000000600036c1f0002", "response": "015a00000003008302", "expected_response": "015a00000003008302"}
+{"valid": true, "context": "", "request": "023c000000060001ffff0001", "response": "023c00000003008102", "expected_response": "023c00000003008102"}
+{"valid": true, "context": "", "request": "01160000000d00100021000306fffd0000fffd", "response": "011600000003009002", "expected_response": "011600000006001000210003"}
+{"valid": true, "context": "", "request": "00ba000000060005bd2eff00", "response": "00ba00000003008502", "expected_response": "00ba00000003008502"}
+{"valid": true, "context": "", "request": "01080000000d0010fffd000306000000009700", "response": "010800000003009002", "expected_response": "010800000003009002"}
+{"valid": true, "context": "", "request": "0216000000060003fffd0002", "response": "021600000003008302", "expected_response": "021600000003008302"}
+{"valid": true, "context": "", "request": "02b40000000d0010fffd000306fffdfffdfffd", "response": "02b400000003009002", "expected_response": "02b400000003009002"}
+{"valid": true, "context": "", "request": "00e900000006000300280002", "response": "00e900000003008302", "expected_response": "00e900000003008302"}
+{"valid": true, "context": "", "request": "0340000000060005bd2eff00", "response": "034000000003008502", "expected_response": "034000000003008502"}
+{"valid": true, "context": "", "request": "014a00000008000f001400020102", "response": "014a00000003008f02", "expected_response": "014a00000006000f00140002"}
+{"valid": true, "context": "", "request": "01c80000000600050028ff00", "response": "01c800000003008502", "expected_response": "01c800000003008502"}
+{"valid": true, "context": "", "request": "02ff000000060001fffe0001", "response": "02ff00000003008102", "expected_response": "02ff00000003008102"}
+{"valid": true, "context": "", "request": "00cf00000006000300140001", "response": "00cf00000003008302", "expected_response": "00cf000000050003020000"}
+{"valid": true, "context": "", "request": "02e10000000d0010cae9000306fffd00000000", "response": "02e100000003009002", "expected_response": "02e100000003009002"}
+{"valid": true, "context": "", "request": "013100000008000f002500030106", "response": "013100000006000f00250003", "expected_response": "013100000006000f00250003"}
+{"valid": true, "context": "", "request": "039c0000000d00100023000306e3c60000fffd", "response": "039c00000006001000230003", "expected_response": "039c00000006001000230003"}
+{"valid": true, "context": "", "request": "02c600000006000300000002", "response": "02c600000003008302", "expected_response": "02c6000000070003048695fffd"}
+{"valid": true, "context": "", "request": "03490000000600050028ff00", "response": "034900000003008502", "expected_response": "034900000003008502"}
+{"valid": true, "context": "", "request": "02de00000006000300260001", "response": "02de00000003008302", "expected_response": "02de00000005000302fffd"}
+{"valid": true, "context": "", "request": "01e600000006000300250002", "response": "01e600000003008302", "expected_response": "01e6000000070003041ed10000"}
+{"valid": true, "context": "", "request": "02b000000006000100000001", "response": "02b000000003008102", "expected_response": "02b00000000400010101"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 40 exceeds: 39", "context": "", "request": "039d0000000d001000280003060000fffd29aa", "response": "039d00000006001000280003", "expected_response": "039d00000003009002"}
+{"valid": true, "context": "", "request": "01e10000000b0010000000020439a30000", "response": "01e100000003009002", "expected_response": "01e100000006001000000002"}
+{"valid": true, "context": "", "request": "00e1000000060003fffd0003", "response": "00e100000003008302", "expected_response": "00e100000003008302"}
+{"valid": true, "context": "", "request": "029600000008000f000d00030105", "response": "029600000003008f02", "expected_response": "029600000006000f000d0003"}
+{"valid": true, "context": "", "request": "00ab000000060005fffdff00", "response": "00ab00000003008502", "expected_response": "00ab00000003008502"}
+{"valid": true, "context": "", "request": "00af000000060006001b0000", "response": "00af00000003008602", "expected_response": "00af000000060006001b0000"}
+{"valid": true, "context": "", "request": "00c50000000600050028ff00", "response": "00c500000003008502", "expected_response": "00c500000003008502"}
+{"valid": true, "context": "", "request": "023e0000000b001000140002042027fffe", "response": "023e00000006001000140002", "expected_response": "023e00000006001000140002"}
+{"valid": true, "context": "", "request": "02e800000006000300000002", "response": "02e800000003008302", "expected_response": "02e800000007000304fffd0000"}
+{"valid": true, "context": "", "request": "013c0000000b0010fffe000204d47f0000", "response": "013c00000003009002", "expected_response": "013c00000003009002"}
+{"valid": true, "context": "", "request": "012d00000006000300280002", "response": "012d00000003008302", "expected_response": "012d00000003008302"}
+{"valid": true, "context": "", "request": "02a500000006000100120001", "response": "02a500000003008102", "expected_response": "02a50000000400010101"}
+{"valid": true, "context": "", "request": "01d20000000600018e280001", "response": "01d200000003008102", "expected_response": "01d200000003008102"}
+{"valid": true, "context": "", "request": "00ec000000060003fffd0002", "response": "00ec00000003008302", "expected_response": "00ec00000003008302"}
+{"valid": true, "context": "", "request": "02b200000006000100260001", "response": "02b200000003008102", "expected_response": "02b20000000400010101"}
+{"valid": true, "context": "", "request": "032a00000006000577e0ff00", "response": "032a00000003008502", "expected_response": "032a00000003008502"}
+{"valid": true, "context": "", "request": "020500000006000300000002", "response": "020500000003008302", "expected_response": "02050000000700030439a30000"}
+{"valid": true, "context": "", "request": "01b200000006000300250002", "response": "01b200000007000304fffde56", "expected_response": "01b2000000070003041ed10000"}
+{"valid": true, "context": "", "request": "00bb0000000d0010fffd0003060000fffdfffd", "response": "00bb00000003009002", "expected_response": "00bb00000003009002"}
+{"valid": false, "error": "num_registers: 2, expected: 1", "context": "", "request": "03b100000006000300000001", "response": "03b1000000070003048fffdfffd", "expected_response": "03b1000000050003020000"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 40 exceeds: 39", "context": "", "request": "038a0000000b001000280002049e3e9e3e", "response": "038a00000007001000280002", "expected_response": "038a00000003009002"}
+{"valid": true, "context": "", "request": "019700000008000f002600020100", "response": "019700000003008f02", "expected_response": "019700000006000f00260002"}
+{"valid": true, "context": "", "request": "02790000000d00100000000306000053525352", "response": "027900000003009002", "expected_response": "027900000006001000000003"}
+{"valid": true, "context": "", "request": "01b10000000d00100000000306869500000000", "response": "01b100000006001000000003", "expected_response": "01b100000006001000000003"}
+{"valid": false, "error": "num_registers: 1, expected: 2", "context": "", "request": "033a00000006000300210002", "response": "033a000000070003042fffd", "expected_response": "033a0000000700030453e853e8"}
+{"valid": true, "context": "", "request": "01170000000d001000250003061ed11ed11ed1", "response": "011700000003009002", "expected_response": "011700000006001000250003"}
+{"valid": true, "context": "", "request": "036d0000000d0010cae90003060000000029aa", "response": "036d00000003009002", "expected_response": "036d00000003009002"}
+{"valid": true, "context": "", "request": "018b0000000d0010fffd0003060000dbe1fffd", "response": "018b00000003009002", "expected_response": "018b00000003009002"}
+{"valid": true, "context": "", "request": "024400000006000300280002", "response": "024400000003008302", "expected_response": "024400000003008302"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 40 exceeds: 39", "context": "", "request": "033e00000006000300280002", "response": "033e00000004000302fffd", "expected_response": "033e00000003008302"}
+{"valid": true, "context": "", "request": "0149000000060003cae90002", "response": "014900000003008302", "expected_response": "014900000003008302"}
+{"valid": true, "context": "", "request": "012e000000060003fffd0002", "response": "012e00000003008302", "expected_response": "012e00000003008302"}
+{"valid": true, "context": "", "request": "028700000008000f002000030106", "response": "028700000003008f02", "expected_response": "028700000006000f00200003"}
+{"valid": true, "context": "", "request": "017e00000006000300020001", "response": "017e00000003008302", "expected_response": "017e000000050003020000"}
+{"valid": true, "context": "", "request": "0285000000060005f3daff00", "response": "028500000003008502", "expected_response": "028500000003008502"}
+{"valid": true, "context": "", "request": "01860000000600036c1f0002", "response": "018600000003008302", "expected_response": "018600000003008302"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 40 exceeds: 39", "context": "", "request": "037300000006000100280001", "response": "03730000000600010102", "expected_response": "037300000003008102"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 40 exceeds: 39", "context": "", "request": "022900000006000100280002", "response": "02290000000600010102", "expected_response": "022900000003008102"}
+{"valid": true, "context": "", "request": "032100000008000f000d00030104", "response": "032100000007000f000d0003", "expected_response": "032100000006000f000d0003"}
+{"valid": false, "error": "Should have thrown an exception since requested address: 65534 exceeds: 39", "context": "", "request": "03180000000b0010fffe0002041ba1fffe", "response": "0318000000060010fffe0002", "expected_response": "031800000003009002"}
+{"valid": true, "context": "", "request": "01e30000000600051802ff00", "response": "01e300000003008502", "expected_response": "01e300000003008502"}
+{"valid": true, "context": "", "request": "021d00000006000100280001", "response": "021d00000003008102", "expected_response": "021d00000003008102"}
+{"valid": true, "context": "", "request": "014c0000000600050028ff00", "response": "014c00000003008502", "expected_response": "014c00000003008502"}
+{"valid": true, "context": "", "request": "03360000000b00100028000204d47fd47f", "response": "033600000003009002", "expected_response": "033600000003009002"}
+{"valid": true, "context": "", "request": "00e70000000b00100026000204fffe5644", "response": "00e700000003009002", "expected_response": "00e700000006001000260002"}
+{"valid": true, "context": "", "request": "037c00000006000300000001", "response": "037c00000004000302fffd", "expected_response": "037c000000050003028695"}
+{"valid": true, "context": "", "request": "01690000000600050028ff00", "response": "016900000003008502", "expected_response": "016900000003008502"}

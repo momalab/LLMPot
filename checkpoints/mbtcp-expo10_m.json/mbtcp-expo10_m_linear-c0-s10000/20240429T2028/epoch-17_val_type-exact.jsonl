@@ -1,0 +1,1000 @@
+{"valid": true, "context": "", "request": "-8.5059", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.9714", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.4371", "response": "0.0342", "expected_response": "0.0365"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.8172", "response": "65.3921", "expected_response": "65.642"}
+{"valid": true, "context": "", "request": "-5.5196", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.2172", "response": "169.4583", "expected_response": "164.9004"}
+{"valid": true, "context": "", "request": "-3.5414", "response": "0.0003", "expected_response": "0.0003"}
+{"valid": true, "context": "", "request": "-7.7738", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.7619", "response": "581406729.332", "expected_response": "577931262.3359"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.6451", "response": "0.2213", "expected_response": "0.2264"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.4373", "response": "2791.853", "expected_response": "2737.4345"}
+{"valid": true, "context": "", "request": "-4.5255", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.506", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.3715", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.8637", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.5952", "response": "39.6541", "expected_response": "39.3695"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.1292", "response": "134.6258", "expected_response": "134.652"}
+{"valid": true, "context": "", "request": "-4.3434", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.389", "response": "0.4162", "expected_response": "0.4083"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.796", "response": "6239504187.315", "expected_response": "6251433244.5683"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.0911", "response": "12.584", "expected_response": "12.3341"}
+{"valid": true, "context": "", "request": "-3.0353", "response": "0.0009", "expected_response": "0.0009"}
+{"valid": true, "context": "", "request": "-5.8116", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.5519", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.1835", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.896", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.4111", "response": "25.6983", "expected_response": "25.7716"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.4911", "response": "0.0316", "expected_response": "0.0323"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.1598", "response": "146780259.35", "expected_response": "144482744.1592"}
+{"valid": true, "context": "", "request": "-5.0555", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.4217", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.8959", "response": "784310526.96", "expected_response": "786845723.8332"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.1539", "response": "1476805293.42", "expected_response": "1425329886.3765"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.1014", "response": "12450.3968", "expected_response": "12630.1975"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3054", "response": "20185.3967", "expected_response": "20203.6829"}
+{"valid": true, "context": "", "request": "-5.1035", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.7559", "response": "564102793.82", "expected_response": "570000960.5821"}
+{"valid": true, "context": "", "request": "-7.7498", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-2.9173", "response": "0.0012", "expected_response": "0.0012"}
+{"valid": true, "context": "", "request": "-4.8795", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.1138", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.5113", "response": "321.5948", "expected_response": "324.5272"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.9613", "response": "920.843", "expected_response": "914.7368"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.1453", "response": "1369.4827", "expected_response": "1397.38"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.7919", "response": "6234175908.25", "expected_response": "619268782.8635"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3434", "response": "21798.5436", "expected_response": "22051.3074"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.9293", "response": "0.0011", "expected_response": "0.0012"}
+{"valid": true, "context": "", "request": "-3.7554", "response": "0.0002", "expected_response": "0.0002"}
+{"valid": true, "context": "", "request": "-3.6374", "response": "0.0002", "expected_response": "0.0002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.2779", "response": "1895702643.15", "expected_response": "1896390594.8967"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.7072", "response": "50.3981", "expected_response": "50.9531"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.279", "response": "0.5321", "expected_response": "0.526"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.1991", "response": "0.0652", "expected_response": "0.0632"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.4413", "response": "2759.4816", "expected_response": "2762.7662"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.7335", "response": "54698.3172", "expected_response": "54134.4025"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.548", "response": "3591076428.08", "expected_response": "3531464098.3848"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.6915", "response": "49012.5683", "expected_response": "49143.8466"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.4478", "response": "281709463.55", "expected_response": "280443116.3688"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.2519", "response": "1748653209.535", "expected_response": "1786179877.8145"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.9395", "response": "85467.3219", "expected_response": "86994.9313"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.4431", "response": "0.0348", "expected_response": "0.036"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.001", "response": "1.0958", "expected_response": "1.0023"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.5231", "response": "0.2958", "expected_response": "0.2999"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.7633", "response": "581.3629", "expected_response": "579.7975"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.5078", "response": "32457109.86", "expected_response": "32192208.739"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.9231", "response": "0.1135", "expected_response": "0.1194"}
+{"valid": true, "context": "", "request": "-5.9236", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.3477", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.5112", "response": "0.0296", "expected_response": "0.0308"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.8354", "response": "6519.3248", "expected_response": "6845.159"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.5492", "response": "35.8927", "expected_response": "35.4124"}
+{"valid": true, "context": "", "request": "-5.8076", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.3356", "response": "2187460.953", "expected_response": "2165875.8725"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.9816", "response": "961230.745", "expected_response": "958513.3363"}
+{"valid": true, "context": "", "request": "-5.2935", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.1474", "response": "14708.5926", "expected_response": "14041.54"}
+{"valid": true, "context": "", "request": "-9.51", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.0194", "response": "10362.5987", "expected_response": "10456.8756"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.3332", "response": "217.5839", "expected_response": "215.3939"}
+{"valid": true, "context": "", "request": "-2.9553", "response": "0.0011", "expected_response": "0.0011"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.1675", "response": "146759.3208", "expected_response": "147067.5141"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.7153", "response": "526.9418", "expected_response": "519.1245"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.0032", "response": "100.9683", "expected_response": "100.7396"}
+{"valid": true, "context": "", "request": "-6.6097", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.2573", "response": "1894.7025", "expected_response": "1808.5301"}
+{"valid": true, "context": "", "request": "-6.1776", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.8471", "response": "7.6589", "expected_response": "7.0321"}
+{"valid": true, "context": "", "request": "-8.9779", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.4959", "response": "3149502687.7", "expected_response": "3132922090.3397"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3594", "response": "22175.8496", "expected_response": "22878.9423"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.8811", "response": "7.6359", "expected_response": "7.6048"}
+{"valid": true, "context": "", "request": "-8.0358", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.9658", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.5752", "response": "0.0285", "expected_response": "0.0266"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.5656", "response": "361258.7904", "expected_response": "367753.2806"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.0014", "response": "10059.4327", "expected_response": "10032.2914"}
+{"valid": true, "context": "", "request": "-4.0414", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": true, "context": "", "request": "-7.3737", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.4312", "response": "0.0034", "expected_response": "0.0037"}
+{"valid": true, "context": "", "request": "-4.8955", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.0177", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.0753", "response": "1147.293", "expected_response": "1189.3441"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.9532", "response": "89.365", "expected_response": "89.7832"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.9898", "response": "97540123.866", "expected_response": "97678499.5847"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.0534", "response": "11307.4928", "expected_response": "11308.5088"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.8652", "response": "72.8153", "expected_response": "73.3139"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.1415", "response": "130684.5927", "expected_response": "138520.5322"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.2319", "response": "1765034292.84", "expected_response": "1705780684.3994"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.9254", "response": "8347.5219", "expected_response": "8421.5598"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.3759", "response": "2397065148.143", "expected_response": "2376498769.483"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.5457", "response": "3527104.896", "expected_response": "3512809.2319"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.1491", "response": "14.5398", "expected_response": "14.0966"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.045", "response": "0.893", "expected_response": "0.9016"}
+{"valid": true, "context": "", "request": "-5.9076", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.8054", "response": "0.0002", "expected_response": "0.0002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.0498", "response": "1120974356.835", "expected_response": "112151472.6147"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.6037", "response": "4061529.3879", "expected_response": "4014767.1876"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.3298", "response": "215674830.95", "expected_response": "213714005.1139"}
+{"valid": true, "context": "", "request": "-6.2516", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.4094", "response": "25498.713", "expected_response": "25670.8911"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.1016", "response": "1206354.987", "expected_response": "1263601.5822"}
+{"valid": true, "context": "", "request": "-4.6755", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.1439", "response": "1307564298.362", "expected_response": "1392882209.5536"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.1316", "response": "1374260.859", "expected_response": "1353982.8433"}
+{"valid": true, "context": "", "request": "-3.9634", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.4432", "response": "0.0035", "expected_response": "0.0036"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.4912", "response": "310.8659", "expected_response": "309.9197"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.74", "response": "5614907328.23", "expected_response": "5495079720.721"}
+{"valid": true, "context": "", "request": "-9.516", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.0717", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.0771", "response": "11.5692", "expected_response": "11.9428"}
+{"valid": true, "context": "", "request": "-7.1657", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.5037", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.2351", "response": "17.8623", "expected_response": "17.184"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.9257", "response": "8367120.594", "expected_response": "8427379.8461"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.7296", "response": "531760.9284", "expected_response": "536503.9914"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.7755", "response": "59201.7638", "expected_response": "59631.749"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.7891", "response": "0.1358", "expected_response": "0.1625"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.6792", "response": "0.0213", "expected_response": "0.0209"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.177", "response": "0.6352", "expected_response": "0.6652"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.8752", "response": "74.9518", "expected_response": "75.0218"}
+{"valid": true, "context": "", "request": "-9.2239", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.7752", "response": "59.4187", "expected_response": "59.5906"}
+{"valid": true, "context": "", "request": "-6.7697", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.8196", "response": "665401.3928", "expected_response": "660057.7858"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.9955", "response": "99874.265", "expected_response": "98969.0838"}
+{"valid": true, "context": "", "request": "-7.0997", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.6218", "response": "41057236.89", "expected_response": "41856429.2566"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.051", "response": "0.8971", "expected_response": "0.8892"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.9116", "response": "816204.3975", "expected_response": "815814.0098"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.2371", "response": "0.0589", "expected_response": "0.0579"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.2073", "response": "1695.842", "expected_response": "1611.8356"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.3613", "response": "2318.4596", "expected_response": "2297.9265"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.7157", "response": "5267349.180", "expected_response": "5196029.0104"}
+{"valid": true, "context": "", "request": "-4.1954", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.2072", "response": "169.3857", "expected_response": "161.1464"}
+{"valid": true, "context": "", "request": "-3.2013", "response": "0.0006", "expected_response": "0.0006"}
+{"valid": true, "context": "", "request": "-7.7158", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.708", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.4534", "response": "28719.5643", "expected_response": "28408.3065"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.1532", "response": "147.5298", "expected_response": "142.3034"}
+{"valid": true, "context": "", "request": "-4.0634", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.6831", "response": "4.8315", "expected_response": "4.8202"}
+{"valid": true, "context": "", "request": "-9.828", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.2479", "response": "1740526938.95", "expected_response": "1769802452.0512"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.147", "response": "1.4253", "expected_response": "1.4029"}
+{"valid": true, "context": "", "request": "-3.5454", "response": "0.0003", "expected_response": "0.0003"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.4039", "response": "2517904638.949", "expected_response": "2534780713.5559"}
+{"valid": true, "context": "", "request": "-7.4337", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-2.6813", "response": "0.0021", "expected_response": "0.0021"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.6151", "response": "0.2439", "expected_response": "0.2426"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.5839", "response": "3864105927.125", "expected_response": "383582147.146"}
+{"valid": true, "context": "", "request": "-4.3294", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.1833", "response": "1549.2638", "expected_response": "1525.1703"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.5638", "response": "36210459.872", "expected_response": "36623207.3336"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.1915", "response": "154236.7908", "expected_response": "155424.383"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.8311", "response": "0.1425", "expected_response": "0.1475"}
+{"valid": true, "context": "", "request": "-8.6599", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.8619", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.804", "response": "6231405789.46", "expected_response": "6367667796.7523"}
+{"valid": true, "context": "", "request": "-6.0416", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.882", "response": "76412053986.7", "expected_response": "7620583021.6509"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.3497", "response": "22179543.068", "expected_response": "22373553.8455"}
+{"valid": true, "context": "", "request": "-5.9936", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.2178", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.6178", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.1677", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.6373", "response": "436.2517", "expected_response": "433.7742"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.4433", "response": "2798.435", "expected_response": "2775.5198"}
+{"valid": true, "context": "", "request": "-4.9075", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.4959", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.2158", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.4138", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-2.6373", "response": "0.0023", "expected_response": "0.0023"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.9111", "response": "0.1125", "expected_response": "0.1227"}
+{"valid": true, "context": "", "request": "-4.9655", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.4539", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.2137", "response": "16483509.729", "expected_response": "16357667.3507"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.8532", "response": "0.0132", "expected_response": "0.014"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.8091", "response": "6.4853", "expected_response": "6.4429"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.3671", "response": "23.4659", "expected_response": "23.2882"}
+{"valid": true, "context": "", "request": "-9.866", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.9931", "response": "9.8653", "expected_response": "9.8424"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.8676", "response": "721034.8659", "expected_response": "737202.431"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.1952", "response": "156.2089", "expected_response": "156.7543"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.1597", "response": "14765329.08", "expected_response": "14444947.6281"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.5335", "response": "34758.6219", "expected_response": "34154.9257"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.7", "response": "5974012368.15", "expected_response": "5011526105.7323"}
+{"valid": true, "context": "", "request": "-9.0099", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.0957", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.9593", "response": "921.453", "expected_response": "910.5335"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.8679", "response": "731640529.85", "expected_response": "737711899.2827"}
+{"valid": true, "context": "", "request": "-7.2997", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.1014", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.4014", "response": "25410.7986", "expected_response": "25202.2981"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.0311", "response": "10.8973", "expected_response": "10.7424"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.0971", "response": "0.0819", "expected_response": "0.08"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.7271", "response": "0.1725", "expected_response": "0.1875"}
+{"valid": true, "context": "", "request": "-8.1258", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.9672", "response": "0.0103", "expected_response": "0.0108"}
+{"valid": true, "context": "", "request": "-5.1495", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.381", "response": "2.4513", "expected_response": "2.4046"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.4232", "response": "0.0036", "expected_response": "0.0038"}
+{"valid": true, "context": "", "request": "-2.9453", "response": "0.0011", "expected_response": "0.0011"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.9594", "response": "9167.4258", "expected_response": "9107.432"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.9074", "response": "8045.9126", "expected_response": "8079.6163"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.6979", "response": "493106728.55", "expected_response": "498734931.061"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3314", "response": "21789.5463", "expected_response": "21450.2888"}
+{"valid": true, "context": "", "request": "-3.3833", "response": "0.0004", "expected_response": "0.0004"}
+{"valid": true, "context": "", "request": "-7.1297", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.8736", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.1495", "response": "146987.5203", "expected_response": "141096.0811"}
+{"valid": true, "context": "", "request": "-6.6757", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.8835", "response": "76014.2539", "expected_response": "76469.5173"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.4837", "response": "30718429.56", "expected_response": "30461295.8626"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.7155", "response": "52698.7143", "expected_response": "51936.3646"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-3.0733", "response": "0.0009", "expected_response": "0.0008"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.7196", "response": "529016.3487", "expected_response": "524290.4622"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.4994", "response": "31054.2897", "expected_response": "31582.7502"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.6415", "response": "43910.5268", "expected_response": "43798.9951"}
+{"valid": true, "context": "", "request": "-2.7273", "response": "0.0019", "expected_response": "0.0019"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.1854", "response": "15367.4928", "expected_response": "15325.6373"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.7931", "response": "0.1253", "expected_response": "0.161"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.3013", "response": "2039.518", "expected_response": "2001.3827"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.7436", "response": "551720.4689", "expected_response": "554082.4027"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.4332", "response": "0.0035", "expected_response": "0.0037"}
+{"valid": true, "context": "", "request": "-3.9694", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": true, "context": "", "request": "-3.7774", "response": "0.0002", "expected_response": "0.0002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.0458", "response": "1108962437.59", "expected_response": "111123159.3749"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.8819", "response": "762410358.93", "expected_response": "761882834.4119"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3814", "response": "24198.3657", "expected_response": "24067.897"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.8612", "response": "0.0135", "expected_response": "0.0138"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.7373", "response": "549.6328", "expected_response": "546.102"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.2415", "response": "176894.325", "expected_response": "174391.0339"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.1614", "response": "14398.0726", "expected_response": "14501.6073"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.2992", "response": "195.4623", "expected_response": "199.1728"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.5915", "response": "39157.6482", "expected_response": "39035.446"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.4874", "response": "30192.7468", "expected_response": "30721.9477"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.2839", "response": "1948052637.562", "expected_response": "1922774672.6449"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.2972", "response": "195.6428", "expected_response": "198.2575"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.7972", "response": "0.0153", "expected_response": "0.016"}
+{"valid": true, "context": "", "request": "-8.4158", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.8894", "response": "7738.6251", "expected_response": "7751.5569"}
+{"valid": true, "context": "", "request": "-5.5796", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.8611", "response": "0.1365", "expected_response": "0.1377"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.2372", "response": "0.0056", "expected_response": "0.0058"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.355", "response": "2.2598", "expected_response": "2.2648"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.4756", "response": "2936408.715", "expected_response": "2989837.3625"}
+{"valid": true, "context": "", "request": "-9.656", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.4916", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.4353", "response": "0.0004", "expected_response": "0.0004"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.1251", "response": "0.0768", "expected_response": "0.075"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.5538", "response": "35740129.86", "expected_response": "35789478.9406"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.812", "response": "6548901237.354", "expected_response": "6486063528.7159"}
+{"valid": true, "context": "", "request": "-7.8038", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.2651", "response": "18.3429", "expected_response": "18.4131"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.8778", "response": "75318604.295", "expected_response": "75472333.6382"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.7673", "response": "581.4326", "expected_response": "585.1628"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.7531", "response": "5.6819", "expected_response": "5.6634"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.0996", "response": "1246509.387", "expected_response": "1257795.281"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.8492", "response": "0.0135", "expected_response": "0.0142"}
+{"valid": true, "context": "", "request": "-6.0716", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.0039", "response": "1005672938.496", "expected_response": "1009021429.9641"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.2677", "response": "18739042.56", "expected_response": "18523658.7936"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.4558", "response": "281405769.31", "expected_response": "285657469.425"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.8475", "response": "70219.4385", "expected_response": "70385.7509"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.5456", "response": "351720.8496", "expected_response": "351200.039"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.8657", "response": "7234610.958", "expected_response": "7339839.5902"}
+{"valid": true, "context": "", "request": "-5.4195", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.3395", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.6558", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.1971", "response": "15.2943", "expected_response": "15.7442"}
+{"valid": true, "context": "", "request": "-3.5574", "response": "0.0003", "expected_response": "0.0003"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.2696", "response": "1893502.467", "expected_response": "1860488.3834"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.363", "response": "0.4358", "expected_response": "0.4335"}
+{"valid": true, "context": "", "request": "-4.2114", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.2194", "response": "16907.5283", "expected_response": "16573.7942"}
+{"valid": true, "context": "", "request": "-5.1975", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.1197", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.5072", "response": "0.0285", "expected_response": "0.0311"}
+{"valid": true, "context": "", "request": "-9.2979", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-3.2693", "response": "0.0006", "expected_response": "0.0005"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.1031", "response": "0.0791", "expected_response": "0.0789"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.938", "response": "8591402637.622", "expected_response": "8669494978.3713"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.3072", "response": "204.5198", "expected_response": "202.876"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.9133", "response": "824.6951", "expected_response": "819.014"}
+{"valid": true, "context": "", "request": "-8.4258", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.9435", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.0212", "response": "0.0098", "expected_response": "0.0095"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.8219", "response": "6678521493.05", "expected_response": "663563040.1429"}
+{"valid": true, "context": "", "request": "-6.9937", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.1314", "response": "13907.4526", "expected_response": "13533.5939"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.6", "response": "4289031657.135", "expected_response": "3980705015.4984"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.0874", "response": "12405.963", "expected_response": "12229.5011"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.6337", "response": "4237105.689", "expected_response": "4301930.2671"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.4815", "response": "302146.7589", "expected_response": "303073.6329"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.2619", "response": "1854207369.15", "expected_response": "1827789560.9775"}
+{"valid": true, "context": "", "request": "-7.3437", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-2.9253", "response": "0.0012", "expected_response": "0.0012"}
+{"valid": true, "context": "", "request": "-3.6314", "response": "0.0002", "expected_response": "0.0002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.3652", "response": "0.0045", "expected_response": "0.0043"}
+{"valid": true, "context": "", "request": "-3.9894", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.475", "response": "0.3259", "expected_response": "0.3349"}
+{"valid": true, "context": "", "request": "-6.5377", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.2539", "response": "1748502963.85", "expected_response": "1794425335.9758"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.9658", "response": "92147035.68", "expected_response": "92426515.3532"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.3396", "response": "2175690.483", "expected_response": "2185918.4887"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.3732", "response": "0.0045", "expected_response": "0.0042"}
+{"valid": true, "context": "", "request": "-3.4013", "response": "0.0004", "expected_response": "0.0004"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.189", "response": "0.6215", "expected_response": "0.6471"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.1413", "response": "1397.5428", "expected_response": "1384.5675"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.912", "response": "8249705163.52", "expected_response": "8165658236.6799"}
+{"valid": true, "context": "", "request": "-8.5559", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.7972", "response": "62.4513", "expected_response": "62.6873"}
+{"valid": true, "context": "", "request": "-6.3876", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.0994", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.9935", "response": "98674.5213", "expected_response": "98514.3168"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.7198", "response": "52670149.83", "expected_response": "52453198.6665"}
+{"valid": true, "context": "", "request": "-9.95", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.9034", "response": "8049.2153", "expected_response": "8005.5346"}
+{"valid": true, "context": "", "request": "-9.954", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.4036", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.7175", "response": "52964.1783", "expected_response": "52176.116"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.7939", "response": "625104937.8", "expected_response": "622127484.2201"}
+{"valid": true, "context": "", "request": "-8.8099", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.664", "response": "4605932718.225", "expected_response": "4612818816.8003"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.4072", "response": "250.8916", "expected_response": "255.4117"}
+{"valid": true, "context": "", "request": "-4.6695", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.9559", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.7591", "response": "0.1759", "expected_response": "0.1742"}
+{"valid": true, "context": "", "request": "-6.0436", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.924", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.6932", "response": "0.0213", "expected_response": "0.0203"}
+{"valid": true, "context": "", "request": "-6.6297", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.6498", "response": "45890271.36", "expected_response": "44644192.9533"}
+{"valid": true, "context": "", "request": "-6.9137", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.3819", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.2355", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.2658", "response": "184605293.725", "expected_response": "184427883.6491"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.0535", "response": "112354.9687", "expected_response": "113111.1325"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.8534", "response": "7218.4563", "expected_response": "7134.8581"}
+{"valid": true, "context": "", "request": "-8.7019", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.9876", "response": "972301.845", "expected_response": "971848.9278"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.8159", "response": "653412078.94", "expected_response": "654457709.6583"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.9495", "response": "89164.357", "expected_response": "89021.5085"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.2752", "response": "0.0056", "expected_response": "0.0053"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.3139", "response": "2056974138.35", "expected_response": "2060304414.8138"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.309", "response": "0.4859", "expected_response": "0.4909"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.0652", "response": "0.0089", "expected_response": "0.0086"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.7733", "response": "0.0019", "expected_response": "0.0017"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.2558", "response": "182947350.64", "expected_response": "180229377.4485"}
+{"valid": true, "context": "", "request": "-7.4957", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.019", "response": "1.0893", "expected_response": "1.0447"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.0117", "response": "10295437.68", "expected_response": "10273091.8271"}
+{"valid": true, "context": "", "request": "-6.5577", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.592", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.6779", "response": "475310269.83", "expected_response": "476285967.9508"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.922", "response": "8325046197.6", "expected_response": "8355880092.9812"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.7459", "response": "5628074913.7", "expected_response": "557024871.9345"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.6914", "response": "4907.325", "expected_response": "4913.2531"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.7171", "response": "5.294", "expected_response": "5.2128"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.842", "response": "6731042985.15", "expected_response": "6949990299.4843"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.5099", "response": "325890146.7", "expected_response": "323482644.6852"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.035", "response": "1.093", "expected_response": "1.0839"}
+{"valid": true, "context": "", "request": "-8.7339", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.4971", "response": "0.0321", "expected_response": "0.0318"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.2132", "response": "0.0065", "expected_response": "0.0061"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.0957", "response": "12475639.08", "expected_response": "12465496.2086"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.5091", "response": "0.3819", "expected_response": "0.3097"}
+{"valid": true, "context": "", "request": "-9.0519", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.1175", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.1635", "response": "143279.508", "expected_response": "145719.0568"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.6459", "response": "443027159.68", "expected_response": "442450394.2882"}
+{"valid": true, "context": "", "request": "-8.3538", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.1539", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.0557", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.9614", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.0317", "response": "10769532.84", "expected_response": "10757297.2729"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.5478", "response": "35170428.96", "expected_response": "35298380.1091"}
+{"valid": true, "context": "", "request": "-4.3274", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.9932", "response": "0.0105", "expected_response": "0.0102"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.6231", "response": "0.2358", "expected_response": "0.2382"}
+{"valid": true, "context": "", "request": "-9.4459", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.8418", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.339", "response": "2.1958", "expected_response": "2.1829"}
+{"valid": true, "context": "", "request": "-6.1216", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.7858", "response": "60412539.78", "expected_response": "61063061.9584"}
+{"valid": true, "context": "", "request": "-6.2196", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.3457", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.2259", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.8414", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": true, "context": "", "request": "-9.826", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.4596", "response": "2807546.391", "expected_response": "2881681.4084"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.2118", "response": "165830294.753", "expected_response": "162862531.886"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.407", "response": "0.3825", "expected_response": "0.3917"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.9195", "response": "83671.5429", "expected_response": "83079.1318"}
+{"valid": true, "context": "", "request": "-6.6557", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.0499", "response": "1125674093.83", "expected_response": "1121773020.0215"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.968", "response": "9256013478.04", "expected_response": "9289595412.4331"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.1793", "response": "1537.4928", "expected_response": "1511.186"}
+{"valid": true, "context": "", "request": "-4.6275", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.3336", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.818", "response": "6541037928.25", "expected_response": "6576302746.7768"}
+{"valid": true, "context": "", "request": "-7.7298", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.5071", "response": "3.2581", "expected_response": "3.214"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.8417", "response": "6541302.987", "expected_response": "6945190.5942"}
+{"valid": true, "context": "", "request": "-6.8857", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.6291", "response": "0.2318", "expected_response": "0.2349"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3934", "response": "24105.7693", "expected_response": "24742.2587"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.7231", "response": "5.3928", "expected_response": "5.2853"}
+{"valid": true, "context": "", "request": "-9.1259", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.9219", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.7279", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.3096", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.1817", "response": "15483029.67", "expected_response": "15195611.1579"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.8512", "response": "0.0135", "expected_response": "0.0141"}
+{"valid": true, "context": "", "request": "-3.0513", "response": "0.0009", "expected_response": "0.0009"}
+{"valid": true, "context": "", "request": "-4.5435", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.2418", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.023", "response": "0.9816", "expected_response": "0.9484"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.8031", "response": "0.1945", "expected_response": "0.1574"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.8595", "response": "72098.3165", "expected_response": "72357.8991"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.7679", "response": "584910372.61", "expected_response": "585971896.6861"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.7597", "response": "5627439.108", "expected_response": "5750107.5472"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.4599", "response": "2807159463.15", "expected_response": "2883672890.2516"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3674", "response": "23985.4176", "expected_response": "23304.3366"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.3773", "response": "2309.5418", "expected_response": "2384.1728"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.802", "response": "6451032978.15", "expected_response": "6338408101.5447"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.3931", "response": "24.5863", "expected_response": "24.7252"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.2173", "response": "1698.5204", "expected_response": "1649.3838"}
+{"valid": true, "context": "", "request": "-7.5358", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.2179", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.9019", "response": "8051724693.03", "expected_response": "797792940.5139"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.7614", "response": "5841.207", "expected_response": "5772.6621"}
+{"valid": true, "context": "", "request": "-4.4634", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.642", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.9439", "response": "874590132.62", "expected_response": "878808784.494"}
+{"valid": true, "context": "", "request": "-5.5856", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.7613", "response": "0.0018", "expected_response": "0.0017"}
+{"valid": true, "context": "", "request": "-4.3414", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.906", "response": "80261574932.555", "expected_response": "8053610077.919"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.4931", "response": "31.2048", "expected_response": "31.1279"}
+{"valid": true, "context": "", "request": "-7.6878", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.3679", "response": "2347501698.56", "expected_response": "2333118480.3326"}
+{"valid": true, "context": "", "request": "-7.2557", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.7599", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.6013", "response": "409.5621", "expected_response": "399.264"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.7439", "response": "557491320.68", "expected_response": "554465319.7568"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.6331", "response": "0.2153", "expected_response": "0.2328"}
+{"valid": true, "context": "", "request": "-3.3453", "response": "0.0005", "expected_response": "0.0005"}
+{"valid": true, "context": "", "request": "-7.6778", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.5832", "response": "0.0265", "expected_response": "0.0261"}
+{"valid": true, "context": "", "request": "-8.5259", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.7812", "response": "0.0183", "expected_response": "0.0166"}
+{"valid": true, "context": "", "request": "-3.0833", "response": "0.0008", "expected_response": "0.0008"}
+{"valid": true, "context": "", "request": "-5.0415", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.576", "response": "3718052649.175", "expected_response": "3766670196.5718"}
+{"valid": true, "context": "", "request": "-4.6095", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.2435", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.5595", "response": "36297.8145", "expected_response": "36262.35"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.0233", "response": "1059.748", "expected_response": "1055.1212"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.1094", "response": "12470.8953", "expected_response": "12865.0341"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.4819", "response": "3012645798.623", "expected_response": "3033529305.5307"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.6196", "response": "412560.7389", "expected_response": "416449.1272"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.2896", "response": "1950624.387", "expected_response": "1948179.4721"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.9851", "response": "9.8125", "expected_response": "9.6627"}
+{"valid": true, "context": "", "request": "-7.4617", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.1498", "response": "147058362.92", "expected_response": "141193590.2351"}
+{"valid": true, "context": "", "request": "-4.3914", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.0412", "response": "110.4759", "expected_response": "109.9522"}
+{"valid": true, "context": "", "request": "-4.4374", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.8132", "response": "0.0153", "expected_response": "0.0154"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.1057", "response": "12903574.68", "expected_response": "12755884.29"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.2937", "response": "19623504.87", "expected_response": "19666603.9941"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.6893", "response": "0.0021", "expected_response": "0.002"}
+{"valid": true, "context": "", "request": "-4.4294", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.1194", "response": "13405.7296", "expected_response": "13164.7295"}
+{"valid": true, "context": "", "request": "-8.7419", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.6139", "response": "4105926387.76", "expected_response": "411018515.3009"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.9274", "response": "8359.624", "expected_response": "8460.4359"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.9452", "response": "0.0112", "expected_response": "0.0113"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.7711", "response": "5.9813", "expected_response": "5.9031"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.1457", "response": "13978425.065", "expected_response": "13986677.8309"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.7451", "response": "0.1923", "expected_response": "0.1799"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.1814", "response": "15296.3407", "expected_response": "15185.117"}
+{"valid": true, "context": "", "request": "-8.2578", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.0392", "response": "105.964", "expected_response": "109.447"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.259", "response": "1.8329", "expected_response": "1.8156"}
+{"valid": true, "context": "", "request": "-5.7696", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.0018", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.8256", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.2891", "response": "19.6538", "expected_response": "19.4594"}
+{"valid": true, "context": "", "request": "-7.6358", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-2.9873", "response": "0.001", "expected_response": "0.001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.0377", "response": "10879542.36", "expected_response": "10906961.2548"}
+{"valid": true, "context": "", "request": "-5.0755", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.4214", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.1456", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.8272", "response": "0.0146", "expected_response": "0.0149"}
+{"valid": true, "context": "", "request": "-5.0995", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.6033", "response": "0.0023", "expected_response": "0.0025"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.257", "response": "0.5923", "expected_response": "0.5533"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.1179", "response": "1365049728.554", "expected_response": "1311933407.3717"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.0954", "response": "12645.3908", "expected_response": "12456.8875"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.5896", "response": "386250.7419", "expected_response": "388650.254"}
+{"valid": true, "context": "", "request": "-4.7435", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.3998", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-2.2552", "response": "0.0056", "expected_response": "0.0056"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-3.2773", "response": "0.0006", "expected_response": "0.0005"}
+{"valid": true, "context": "", "request": "-3.9574", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.4857", "response": "30716942.585", "expected_response": "30601912.91"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.6199", "response": "418502763.955", "expected_response": "416736928.2127"}
+{"valid": true, "context": "", "request": "-4.7855", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.2333", "response": "0.0006", "expected_response": "0.0006"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.7253", "response": "531.8462", "expected_response": "531.2177"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.4891", "response": "0.0318", "expected_response": "0.0324"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.8055", "response": "65127.3498", "expected_response": "63897.0117"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.409", "response": "0.3752", "expected_response": "0.3899"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.6698", "response": "46890213.751", "expected_response": "46748424.2516"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.3675", "response": "231654.9708", "expected_response": "233097.0373"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.2334", "response": "17965.843", "expected_response": "17116.8302"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.1093", "response": "1269.854", "expected_response": "1286.2072"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.0939", "response": "1269053478.295", "expected_response": "1241393282.3945"}
+{"valid": true, "context": "", "request": "-7.9598", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.9797", "response": "9516340.728", "expected_response": "9543286.6708"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.6694", "response": "4608.3219", "expected_response": "4670.5383"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.1977", "response": "15673204.98", "expected_response": "15765936.4616"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.341", "response": "0.4758", "expected_response": "0.456"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.8812", "response": "76.5413", "expected_response": "76.0656"}
+{"valid": true, "context": "", "request": "-9.818", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.2512", "response": "0.0053", "expected_response": "0.0056"}
+{"valid": true, "context": "", "request": "-4.5875", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.8518", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.5815", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.7752", "response": "0.0185", "expected_response": "0.0168"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.9971", "response": "9.9265", "expected_response": "9.9334"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.6255", "response": "42019.3657", "expected_response": "42214.5871"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.724", "response": "5298041637.36", "expected_response": "5296297807.6888"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.7056", "response": "503184.2697", "expected_response": "507657.2082"}
+{"valid": true, "context": "", "request": "-7.3097", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.0395", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.4435", "response": "271954.8306", "expected_response": "277679.8426"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.63", "response": "4289503617.55", "expected_response": "4265431739.9663"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.9837", "response": "9641502.738", "expected_response": "9631598.4871"}
+{"valid": true, "context": "", "request": "-4.5235", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.4076", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-3.2673", "response": "0.0006", "expected_response": "0.0005"}
+{"valid": true, "context": "", "request": "-5.2695", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.4971", "response": "31.592", "expected_response": "31.4159"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.6052", "response": "40.3689", "expected_response": "40.2866"}
+{"valid": true, "context": "", "request": "-6.7297", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-3.3473", "response": "0.0005", "expected_response": "0.0004"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.7658", "response": "58491023.761", "expected_response": "58314502.8743"}
+{"valid": true, "context": "", "request": "-7.1777", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.4039", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.6696", "response": "463057.1829", "expected_response": "467268.9861"}
+{"valid": true, "context": "", "request": "-6.7557", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.0574", "response": "11295.8473", "expected_response": "11413.1557"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3274", "response": "21768.593", "expected_response": "21253.6118"}
+{"valid": true, "context": "", "request": "-4.4234", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.7475", "response": "56179.324", "expected_response": "55908.1018"}
+{"valid": true, "context": "", "request": "-7.2537", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.3313", "response": "0.0005", "expected_response": "0.0005"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.4177", "response": "26905743.189", "expected_response": "26166267.3354"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.2791", "response": "0.0582", "expected_response": "0.0526"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-3.0113", "response": "0.009", "expected_response": "0.001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.2511", "response": "0.0593", "expected_response": "0.0561"}
+{"valid": true, "context": "", "request": "-9.1739", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.2791", "response": "19.5643", "expected_response": "19.0164"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.9172", "response": "82.534", "expected_response": "82.6403"}
+{"valid": true, "context": "", "request": "-3.7454", "response": "0.0002", "expected_response": "0.0002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.9551", "response": "9.7328", "expected_response": "9.0177"}
+{"valid": true, "context": "", "request": "-4.7595", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.329", "response": "2.1968", "expected_response": "2.1332"}
+{"valid": true, "context": "", "request": "-5.5676", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.1019", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.323", "response": "2.0958", "expected_response": "2.1039"}
+{"valid": true, "context": "", "request": "-6.7357", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.5293", "response": "334.6125", "expected_response": "338.2618"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.0191", "response": "0.0968", "expected_response": "0.0957"}
+{"valid": true, "context": "", "request": "-3.8454", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.9633", "response": "920.4618", "expected_response": "918.9594"}
+{"valid": true, "context": "", "request": "-4.4314", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.5759", "response": "371820469.55", "expected_response": "376580290.1833"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.221", "response": "1.6925", "expected_response": "1.6635"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.7417", "response": "5587492.3601", "expected_response": "5516633.9452"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.52", "response": "33960754218.64", "expected_response": "3310945218.812"}
+{"valid": true, "context": "", "request": "-3.4933", "response": "0.0003", "expected_response": "0.0003"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.353", "response": "0.4583", "expected_response": "0.4436"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.4437", "response": "27614390.85", "expected_response": "27780776.1104"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.0774", "response": "11420.5987", "expected_response": "11951.0962"}
+{"valid": true, "context": "", "request": "-4.0514", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.6736", "response": "470136.5298", "expected_response": "471593.0072"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.0518", "response": "1125487609.39", "expected_response": "112669192.183"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.5275", "response": "33598.4612", "expected_response": "33686.256"}
+{"valid": true, "context": "", "request": "-4.2994", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": true, "context": "", "request": "-9.1879", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.5576", "response": "361897.524", "expected_response": "361040.3617"}
+{"valid": true, "context": "", "request": "-4.1554", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.1333", "response": "1379.8256", "expected_response": "1359.2938"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.9279", "response": "834157629.025", "expected_response": "847018291.8624"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.5833", "response": "0.0028", "expected_response": "0.0026"}
+{"valid": true, "context": "", "request": "-4.2894", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.0331", "response": "0.0981", "expected_response": "0.0927"}
+{"valid": true, "context": "", "request": "-4.7135", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.3755", "response": "237980.4165", "expected_response": "237431.0722"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.5015", "response": "31268.4957", "expected_response": "31728.5441"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.712", "response": "5146027398.55", "expected_response": "5151944751.9325"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.8611", "response": "7.8365", "expected_response": "7.2625"}
+{"valid": true, "context": "", "request": "-4.6015", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.6756", "response": "476109.8253", "expected_response": "473769.9998"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.465", "response": "2.9813", "expected_response": "2.9177"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.0991", "response": "0.0893", "expected_response": "0.0796"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.1931", "response": "0.0658", "expected_response": "0.0641"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.371", "response": "2.3516", "expected_response": "2.3498"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.6855", "response": "48061.7253", "expected_response": "48469.5008"}
+{"valid": true, "context": "", "request": "-6.2156", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.6152", "response": "0.0238", "expected_response": "0.0243"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.9397", "response": "8546320.719", "expected_response": "8703500.7163"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.852", "response": "71348905260.115", "expected_response": "7111892747.2386"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.0435", "response": "110269.3548", "expected_response": "110536.1542"}
+{"valid": true, "context": "", "request": "-8.5439", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.5754", "response": "0.0003", "expected_response": "0.0003"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.3458", "response": "227951403.865", "expected_response": "221735170.1467"}
+{"valid": true, "context": "", "request": "-7.1097", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.3956", "response": "2417503.968", "expected_response": "2486792.5862"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.6958", "response": "49675320.183", "expected_response": "49632891.501"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.4151", "response": "26.5719", "expected_response": "26.0101"}
+{"valid": true, "context": "", "request": "-6.9617", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.4233", "response": "0.0004", "expected_response": "0.0004"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.6252", "response": "0.0236", "expected_response": "0.0237"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.2116", "response": "1623540.897", "expected_response": "1627875.4069"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.9136", "response": "829034.5617", "expected_response": "819580.0137"}
+{"valid": true, "context": "", "request": "-6.5337", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.0358", "response": "108742936.55", "expected_response": "108593437.3805"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.3455", "response": "221496.5873", "expected_response": "221582.0385"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.786", "response": "6014572938.2", "expected_response": "6109119182.7229"}
+{"valid": true, "context": "", "request": "-5.7456", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.3619", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3194", "response": "20468.3951", "expected_response": "20865.6512"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.778", "response": "6035172489.413", "expected_response": "5997604142.1919"}
+{"valid": true, "context": "", "request": "-8.6219", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.4776", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.0695", "response": "116457.923", "expected_response": "117356.4465"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.7772", "response": "0.0183", "expected_response": "0.0167"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.7434", "response": "5519.3248", "expected_response": "5538.2727"}
+{"valid": true, "context": "", "request": "-4.9975", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.3777", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.0379", "response": "1087564239.94", "expected_response": "1091198575.535"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.313", "response": "2.0938", "expected_response": "2.056"}
+{"valid": true, "context": "", "request": "-9.2619", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.4855", "response": "306512.8497", "expected_response": "305878.2204"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.4634", "response": "29104.3587", "expected_response": "29070.0879"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.4192", "response": "0.0035", "expected_response": "0.0038"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.255", "response": "0.5189", "expected_response": "0.5559"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.1599", "response": "1469532708.55", "expected_response": "1445160196.9888"}
+{"valid": true, "context": "", "request": "-8.6259", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.5019", "response": "3185024697.36", "expected_response": "317577835.9633"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.241", "response": "1.7953", "expected_response": "1.7419"}
+{"valid": true, "context": "", "request": "-9.4339", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.4435", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.4774", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.8591", "response": "0.1395", "expected_response": "0.1383"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.1351", "response": "0.0759", "expected_response": "0.0733"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.2171", "response": "16.5489", "expected_response": "16.4862"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.213", "response": "0.6895", "expected_response": "0.6123"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.7918", "response": "62104579.83", "expected_response": "61912619.3115"}
+{"valid": true, "context": "", "request": "-5.5496", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.8692", "response": "72.8513", "expected_response": "73.9924"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.4271", "response": "0.0356", "expected_response": "0.0374"}
+{"valid": true, "context": "", "request": "-3.1973", "response": "0.0006", "expected_response": "0.0006"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.5435", "response": "35198.427", "expected_response": "34950.5766"}
+{"valid": true, "context": "", "request": "-8.2138", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.4554", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.79", "response": "62485013792.225", "expected_response": "6165651845.89"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.9011", "response": "8.0259", "expected_response": "7.9632"}
+{"valid": true, "context": "", "request": "-7.9418", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.2393", "response": "1795.463", "expected_response": "1735.0977"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.3018", "response": "2039574618.59", "expected_response": "200368839.5838"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.4678", "response": "290516348.711", "expected_response": "293661345.7468"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.5693", "response": "0.0028", "expected_response": "0.0027"}
+{"valid": true, "context": "", "request": "-4.7495", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.2312", "response": "0.0056", "expected_response": "0.0059"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.9193", "response": "834.5216", "expected_response": "830.4088"}
+{"valid": true, "context": "", "request": "-7.1637", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.5218", "response": "33904271.658", "expected_response": "33246977.938"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.4995", "response": "310562.749", "expected_response": "315900.2394"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.8412", "response": "0.0135", "expected_response": "0.0144"}
+{"valid": true, "context": "", "request": "-6.4236", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.3379", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.3993", "response": "2504.913", "expected_response": "2508.0716"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.2232", "response": "163.5728", "expected_response": "167.1946"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.8194", "response": "6610.4895", "expected_response": "6597.5386"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.1392", "response": "139.4625", "expected_response": "137.7888"}
+{"valid": true, "context": "", "request": "-6.6337", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.1256", "response": "1329476.580", "expected_response": "1335403.6571"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.159", "response": "1.4358", "expected_response": "1.4422"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.6171", "response": "0.2473", "expected_response": "0.2415"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.2151", "response": "0.0593", "expected_response": "0.0609"}
+{"valid": true, "context": "", "request": "-6.1956", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.1313", "response": "0.0007", "expected_response": "0.0007"}
+{"valid": true, "context": "", "request": "-7.6758", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.039", "response": "0.8213", "expected_response": "0.9141"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.2812", "response": "0.0056", "expected_response": "0.0052"}
+{"valid": true, "context": "", "request": "-9.4299", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.1753", "response": "0.0007", "expected_response": "0.0007"}
+{"valid": true, "context": "", "request": "-9.0759", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.6596", "response": "451807.3629", "expected_response": "456631.5939"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.9293", "response": "846.925", "expected_response": "849.7534"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.6432", "response": "0.0236", "expected_response": "0.0227"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.956", "response": "9124073658.9", "expected_response": "9036403176.4192"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.0659", "response": "11658724093.5", "expected_response": "1163875672.6676"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.7351", "response": "0.1835", "expected_response": "0.184"}
+{"valid": true, "context": "", "request": "-6.1876", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.8435", "response": "67098.4125", "expected_response": "69740.3863"}
+{"valid": true, "context": "", "request": "-5.2535", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-2.1672", "response": "0.0068", "expected_response": "0.0068"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.6613", "response": "0.0023", "expected_response": "0.0022"}
+{"valid": true, "context": "", "request": "-8.3038", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.2391", "response": "0.0519", "expected_response": "0.0577"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.9296", "response": "834762.159", "expected_response": "850340.6863"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.1271", "response": "13.6598", "expected_response": "13.4002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.1055", "response": "126904.385", "expected_response": "127500.1075"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.1592", "response": "0.0071", "expected_response": "0.0069"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3354", "response": "21769.583", "expected_response": "21648.7858"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.5072", "response": "32.4796", "expected_response": "32.1478"}
+{"valid": true, "context": "", "request": "-2.2352", "response": "0.0058", "expected_response": "0.0058"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.0853", "response": "1238.5409", "expected_response": "1217.0503"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.4257", "response": "26715849.309", "expected_response": "26652783.6665"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.7419", "response": "551762049.38", "expected_response": "551917528.8266"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.0997", "response": "12453769.801", "expected_response": "12580849.6135"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.8973", "response": "784.9513", "expected_response": "789.3866"}
+{"valid": true, "context": "", "request": "-3.5034", "response": "0.0003", "expected_response": "0.0003"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.8131", "response": "6.5982", "expected_response": "6.5025"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.5439", "response": "351704269.833", "expected_response": "349827853.6099"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.225", "response": "0.5982", "expected_response": "0.5956"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.9551", "response": "0.1025", "expected_response": "0.1109"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.8296", "response": "664830.5291", "expected_response": "675434.0621"}
+{"valid": true, "context": "", "request": "-4.0454", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.1832", "response": "154.8697", "expected_response": "152.4819"}
+{"valid": true, "context": "", "request": "-9.3979", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.8935", "response": "78621.354", "expected_response": "78250.9014"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.8251", "response": "0.1538", "expected_response": "0.1496"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.9712", "response": "0.0103", "expected_response": "0.0107"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.2636", "response": "1846502.937", "expected_response": "1834958.9904"}
+{"valid": true, "context": "", "request": "-5.5456", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.6553", "response": "450.2913", "expected_response": "452.1323"}
+{"valid": true, "context": "", "request": "-6.6037", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.6078", "response": "40819273.561", "expected_response": "40528522.9296"}
+{"valid": true, "context": "", "request": "-5.5816", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.582", "response": "3865702149.7", "expected_response": "3819075075.3903"}
+{"valid": true, "context": "", "request": "-4.5855", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.6019", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.6492", "response": "0.0235", "expected_response": "0.0224"}
+{"valid": true, "context": "", "request": "-4.0554", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": true, "context": "", "request": "-6.6317", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.2254", "response": "16859.4207", "expected_response": "16804.3819"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.4718", "response": "294715308.615", "expected_response": "296378833.7263"}
+{"valid": true, "context": "", "request": "-3.4133", "response": "0.0004", "expected_response": "0.0004"}
+{"valid": true, "context": "", "request": "-3.1013", "response": "0.0008", "expected_response": "0.0008"}
+{"valid": true, "context": "", "request": "-5.4415", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.305", "response": "2.0983", "expected_response": "2.0185"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.5898", "response": "38157204.96", "expected_response": "38882929.3203"}
+{"valid": true, "context": "", "request": "-6.7717", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.419", "response": "0.3951", "expected_response": "0.381"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.4131", "response": "0.0391", "expected_response": "0.0386"}
+{"valid": true, "context": "", "request": "-4.6655", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.6971", "response": "4.9213", "expected_response": "4.9782"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.7357", "response": "5417238.960", "expected_response": "5440935.3722"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.2453", "response": "1786.943", "expected_response": "1759.2377"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.1131", "response": "12.3548", "expected_response": "12.9751"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.3811", "response": "0.0413", "expected_response": "0.0416"}
+{"valid": true, "context": "", "request": "-8.0838", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.1431", "response": "0.0758", "expected_response": "0.0719"}
+{"valid": true, "context": "", "request": "-5.1355", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.6514", "response": "0.0002", "expected_response": "0.0002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.9718", "response": "94120378.56", "expected_response": "93712425.742"}
+{"valid": true, "context": "", "request": "-2.9093", "response": "0.0012", "expected_response": "0.0012"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.8491", "response": "7.6593", "expected_response": "7.0646"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.9317", "response": "8594107.623", "expected_response": "8544628.1839"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.5375", "response": "34689.7215", "expected_response": "34470.9891"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.6795", "response": "47180.2653", "expected_response": "47804.4083"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.5776", "response": "371460.9285", "expected_response": "378057.4109"}
+{"valid": true, "context": "", "request": "-5.3275", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.0216", "response": "1062549.837", "expected_response": "1050998.6549"}
+{"valid": true, "context": "", "request": "-7.6098", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-5.2475", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.6655", "response": "46509.2173", "expected_response": "46287.8007"}
+{"valid": true, "context": "", "request": "-4.3054", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.9119", "response": "8064127395.29", "expected_response": "816377805.2841"}
+{"valid": true, "context": "", "request": "-1.8692", "response": "0.0135", "expected_response": "0.0135"}
+{"valid": true, "context": "", "request": "-5.7956", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.2312", "response": "174.3589", "expected_response": "170.3033"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.0759", "response": "11350724968.3", "expected_response": "1190988562.3505"}
+{"valid": true, "context": "", "request": "-5.6516", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.9299", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.0234", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.5377", "response": "3461709.528", "expected_response": "3448686.8843"}
+{"valid": true, "context": "", "request": "-8.5799", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.383", "response": "2.4153", "expected_response": "2.4157"}
+{"valid": true, "context": "", "request": "-4.0854", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.8554", "response": "7105.4298", "expected_response": "7167.7944"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.7352", "response": "54.3928", "expected_response": "54.3467"}
+{"valid": true, "context": "", "request": "-6.7377", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.7618", "response": "58130429.76", "expected_response": "57779819.0759"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.3091", "response": "20.3948", "expected_response": "20.3766"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.6957", "response": "4915320.876", "expected_response": "4962146.3278"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.9796", "response": "941350.8267", "expected_response": "954108.9281"}
+{"valid": true, "context": "", "request": "-8.2398", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.3859", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.5119", "response": "3247056198.263", "expected_response": "324975922.4036"}
+{"valid": true, "context": "", "request": "-8.3638", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.8075", "response": "62178.593", "expected_response": "64191.9765"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.6713", "response": "471.3259", "expected_response": "469.1018"}
+{"valid": true, "context": "", "request": "-4.4974", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.2638", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.4072", "response": "0.0049", "expected_response": "0.0039"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.3553", "response": "2218.4967", "expected_response": "2266.3946"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.3539", "response": "2271045639.852", "expected_response": "2259099677.323"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.6211", "response": "4.1938", "expected_response": "4.1789"}
+{"valid": true, "context": "", "request": "-4.4674", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.8912", "response": "0.013", "expected_response": "0.0128"}
+{"valid": true, "context": "", "request": "-9.624", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.7378", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.3217", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-3.7594", "response": "0.0002", "expected_response": "0.0002"}
+{"valid": true, "context": "", "request": "-4.1254", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.9819", "response": "9612503478.46", "expected_response": "959175748.8432"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.2717", "response": "18473259.065", "expected_response": "18695073.3187"}
+{"valid": true, "context": "", "request": "-5.3635", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.0532", "response": "115.6928", "expected_response": "113.033"}
+{"valid": true, "context": "", "request": "-4.1974", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": true, "context": "", "request": "-3.9394", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": true, "context": "", "request": "-2.7473", "response": "0.0018", "expected_response": "0.0018"}
+{"valid": true, "context": "", "request": "-4.9575", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.8139", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.3359", "response": "2164059738.52", "expected_response": "2167372673.1561"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.5051", "response": "0.3856", "expected_response": "0.3126"}
+{"valid": true, "context": "", "request": "-9.4259", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.5675", "response": "36178.4925", "expected_response": "36936.5855"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.7798", "response": "60153249.78", "expected_response": "60225162.1268"}
+{"valid": true, "context": "", "request": "-9.0939", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.7356", "response": "541789.263", "expected_response": "543968.2569"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.0432", "response": "0.009", "expected_response": "0.0091"}
+{"valid": true, "context": "", "request": "-6.9737", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.626", "response": "4285603197.36", "expected_response": "4226322133.7405"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.9811", "response": "0.1023", "expected_response": "0.1044"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.7139", "response": "5148072963.23", "expected_response": "517453569.4934"}
+{"valid": true, "context": "", "request": "-4.7795", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.2354", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.0493", "response": "1108.9527", "expected_response": "1120.2241"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.2219", "response": "1657904283.61", "expected_response": "1666948536.9035"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.5571", "response": "0.2869", "expected_response": "0.2773"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.2699", "response": "1859403627.43", "expected_response": "1861774135.8414"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.9959", "response": "9978512430.629", "expected_response": "990602888.3882"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.1733", "response": "1470.5839", "expected_response": "1490.4497"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.4814", "response": "30169.5487", "expected_response": "30300.3849"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.8553", "response": "723.5819", "expected_response": "716.6144"}
+{"valid": true, "context": "", "request": "-7.4257", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.5691", "response": "0.2938", "expected_response": "0.2697"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.2012", "response": "0.0069", "expected_response": "0.0063"}
+{"valid": true, "context": "", "request": "-3.1293", "response": "0.0007", "expected_response": "0.0007"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.5274", "response": "3325.6917", "expected_response": "3367.85"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.9251", "response": "0.1135", "expected_response": "0.1188"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.3859", "response": "2467059318.46", "expected_response": "2431860137.0942"}
+{"valid": true, "context": "", "request": "-2.8493", "response": "0.0014", "expected_response": "0.0014"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.9059", "response": "804615293.73", "expected_response": "805175569.3732"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.8474", "response": "7019.3658", "expected_response": "7036.9544"}
+{"valid": true, "context": "", "request": "-5.6616", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.181", "response": "1.5682", "expected_response": "1.5171"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.3552", "response": "0.0045", "expected_response": "0.0044"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.6872", "response": "48.5619", "expected_response": "48.6596"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.2873", "response": "1940.583", "expected_response": "1937.8883"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.7077", "response": "5038124.796", "expected_response": "5101181.3952"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.2831", "response": "19.5368", "expected_response": "19.1924"}
+{"valid": true, "context": "", "request": "-3.6634", "response": "0.0002", "expected_response": "0.0002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.4658", "response": "290714653.8", "expected_response": "292311959.7949"}
+{"valid": true, "context": "", "request": "-7.5118", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.6011", "response": "4.0925", "expected_response": "3.9908"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.4117", "response": "25149073.865", "expected_response": "25807217.0309"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.0932", "response": "0.008", "expected_response": "0.0081"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.8514", "response": "7146.3895", "expected_response": "7102.0731"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.4631", "response": "0.0321", "expected_response": "0.0344"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.431", "response": "2.7389", "expected_response": "2.698"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.1531", "response": "0.0793", "expected_response": "0.0703"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.445", "response": "2.7589", "expected_response": "2.7864"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.4458", "response": "280631749.522", "expected_response": "279154468.7242"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.8696", "response": "734102.8569", "expected_response": "740605.5439"}
+{"valid": true, "context": "", "request": "-4.5675", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.9995", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.1215", "response": "136240.5987", "expected_response": "132285.472"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.5051", "response": "3.1958", "expected_response": "3.1993"}
+{"valid": true, "context": "", "request": "-4.2454", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": true, "context": "", "request": "-4.6635", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.8715", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.3617", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.1416", "response": "1376204.895", "expected_response": "1385524.3458"}
+{"valid": true, "context": "", "request": "-5.9096", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.4171", "response": "26.3958", "expected_response": "26.1301"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.375", "response": "0.4713", "expected_response": "0.4217"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.3938", "response": "248903516.75", "expected_response": "247650599.6714"}
+{"valid": true, "context": "", "request": "-5.2195", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.6178", "response": "41753902.86", "expected_response": "41472649.0051"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.4097", "response": "25413690.871", "expected_response": "25688631.808"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.4255", "response": "264719.538", "expected_response": "266405.112"}
+{"valid": true, "context": "", "request": "-2.3992", "response": "0.004", "expected_response": "0.004"}
+{"valid": true, "context": "", "request": "-8.6879", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-8.2658", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.6632", "response": "46.3591", "expected_response": "46.0433"}
+{"valid": true, "context": "", "request": "-6.0996", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-2.8693", "response": "0.0014", "expected_response": "0.0014"}
+{"valid": true, "context": "", "request": "-4.2374", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.0752", "response": "113.8259", "expected_response": "118.907"}
+{"valid": true, "context": "", "request": "-7.3897", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.0171", "response": "10.8653", "expected_response": "10.4016"}
+{"valid": true, "context": "", "request": "-5.8636", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.982", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.1619", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.53", "response": "34971052860.21", "expected_response": "3388074842.3376"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.1419", "response": "1307524698.055", "expected_response": "1386481858.5597"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.7116", "response": "514680.3972", "expected_response": "514720.1346"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.1119", "response": "1265904378.135", "expected_response": "1293931218.3929"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-1.0031", "response": "0.0981", "expected_response": "0.0993"}
+{"valid": true, "context": "", "request": "-8.7659", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.4035", "response": "251906.3487", "expected_response": "253244.6936"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.3133", "response": "2059.4716", "expected_response": "2057.4597"}
+{"valid": true, "context": "", "request": "-9.4879", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-9.594", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.291", "response": "1.9258", "expected_response": "1.9545"}
+{"valid": true, "context": "", "request": "-4.2794", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.0415", "response": "116034.5829", "expected_response": "110028.236"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.5993", "response": "398.7451", "expected_response": "397.4293"}
+{"valid": true, "context": "", "request": "-8.3838", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.8438", "response": "64015729.835", "expected_response": "69788582.6812"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "3.7334", "response": "5491.7628", "expected_response": "5412.1938"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.073", "response": "0.8719", "expected_response": "0.8453"}
+{"valid": true, "context": "", "request": "-9.918", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-7.9278", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-4.2834", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0.011", "response": "1.0839", "expected_response": "1.0257"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.7231", "response": "0.1985", "expected_response": "0.1892"}
+{"valid": true, "context": "", "request": "-3.8394", "response": "0.0001", "expected_response": "0.0001"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.1318", "response": "1367502948.26", "expected_response": "135460658.1428"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.8992", "response": "79.5148", "expected_response": "79.2848"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.5735", "response": "37109.8265", "expected_response": "37450.4763"}
+{"valid": true, "context": "", "request": "-7.8278", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.4292", "response": "261.7983", "expected_response": "268.6847"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.3998", "response": "254910763.895", "expected_response": "251096109.6279"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.5193", "response": "0.0029", "expected_response": "0.003"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.5353", "response": "341.8569", "expected_response": "342.9679"}
+{"valid": true, "context": "", "request": "-8.3498", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.6079", "response": "4012753698.15", "expected_response": "405378569.7483"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.0138", "response": "102576438.995", "expected_response": "103228919.1544"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.5753", "response": "371.2089", "expected_response": "376.0603"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "5.5716", "response": "374902.6185", "expected_response": "372869.7536"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.0318", "response": "1076852439.51", "expected_response": "107597747.6511"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.3592", "response": "220.5736", "expected_response": "228.6841"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.1616", "response": "1468502.397", "expected_response": "1450828.7785"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.7751", "response": "0.1852", "expected_response": "0.1679"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.0638", "response": "1143786509.242", "expected_response": "115826085.9317"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.9097", "response": "8241037.596", "expected_response": "8122523.3613"}
+{"valid": true, "context": "", "request": "-5.8976", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.0516", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.5893", "response": "0.0028", "expected_response": "0.0026"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "2.7753", "response": "593.4827", "expected_response": "596.0429"}
+{"valid": true, "context": "", "request": "-5.4615", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.3074", "response": "20519.487", "expected_response": "20296.9482"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "9.974", "response": "9415630728.35", "expected_response": "9418839571.4533"}
+{"valid": true, "context": "", "request": "-4.4714", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.4896", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "8.7659", "response": "581407296.33", "expected_response": "583279331.7401"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-2.0592", "response": "0.0089", "expected_response": "0.0087"}
+{"valid": true, "context": "", "request": "-6.1556", "response": "0.0", "expected_response": "0.0"}
+{"valid": true, "context": "", "request": "-6.2876", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "-0.5271", "response": "0.2918", "expected_response": "0.2971"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "7.9438", "response": "87210439.56", "expected_response": "87860643.4356"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "1.4591", "response": "28.1536", "expected_response": "28.7837"}
+{"valid": true, "context": "", "request": "-6.8517", "response": "0.0", "expected_response": "0.0"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "4.0734", "response": "11490.8253", "expected_response": "11841.5169"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "6.6277", "response": "4236590.718", "expected_response": "4242899.7087"}

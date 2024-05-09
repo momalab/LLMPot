@@ -1,0 +1,20 @@
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "02880000000600035b3e0002", "response": "02880000000300035b3", "expected_response": "0288000000070003040d340000"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "04c0000000060003cec10002", "response": "04c00000003008302", "expected_response": "04c000000003008302"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0105000000060001c34d0002", "response": "010500000003008102", "expected_response": "01050000000400010103"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0341000000060003fffd0002", "response": "0341000000060003ffd0002", "expected_response": "034100000003008302"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "02cb0000000d0010fffd0003062e442e442e44", "response": "02cb0000000d0010fffd0003062", "expected_response": "02cb00000003009002"}
+{"valid": true, "context": "", "request": "0246000000060001c3500002", "response": "024600000003008102", "expected_response": "024600000003008102"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "05d40000000d0010fffd00030600000000ffff", "response": "05d4000000030010fff", "expected_response": "05d400000003009002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "052400000008000f000000020103", "response": "052400000008000f00000003", "expected_response": "052400000006000f00000002"}
+{"valid": true, "context": "", "request": "056e000000060003c3500002", "response": "056e00000003008302", "expected_response": "056e00000003008302"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "0098000000060001f7d00001", "response": "09800000003008102", "expected_response": "009800000003008102"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "01bf0000000d00108100000306ffff28390000", "response": "01bf0000000d00108100", "expected_response": "01bf00000006001081000003"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "013600000006000100000002", "response": "013600000002", "expected_response": "01360000000400010100"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "02830000000b0010333b0002042f6d0000", "response": "02830000000b0010333b0002", "expected_response": "0283000000060010333b0002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "04ae00000005002b0e0100", "response": "04ae00000003002b0e0100", "expected_response": "04ae00000021002b0e018300000300045741474f01073735302d383831020830332e30312e3032"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "06110000000d0010cec10003062e44ffffffff", "response": "0611000000030083062", "expected_response": "061100000003009002"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "02fd00000006000100000002", "response": "02fd0000000600010000003", "expected_response": "02fd0000000400010101"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "002c000000060006000037a6", "response": "02c0000000300060006000", "expected_response": "002c000000060006000037a6"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "03540000000d0010c34d000306ffffdfa6ffff", "response": "03540000000d0010c34d0003", "expected_response": "0354000000060010c34d0003"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "041e0000000d001086770003061cee1cee1cee", "response": "041e0000000d001086770003", "expected_response": "041e00000006001086770003"}
+{"valid": false, "error": "Not same as expected.", "context": "", "request": "00f4000000060003a4fd0001", "response": "00f400000003008302", "expected_response": "00f4000000050003020000"}
