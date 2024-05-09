@@ -65,7 +65,7 @@ class MathPlots:
             # df = df[(df['distance'] > (mean - 2 * std_dev)) & (df['distance'] < (mean + 2 * std_dev))]
             # df = df[(df['distance'] < (mean + 0.1 * std_dev))]
             # df = df[(df['distance'] > 0)]
-            # df2 = df2[(df2['distance'] < 0.05)]
+            df2 = df2[(df2['distance'] < 0.05)]
 
             mean = df2['distance'].mean()
             std_dev = df2['distance'].std()
@@ -84,11 +84,11 @@ class MathPlots:
         fig.update_layout(
             xaxis_title='<b>Epsilon</b>',
             yaxis_title='<b>RVA-ε</b>',
-            yaxis=dict(range=[0.5, 1.02]),
+            yaxis=dict(range=[0.7, 1.02]),
             # yaxis=dict(type='log', dtick=1),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=0, r=0, b=0, pad=0),
+            margin=dict(l=0, r=0, b=0, t=0, pad=0),
             font=dict(family=FONT_FAMILY, size=32, color="Black"),
             legend=dict(yanchor="bottom", y=1, xanchor="right", x=1, orientation='h', font=dict(family=FONT_FAMILY, size=24)),
             )
@@ -100,7 +100,7 @@ class MathPlots:
                         zeroline=False, zerolinewidth=3, zerolinecolor='black',
                         )
 
-        fig.show()
+        # fig.show()
 
         name = "-".join([dataset.client for dataset in self._finetuner.datasets])
         os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
