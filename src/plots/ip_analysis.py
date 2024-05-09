@@ -33,7 +33,7 @@ fig.update_yaxes(range=[0, 55], row=2, col=1)
 fig.update_annotations(font=dict(size=32))
 
 fig.update_layout(
-    margin=dict(pad=0, r=0, b=0),
+    margin=dict(pad=0, r=0, b=0, t=35, l=0),
     font=dict(family='Serif', size=26),
     yaxis=dict(tickfont=dict(size=26)),
     yaxis2=dict(tickfont=dict(size=26)),
@@ -45,6 +45,6 @@ fig.update_layout(
     autosize=False,
 )
 
-fig.show()
+# fig.show()
 fig.write_image(f"{ASSETS}/interaction.pdf")
 
