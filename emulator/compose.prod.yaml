@@ -15,7 +15,7 @@ services:
           memory: 8G
 
   modbus_app:
-    image: cv43nyu/allippe:modbus
+    image: modbus:1.0
     volumes:
       - /home/chris/logs/modbus:/app/logs
     deploy:
