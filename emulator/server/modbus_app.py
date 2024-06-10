@@ -34,12 +34,12 @@ def load_model(finetuner_model: FinetunerModel):
     logger.info("Loading model...")
     tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
     model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id()).to(device)
-    byt5module = Byt5LightningModule(finetuner_model=finetuner_model,
-                                     tokenizer=tokenizer,
-                                     model=model,
-                                     test_dataset=None)
-    model = byt5module.load_from_checkpoint(
+    model = Byt5LightningModule.load_from_checkpoint(
         checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[0]}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
+        finetuner_model=finetuner_model,
+        tokenizer=tokenizer,
+        model=model,
+        test_dataset=None,
         map_location=device)
     logger.info("Loading model... Done.")
     model.eval()
