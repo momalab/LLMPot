@@ -18,7 +18,7 @@ FROM model as modbus
 
 COPY ./src /app/src
 COPY ./emulator /app/emulator
-COPY ./experiments /app/experiments
+COPY ./experiments/honeypot-with-43.json /app/experiments/honeypot.json
 
 EXPOSE 5020
 

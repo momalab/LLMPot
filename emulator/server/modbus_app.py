@@ -53,7 +53,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         config = json.loads(config)
         finetuner_model = FinetunerModel(**config)
         finetuner_model.experiment = "honeypot.json"
-        finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[0].__str__()}")[0]
+        finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[0]}")[0]
     model, tokenizer = load_model(finetuner_model)
 
     def handle(self):
