@@ -7,7 +7,7 @@ class P1Server(MbtcpServer):
     def __init__(self, ip: str, port: int):
         super().__init__(ip, port, {1: [0, 0]}, {1: [0, 0]}, {0: 0}, {})
 
-    def _update_control_logic(self):
+    def update_control_logic(self):
         while True:
             temperature = self._store.getValues(0x03, 0, count=1)[0]
             if int(temperature) > 25:

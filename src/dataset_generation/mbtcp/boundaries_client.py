@@ -31,10 +31,12 @@ class BoundariesClient(MbtcpClient):
         functions = []
         while len(functions) < self._samples_num:
 
+
             device_functions: List[tuple[Callable[..., Any], List[Any], dict]] = []
-            for _ in range(30):
-                object_id = random.randint(0, 3)
-                device_functions.append((self.read_device_information, [], {"object_id": object_id}))
+            if 43 in self._codes:
+                for _ in range(int(0.1 * self._samples_num)):
+                    object_id = random.randint(0, 3)
+                    device_functions.append((self.read_device_information, [], {"object_id": object_id}))
 
             coil_functions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 1 in self._codes and 5 in self._codes:
@@ -140,13 +142,10 @@ class BoundariesClient(MbtcpClient):
 
 
 def main():
-    ip, port, samples_num = retrieve_args()
-
-    client = BoundariesClient(ip, port, samples_num, [1, 5, 15, 3, 6, 16], RangeModel(low=0, high=10), RangeModel(low=0, high=10), 2)
-    client.start_client()
-    client.execute_functions()
+    client = BoundariesClient(*retrieve_args(), RangeModel(low=0, high=10), RangeModel(low=0, high=10), 2)
     try:
         client.start_client()
+        client.execute_functions()
     except KeyboardInterrupt:
         print("Client stopped by user.")
     finally:

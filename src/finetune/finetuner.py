@@ -1,31 +1,21 @@
-import glob
-import os
 from abc import abstractmethod
-from typing import Iterable, List
+from typing import List
 
-import torch
-from accelerate import Accelerator
-from datasets import Dataset, load_dataset, Features, Value
-from lightning import LightningModule, LightningDataModule
-from lightning import Trainer
+from datasets import Dataset
+from lightning import LightningDataModule, LightningModule, Trainer
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
-from peft.tuners.lora import LoraConfig
-from peft.utils.peft_types import TaskType
-from peft.mapping import get_peft_model
-from peft.utils.other import prepare_model_for_kbit_training
 from lightning.pytorch.loggers.logger import Logger
-from torch.utils.data import DataLoader, DistributedSampler
-from transformers import BitsAndBytesConfig, PreTrainedTokenizer, PreTrainedModel
+from peft.mapping import get_peft_model
+from peft.tuners.lora import LoraConfig
+from peft.utils.other import prepare_model_for_kbit_training
+from peft.utils.peft_types import TaskType
+import torch
+from transformers import BitsAndBytesConfig, PreTrainedModel, PreTrainedTokenizer
 
-from cfg import OUTPUTS_DIR, DATASET_PARSED, CHECKPOINTS
+from cfg import OUTPUTS_DIR
 from finetune.callbacks.metrics_logger import MetricsLogger
-from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
-from utilities.epsilon import calculate_error_margin
-from utilities.file_tqdm_progress_bar import FileTQDMProgressBar
 from utilities.logger import TheLogger
-
-torch.set_float32_matmul_precision('medium')
 
 
 class Finetuner:
@@ -105,7 +95,7 @@ class Finetuner:
         )
 
     def train(self, loggers: List[Logger]):
-        with open(f"{self._finetuner_model.log_output_dir}/{self._finetuner_model.__str__()}", "a") as f:
+        with open(f"{self._finetuner_model.log_output_dir}/{str(self._finetuner_model)}", "a") as f:
             checkpoint_callback = ModelCheckpoint(
                 monitor=self._finetuner_model.val_loss_const,
                 filename='best-{epoch}',

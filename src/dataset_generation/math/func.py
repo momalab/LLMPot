@@ -1,16 +1,11 @@
 import os
-from matplotlib import pyplot as plt
-from matplotlib.animation import adjusted_figsize
 import numpy as np
-import pandas as pd
-import math
-from regex import X
 from scipy.integrate import cumtrapz
 from scipy.interpolate import interp1d
 import plotly.graph_objects as go
 
-from cfg import ASSETS, DATASET_PARSED
-from numpy.polynomial import Polynomial
+from cfg import ASSETS
+
 import plotly.io as pio
 pio.kaleido.scope.mathjax = None
 
@@ -45,8 +40,8 @@ def cauchy_derivative(x, x0=0, gamma=1):
     denominator = np.pi * gamma**3 * (1 + ((x - x0) / gamma) ** 2) ** 2
     return numerator / denominator
 
-THE_FUNC = cauchy
-DF = cauchy_derivative
+THE_FUNC = sigmoid
+DF = sigmoid_derivative
 
 def remove_decimals(x, y, dec_num = 4):
     x = [round(x, dec_num) for x in x]
@@ -98,6 +93,7 @@ def func_values_sampled(x, samples):
     fig_combined.add_trace(go.Histogram(x=x, nbinsx=100, name='uniform', opacity=0.6, marker_color=NATURE[3], yaxis='y2'))
 
     fig_combined.update_layout(
+        margin=dict(l=0, r=0, b=0, t=0, pad=0),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         xaxis_title='<b>x</b>',

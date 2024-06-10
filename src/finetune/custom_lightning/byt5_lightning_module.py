@@ -2,12 +2,11 @@ import json
 from typing import List
 
 import torch
+import torch.distributed as dist
 from lightning.pytorch import LightningModule
-from lightning.pytorch.loggers.logger import DummyLogger
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, DistributedSampler
 from transformers import PreTrainedModel, PreTrainedTokenizer
-import torch.distributed as dist
 
 from finetune.model.finetuner_model import FinetunerModel
 from validation.mbtcp_validator import Validator
@@ -153,7 +152,7 @@ class Byt5LightningModule(LightningModule):
 
                 except ValueError as exception:
                     to_save.valid = False
-                    to_save.error = exception.__str__()
+                    to_save.error = str(exception)
                 finally:
                     if to_save.valid:
                         valid = valid + 1
@@ -169,11 +168,11 @@ class Byt5LightningModule(LightningModule):
     def validate_choice(validation_type: str, question: str, response: str, expected_response: str, end_address: int):
         if validation_type == "validator":
             try:
-                validation = Validator(question, response, end_address)
+                validation = Validator(question, response, expected_response, end_address)
                 validation.check_header_ids()
                 validation.check_payload()
-            except IndexError:
-                raise ValueError("Invalid packet.")
+            except IndexError as exc:
+                raise ValueError("Invalid packet.") from exc
         else:
             if response != expected_response:
                 raise ValueError("Not same as expected.")

@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import sys
 
 from tqdm import tqdm
 
@@ -21,25 +22,25 @@ def main(experiment: str, resume: bool):
 
         for dataset in tqdm(finetuner_model.datasets):
             finetuner_model.current_dataset = dataset
-            log = TheLogger(finetuner_model.__str__(), finetuner_model.log_output_dir)
-            if os.path.exists(f"{CHECKPOINTS}/{experiment}/{dataset.__str__()}"):
+            log = TheLogger(str(finetuner_model), finetuner_model.log_output_dir)
+            if os.path.exists(f"{CHECKPOINTS}/{experiment}/{dataset}"):
                 log.warning(f'Experiment {dataset} already exists.')
                 if resume:
                     log.info(f'Resuming {dataset} ...')
-                    finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{experiment}/{dataset.__str__()}")[0]
+                    finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{experiment}/{dataset}")[0]
                 else:
                     continue
             log.info(f'Fine tuning {dataset} ...')
             trainer.main(finetuner_model)
     except KeyboardInterrupt:
         print("User interrupted the process.")
-        os.remove(f"{CHECKPOINTS}/{experiment}/{dataset.__str__()}")
-        exit(0)
+        os.remove(f"{CHECKPOINTS}/{experiment}/{dataset}")
+        sys.exit(0)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-cfg', default="sigmoid.json", required=False)
+    parser.add_argument('-cfg', default="mbtcp-diff-functions.json", required=False)
     parser.add_argument('-r', default=False, type=bool, required=False)
     args = parser.parse_args()
     main(args.cfg, args.r)

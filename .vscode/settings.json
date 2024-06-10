@@ -4,6 +4,14 @@
     "cSpell.words": [
         "mbtcp"
     ],
+    "pylint.args": [
+        "--disable=C0114",
+        "--disable=C0115",
+        "--disable=C0116",
+        "--disable=W1514",
+        "--disable=R0903",
+        "--max-line-length=240",
+    ],
     "python.analysis.autoImportCompletions": true,
     "python.analysis.typeCheckingMode": "basic",
     "files.exclude": {

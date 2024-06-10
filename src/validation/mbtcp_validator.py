@@ -1,10 +1,11 @@
 class Validator:
 
-    def __init__(self, request, response, end_address):
+    def __init__(self, request: str, response: str, expected_response: str, end_address: int):
         self.request = request
         if ":" in request:
             self.request = request[:-1]
         self.response = response
+        self.expected_response = expected_response
         self._end_address = end_address
         hex_chunks_query = [self.request[i:i + 2] for i in range(0, len(self.request), 2)]
         hex_chunks_response = [self.response[i:i + 2] for i in range(0, len(self.response), 2)]
@@ -57,6 +58,12 @@ class Validator:
                 return
             else:
                 raise ValueError(f"FC: {r_fc}, expected: {q_fc}")
+
+        if fc == "2b":
+            if self.response == self.expected_response:
+                return
+            else:
+                raise ValueError(f"Information request expected same values but, payload: {self.response}, expected: {self.expected_response}")
 
         if self.address > self._end_address:
             raise ValueError(f"Should have thrown an exception since requested address: {self.address} exceeds: {self._end_address}")
@@ -147,5 +154,6 @@ class Validator:
 
 
 if __name__ == '__main__':
-    val = Validator("000100000006000100050001", "00010000000400010100", 3)
+    val = Validator("001d00000005002b0e0101", "001d00000021002b0e018300000300045741474f01073735302d383831020830332e30312e3032", "001d00000021002b0e018300000300045741474f01073735302d383831020830332e30312e3032", 3)
+    val.check_header_ids()
     val.check_payload()

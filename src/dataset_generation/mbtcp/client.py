@@ -1,13 +1,11 @@
 import argparse
-import itertools
 import random
 import time
-from typing import Tuple, Optional, Callable, Any, List
+from typing import Tuple, List
 
 from pymodbus.client import ModbusTcpClient
 
 from dataset_generation.mbtcp.invalid_function import MbtcpCustomInvalidFunctionRequest
-from finetune.model.finetuner_model import RangeModel
 
 
 class MbtcpClient(ModbusTcpClient):
@@ -41,11 +39,11 @@ class MbtcpClient(ModbusTcpClient):
                 time.sleep(0.05)
 
 
-def retrieve_args() -> Tuple[str, int, int]:
+def retrieve_args() -> Tuple[str, int, int, List[int]]:
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
     parser.add_argument('-p', default=5020, required=False)
     parser.add_argument('-num', default=1000, required=False)
     args = parser.parse_args()
 
-    return args.ip, int(args.p), int(args.num)
+    return args.ip, int(args.p), int(args.num), [1,5,15,3,6,16]

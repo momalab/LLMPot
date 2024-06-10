@@ -1,10 +1,9 @@
-import itertools
 import random
-from typing import List, Callable, Any
+from typing import Any, Callable, List
 
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
-from finetune.model.finetuner_model import RangeModel
 from dataset_generation.utils import value_generator
+from finetune.model.finetuner_model import RangeModel
 
 MAX_ADDRESS = 65535
 MAX_REG_VALUE = 65535
@@ -74,9 +73,7 @@ class RandomClient(MbtcpClient):
 
 
 def main():
-    ip, port, samples_num = retrieve_args()
-
-    client = RandomClient(ip, port, samples_num, [1, 5, 15, 3, 6, 16], RangeModel(low=0, high=1), RangeModel(low=0, high=10), 2)
+    client = RandomClient(*retrieve_args(), RangeModel(low=0, high=1), RangeModel(low=0, high=10), 2)
     client.start_client()
     client.execute_functions()
     try:

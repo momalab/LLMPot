@@ -26,10 +26,12 @@ class MbtcpServer:
         self._identity.ProductName = 'ETHERNET Programmable Fieldbus Controller'
         self._identity.ModelName = 'PFC200'
         self._identity.MajorMinorRevision = '03.01.02'
+
+    def run(self):
         StartTcpServer(context=self._context, identity=self._identity, address=(self._ip, self._port))
 
     def start(self):
-        update_logic_thread = multiprocessing.Process(target=self._update_control_logic)
+        update_logic_thread = multiprocessing.Process(target=self.update_control_logic)
         try:
             update_logic_thread.start()
 
@@ -38,7 +40,7 @@ class MbtcpServer:
             update_logic_thread.terminate()
             update_logic_thread.join()
 
-    def _update_control_logic(self):
+    def update_control_logic(self):
         pass
 
 

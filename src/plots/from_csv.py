@@ -72,7 +72,7 @@ class Plots:
 
         for metric in self._test_metrics:
             validation_type = metric.split("/")[1]
-            df = dfs.query(f"functions == '1_5_15_3_6_16'")
+            df = dfs.query("functions == '1_5_15_3_6_16'")
             fig = px.bar(df, x='size', y=metric, color='plc_cfg', barmode='group',
                          color_discrete_sequence=['#EDB88B', '#545E75'])
 
@@ -95,7 +95,7 @@ class Plots:
                              zeroline=False, zerolinewidth=3, zerolinecolor='black', range=[0, 1.002]
                              )
 
-            # fig.show()
+            fig.show()
 
             os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
             fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{validation_type}.pdf")
@@ -241,35 +241,35 @@ if __name__ == '__main__':
     plot = Plots("s7comm-protocol-test.json")
     plot.accuracy_with_random_dataset()
 
-    plot = Plots("s7comm-protocol-emulation.json")
-    colors = {dataset.size: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    labels = [dataset.size for dataset in plot._finetuner.datasets]
-    plot.accuracy_per_epoch(colors, labels)
-    plot.loss_per_epoch(colors, labels)
+    # plot = Plots("s7comm-protocol-emulation.json")
+    # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
+    # labels = [dataset.size for dataset in plot._finetuner.datasets]
+    # plot.accuracy_per_epoch(colors, labels)
+    # plot.loss_per_epoch(colors, labels)
 
-    plot = Plots("mbtcp-protocol-emulation.json")
-    colors = {dataset.size: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    labels = [dataset.size for dataset in plot._finetuner.datasets]
-    plot.accuracy_per_epoch(colors, labels)
-    plot.loss_per_epoch(colors, labels)
+    # plot = Plots("mbtcp-protocol-emulation.json")
+    # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
+    # labels = [dataset.size for dataset in plot._finetuner.datasets]
+    # plot.accuracy_per_epoch(colors, labels)
+    # plot.loss_per_epoch(colors, labels)
 
-    plot = Plots("mbtcp-icspatch-processes.json")
-    colors = {dataset.client: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    labels = [f"{dataset.client}" for dataset in plot._finetuner.datasets]
-    plot.accuracy_per_epoch(colors, labels)
-    plot.loss_per_epoch(colors, labels, False)
+    # plot = Plots("mbtcp-icspatch-processes.json")
+    # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
+    # labels = [f"{dataset.client}" for dataset in plot._finetuner.datasets]
+    # plot.accuracy_per_epoch(colors, labels)
+    # plot.loss_per_epoch(colors, labels, False)
 
-    plot = Plots("mbtcp-protocol-generalization.json")
-    colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    labels = [dataset.server.__str__() for dataset in plot._finetuner.datasets]
-    plot.accuracy_per_epoch(colors, labels)
+    # plot = Plots("mbtcp-protocol-generalization.json")
+    # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
+    # labels = [dataset.server.__str__() for dataset in plot._finetuner.datasets]
+    # plot.accuracy_per_epoch(colors, labels)
 
-    plot = Plots("s7comm-protocol-generalization.json")
-    colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    labels = [dataset.server.__str__() for dataset in plot._finetuner.datasets]
-    plot.accuracy_per_epoch(colors, labels)
+    # plot = Plots("s7comm-protocol-generalization.json")
+    # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
+    # labels = [dataset.server.__str__() for dataset in plot._finetuner.datasets]
+    # plot.accuracy_per_epoch(colors, labels)
 
-    plot = Plots("mbtcp-anaerobic-variations.json")
-    colors = {dataset.client: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    labels = [dataset.client for dataset in plot._finetuner.datasets]
-    plot.accuracy_per_epoch(colors, labels)
+    # plot = Plots("mbtcp-anaerobic-variations.json")
+    # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
+    # labels = [dataset.client for dataset in plot._finetuner.datasets]
+    # plot.accuracy_per_epoch(colors, labels)

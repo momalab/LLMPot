@@ -1,23 +1,17 @@
 import glob
 import json
 import os
-from typing import List
-
-from matplotlib import legend
-from matplotlib.axis import YAxis
-import plotly
-import plotly.express as px
 
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.colors import qualitative
-from regex import F
-
-from cfg import EXPERIMENTS, CHECKPOINTS, ASSETS, TEST_METRICS, TRAINING_METRICS
-from finetune.model.finetuner_model import FinetunerModel
 import plotly.io as pio
+
 pio.kaleido.scope.mathjax = None
 pd.options.mode.copy_on_write = True
+
+from cfg import ASSETS, CHECKPOINTS, EXPERIMENTS
+from finetune.model.finetuner_model import FinetunerModel
+
 
 FONT_FAMILY = "Serif"
 SYMBOL = ['cross', 'diamond-open', 'circle-dot', 'triangle-up-open', 'diamond-open', 'star-triangle-up']
@@ -75,7 +69,7 @@ class MathPlots:
 
             fig.add_trace(go.Scatter(x=df2['distance'], y=df2['percintile'],
                                      mode='lines',
-                                     name="uniform" if dataset.client.__contains__("linear") else "adjusted",
+                                     name="uniform" if "linear" in dataset.client else "adjusted",
                                      line=dict(width=5, color=colors[dataset.client], shape='spline'),
                                      )
                           )
