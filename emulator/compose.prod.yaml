@@ -6,7 +6,6 @@ services:
     command: --quiet
 
   web_app:
-    image: cv43nyu/allippe:web
     volumes:
       - /home/chris/logs/web:/app/logs
     deploy:
@@ -15,7 +14,6 @@ services:
           memory: 8G
 
   modbus_app:
-    image: modbus:1.0
     volumes:
       - /home/chris/logs/modbus:/app/logs
     deploy:
