@@ -16,7 +16,7 @@ def setup_logging():
                         datefmt='%Y-%m-%d %H:%M:%S')
 
 
-def start_server(address: str = "localhost", port: int = 502):
+def start_server(address: str = "localhost", port: int = 5020):
     setup_logging()
 
     logging.info("Starting Modbus Server")

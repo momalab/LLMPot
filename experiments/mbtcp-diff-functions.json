@@ -1,8 +1,8 @@
 {
   "model_type": "google",
   "model_name": "byt5-small",
-  "max_epochs": 100,
-  "patience": 5,
+  "max_epochs": 70,
+  "patience": 50,
   "datasets": [
     {
       "protocol": "mbtcp",

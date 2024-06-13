@@ -102,7 +102,7 @@ class Plots:
 
     def accuracy_per_epoch(self, colors: dict, labels: List):
         # names =["[-120, -60]", "[-90, -30]", "[30, 90]", "[60, 120]"]
-        names =["a-40_d-40", "a-100_d-100", "a-5000_d-5000"]
+        # names =["a-40_d-40", "a-100_d-100", "a-5000_d-5000"]
         dfs = pd.DataFrame()
         # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
         # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
@@ -119,7 +119,7 @@ class Plots:
             df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv")
             df.drop(columns=['csv-val_loss_step', 'csv-val_loss_epoch', 'csv-train_loss_step', 'csv-train_loss_epoch'], inplace=True)
             df.dropna(subset=["csv-accuracy/validator", "csv-accuracy/exact"], inplace=True)
-            df.loc[:, 'dataset'] = dataset.__str__()
+            df.loc[:, 'dataset'] = str(dataset)
             dfs = pd.concat([dfs, df])
 
         for metric in self._metrics:
@@ -151,7 +151,7 @@ class Plots:
                              zeroline=False, zerolinewidth=3, zerolinecolor='black', range=[0, 1.002]
                              )
 
-            # fig.show()
+            fig.show()
 
             os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
             fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{validation_type}.pdf")
@@ -235,11 +235,11 @@ class Plots:
 
 
 if __name__ == '__main__':
-    plot = Plots("mbtcp-protocol-test.json")
-    plot.accuracy_with_random_dataset()
+    # plot = Plots("mbtcp-protocol-test.json")
+    # plot.accuracy_with_random_dataset()
 
-    plot = Plots("s7comm-protocol-test.json")
-    plot.accuracy_with_random_dataset()
+    # plot = Plots("s7comm-protocol-test.json")
+    # plot.accuracy_with_random_dataset()
 
     # plot = Plots("s7comm-protocol-emulation.json")
     # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
@@ -252,6 +252,13 @@ if __name__ == '__main__':
     # labels = [dataset.size for dataset in plot._finetuner.datasets]
     # plot.accuracy_per_epoch(colors, labels)
     # plot.loss_per_epoch(colors, labels)
+
+    plot = Plots("mbtcp-diff-functions.json")
+    colors = {dataset.functions_str(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
+    labels = [dataset.functions_str() for dataset in plot._finetuner.datasets]
+    plot.accuracy_per_epoch(colors, labels)
+    plot.loss_per_epoch(colors, labels)
+
 
     # plot = Plots("mbtcp-icspatch-processes.json")
     # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
