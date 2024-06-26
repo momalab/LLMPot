@@ -1,9 +1,7 @@
 {
     "python.terminal.launchArgs": [],
     "sarif-viewer.connectToGithubCodeScanning": "off",
-    "cSpell.words": [
-        "mbtcp"
-    ],
+    "cSpell.enabled": false,
     "pylint.args": [
         "--disable=C0114",
         "--disable=C0115",

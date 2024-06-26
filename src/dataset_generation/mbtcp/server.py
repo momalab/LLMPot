@@ -1,5 +1,6 @@
 import argparse
 import multiprocessing
+import threading
 from typing import Tuple
 
 from pymodbus.datastore import ModbusServerContext, ModbusSlaveContext
@@ -27,20 +28,20 @@ class MbtcpServer:
         self._identity.ModelName = 'PFC200'
         self._identity.MajorMinorRevision = '03.01.02'
 
-    def run(self):
-        StartTcpServer(context=self._context, identity=self._identity, address=(self._ip, self._port))
-
     def start(self):
-        update_logic_thread = multiprocessing.Process(target=self.update_control_logic)
+        update_logic_thread = threading.Thread(target=self.update_control_logic, args=(self._context,))
+        update_logic_thread.daemon = True
         try:
+            print("Starting server.")
             update_logic_thread.start()
 
+            StartTcpServer(context=self._context, identity=self._identity, address=(self._ip, self._port))
         except KeyboardInterrupt:
             print("Server stopped by user.")
-            update_logic_thread.terminate()
             update_logic_thread.join()
 
-    def update_control_logic(self):
+    @staticmethod
+    def update_control_logic(context: ModbusServerContext):
         pass
 
 

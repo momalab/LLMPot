@@ -1,0 +1,11 @@
+- 1904 total requests
+
+- 691 valid Modbus requests (all function codes)
+
+- 646 are function codes [43, 1, 5, 15, 3, 6, 16]
+
+- 589 are device information [43]
+
+- 213 valid replies
+
+- 238 valid Modbus responses (all function codes)

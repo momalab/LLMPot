@@ -1,0 +1,22 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 100,
+  "patience": 15,
+  "target_max_token_len": 256,
+  "source_max_token_len": 256,
+  "batch_size": 8,
+  "datasets": [
+    {
+      "protocol": "mbtcp",
+      "size": 1600,
+      "context": 1
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 3200,
+      "context": 1
+    }
+
+  ]
+}

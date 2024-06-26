@@ -29,10 +29,11 @@ class MbtcpClient(ModbusTcpClient):
     def start_client(self):
         pass
 
-    def execute_functions(self):
+    def execute_functions(self, delay: float):
         self.connect()
         for function, args, kwargs in self._functions:
             response = function(*args, **kwargs)
+            time.sleep(delay)
             if not response:
                 print(f"Not received response to request: {function.__name__} and {args}")
             if function.__name__ == self.write_register.__name__:

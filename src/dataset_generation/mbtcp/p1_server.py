@@ -20,6 +20,7 @@ class P1Server(MbtcpServer):
 def main():
     ip, port = retrieve_args()
     server = P1Server(ip, port)
+    server.run()
     server.start()
 
 
