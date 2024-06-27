@@ -1,13 +1,10 @@
-import dis
 import json
-import traceback
-from unittest import result
+from typing import Tuple
 
 import pandas as pd
-from typing import Tuple
-from pymodbus.constants import Endian
-from pymodbus.payload import BinaryPayloadDecoder
-import sys
+
+from cfg import CHECKPOINTS
+
 
 def calculate_error_margin(path: str, file: str) -> Tuple[float, float, float]:
     with open(f"{path}/{file}.jsonl", "r") as data:
@@ -48,7 +45,7 @@ def calculate(df: pd.DataFrame, path: str, file: str) -> Tuple[float, float, flo
 
     results = pd.DataFrame(results_data)
     results.to_json(f"{path}/epsilon-{file}.jsonl", orient='records', lines=True)
-    results.query(f"distance != 'invalid'", inplace=True)
+    results.query("distance != 'invalid'", inplace=True)
     mean_value = results['distance'].sum() / len(results['distance'])
     std_dev = results['distance'].std()
     mean_percentage = results['percentage'].mean()
@@ -60,4 +57,4 @@ def calculate(df: pd.DataFrame, path: str, file: str) -> Tuple[float, float, flo
 
 
 if __name__ == "__main__":
-    calculate_error_margin(f"/media/shared/ICSPot/checkpoints/mbtcp-expo10_m-test.json/mbtcp-expo10_m_noise-c0-s1024/", "val_type_exact-model_mbtcp-expo10_m-c0-s1024")
+    calculate_error_margin(f"{CHECKPOINTS}/mbtcp-testbed.json/mbtcp-none-c1-s1600/", "")

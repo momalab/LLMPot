@@ -1,14 +1,17 @@
 import dis
 import json
+import sys
 import traceback
+from typing import Tuple
 from unittest import result
 
 import pandas as pd
-from typing import Tuple
 from param import Callable
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
-import sys
+
+from cfg import CHECKPOINTS
+
 
 def calculate_error_margin(path: str, file: str, output_registers: int, input_registers: int, func) -> Tuple[float, float, float]:
     with open(f"{path}/{file}.jsonl", "r") as data:
@@ -23,36 +26,44 @@ def calculate(df: pd.DataFrame, path: str, file: str, output_registers: int, inp
         if func == "int":
             if input_registers == 4:
                 input_func = BinaryPayloadDecoder.decode_64bit_int
-            else:
+            elif input_registers == 2:
                 input_func = BinaryPayloadDecoder.decode_32bit_int
+            else:
+                input_func = BinaryPayloadDecoder.decode_16bit_uint
             if output_registers == 4:
                 output_func = BinaryPayloadDecoder.decode_64bit_int
-            else:
+            elif output_registers == 2:
                 output_func = BinaryPayloadDecoder.decode_32bit_int
+            else:
+                output_func = BinaryPayloadDecoder.decode_16bit_uint
         else:
             if input_registers == 4:
                 input_func = BinaryPayloadDecoder.decode_64bit_float
-            else:
+            elif input_registers == 2:
                 input_func = BinaryPayloadDecoder.decode_32bit_float
+            else:
+                input_func = BinaryPayloadDecoder.decode_16bit_float
             if output_registers == 4:
                 output_func = BinaryPayloadDecoder.decode_64bit_float
-            else:
+            elif output_registers == 2:
                 output_func = BinaryPayloadDecoder.decode_32bit_float
+            else:
+                output_func = BinaryPayloadDecoder.decode_16bit_float
 
         distance = "invalid"
         percentage = "invalid"
         x, y, y_orig = "invalid", "invalid", "invalid"
+        context: str = row['context']
+        request: str = row['request']
+        response: str = row['response']
+        expected_response = row['expected_response']
         try:
-            context: str = row['context']
-            request: str = row['request']
-            response: str = row['response']
-            expected_response = row['expected_response']
 
             bytes.fromhex(response) # just check if it is a valid packet
 
-            reg_values = context.split(":")[0][-4*input_registers:]
-            context_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
-            context_chunks = [int(chunk, 16) for chunk in context_chunks]
+            # reg_values = context.split(":")[0][-4*input_registers:]
+            # context_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
+            # context_chunks = [int(chunk, 16) for chunk in context_chunks]
 
             reg_values = response[-4*output_registers:]
             response_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
@@ -62,11 +73,11 @@ def calculate(df: pd.DataFrame, path: str, file: str, output_registers: int, inp
             e_response_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
             e_response_chunks = [int(chunk, 16) for chunk in e_response_chunks]
 
-            x = BinaryPayloadDecoder.fromRegisters(context_chunks, Endian.BIG, wordorder=Endian.LITTLE)
+            # x = BinaryPayloadDecoder.fromRegisters(context_chunks, Endian.BIG, wordorder=Endian.LITTLE)
             y = BinaryPayloadDecoder.fromRegisters(response_chunks, Endian.BIG, wordorder=Endian.LITTLE)
             y_orig = BinaryPayloadDecoder.fromRegisters(e_response_chunks, Endian.BIG, wordorder=Endian.LITTLE)
 
-            x = input_func(x)
+            # x = input_func(x)
             y = output_func(y)
             y_orig = output_func(y_orig)
 
@@ -112,4 +123,4 @@ def calculate(df: pd.DataFrame, path: str, file: str, output_registers: int, inp
 
 
 if __name__ == "__main__":
-    calculate_error_margin(f"/media/shared/ICSPot/checkpoints/mbtcp-math-functions.json/mbtcp-cosh-c1-s4096/20240427T1812", "epoch-29_val_type-exact", 2, 2, "float")
+    calculate_error_margin(f"{CHECKPOINTS}/mbtcp-testbed.json/mbtcp-none-c1-s1600/20240626T1729", "epoch-99_val_type-exact", 1, 1, "int")

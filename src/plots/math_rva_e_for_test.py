@@ -110,5 +110,5 @@ class MathPlots:
 
 
 if __name__ == '__main__':
-    plot = MathPlots("mbtcp-sigmoid-test.json")
+    plot = MathPlots("mbtcp-testbed.json")
     plot.rva_e()

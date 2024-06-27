@@ -40,7 +40,7 @@ def main(experiment: str, resume: bool):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-cfg', default="mbtcp-diff-functions.json", required=False)
+    parser.add_argument('-cfg', default="mbtcp-testbed.json", required=False)
     parser.add_argument('-r', default=False, type=bool, required=False)
     args = parser.parse_args()
     main(args.cfg, args.r)

@@ -7,7 +7,7 @@ from cfg import DATASET_PARSED
 
 import matplotlib.pyplot as plt
 
-with open(f'{DATASET_PARSED}/lala/testbed.csv', 'r') as file:
+with open(f'{DATASET_PARSED}/mbtcp-testbed.json/mbtcp-testbed-sp80-c1-s1600.csv', 'r') as file:
     reader = csv.reader(file)
 
     next(reader)
@@ -40,5 +40,5 @@ plt.xticks(range(0, len(values_dict['time']), 100))
 plt.xlabel('Time')
 plt.ylabel('WS')
 plt.title('WS vs Time')
-plt.show()
-# plt.savefig('/Users/cv43/nyuad/source/ICSPot/src/dataset_generation/plot.pdf')
+# plt.show()
+plt.savefig('/Users/cv43/nyuad/source/ICSPot/src/dataset_generation/plot.pdf')
