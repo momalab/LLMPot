@@ -24,3 +24,4 @@ outputs/datasets/dumps
 outputs/validation_data
 
 checkpoints/
+dump/
