@@ -10,6 +10,24 @@
     {
       "protocol": "mbtcp",
       "size": 1600,
+      "client": "testbed-sp75",
+      "server": {
+        "name": "desalination"
+      },
+      "context": 1
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 3200,
+      "client": "testbed-sp75",
+      "server": {
+        "name": "desalination"
+      },
+      "context": 1
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 1600,
       "client": "testbed-sp80",
       "server": {
         "name": "desalination"
@@ -38,24 +56,6 @@
       "protocol": "mbtcp",
       "size": 3200,
       "client": "testbed-sp85",
-      "server": {
-        "name": "desalination"
-      },
-      "context": 1
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 1600,
-      "client": "testbed-sp90",
-      "server": {
-        "name": "desalination"
-      },
-      "context": 1
-    },
-    {
-      "protocol": "mbtcp",
-      "size": 3200,
-      "client": "testbed-sp90",
       "server": {
         "name": "desalination"
       },
