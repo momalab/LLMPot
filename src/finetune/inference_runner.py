@@ -9,41 +9,45 @@ from cfg import CHECKPOINTS, EXPERIMENTS
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
 
+class ModelLoader:
 
-def load_model(finetuner_model: FinetunerModel):
-    tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
-    model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id())
-    model = Byt5LightningModule.load_from_checkpoint(
-        checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment}/"
-                        f"{finetuner_model.the_name}/"
-                        f"{finetuner_model.start_datetime}/checkpoints/last.ckpt",
-        finetuner_model=finetuner_model,
-        tokenizer=tokenizer,
-        model=model,
-        test_dataset=None,
-        device_map="cuda:0"
-    )
-    model.eval()
-    model = model.to("cuda:0")
-    return model, tokenizer
+    def __init__(self, finetuner_cfg: FinetunerModel, cuda: int = 0) -> None:
+        self.finetuner_model = finetuner_cfg
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(cuda)
+
+    def load_model(self, finetuner_model: FinetunerModel):
+        tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
+        model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id(), device_map="cuda:0")
+        model = Byt5LightningModule.load_from_checkpoint(
+            checkpoint_path=f"{CHECKPOINTS}/{self.finetuner_model.experiment}/"
+                            f"{self.finetuner_model.the_name}/"
+                            f"{self.finetuner_model.start_datetime}/checkpoints/last.ckpt",
+            finetuner_model=self.finetuner_model,
+            tokenizer=tokenizer,
+            model=model_orig,
+            test_dataset=None,
+            device_map="cuda:0"
+        )
+        model.eval()
+        return model, tokenizer
 
 
-def predict(request: str, model, tokenizer):
-    input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True)
-    input_ids = input_ids.to("cuda:0")
-    with torch.no_grad():
-        logits = model.model.generate(input_ids,
-                                      num_beams=2,
-                                      max_length=512,
-                                      repetition_penalty=2.5,
-                                      length_penalty=1.0,
-                                      early_stopping=True,
-                                      top_p=0.95,
-                                      top_k=50,
-                                      num_return_sequences=1,
-                                      do_sample=True
-                                      ).to("cuda:0")
-        return tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+    def predict(self, request: str, model, tokenizer):
+        input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True)
+        input_ids = input_ids.to("cuda:0")
+        with torch.no_grad():
+            logits = model.model.generate(input_ids,
+                                        num_beams=2,
+                                        max_length=512,
+                                        repetition_penalty=2.5,
+                                        length_penalty=1.0,
+                                        early_stopping=True,
+                                        top_p=0.95,
+                                        top_k=50,
+                                        num_return_sequences=1,
+                                        do_sample=True
+                                        ).to("cuda:0")
+            return tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
 
 def main():
@@ -56,21 +60,22 @@ def main():
         print(finetuner_model.current_dataset)
         finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.the_name}")[0]
 
-    model, tokenizer = load_model(finetuner_model)
+    model_loader = ModelLoader(finetuner_model, 0)
+    model, tokenizer = model_loader.load_model(finetuner_model)
     before = time.time_ns()
-    result = predict("00610000000d00102025000306000063146314", model, tokenizer)
+    result = model_loader.predict("00610000000d00102025000306000063146314", model, tokenizer)
     after = time.time_ns()
     print(f"Time: {(after - before) / 1e6} ms")
     before = time.time_ns()
-    result = predict("00610000000d00102025000306000063146314", model, tokenizer)
+    result = model_loader.predict("00610000000d00102025000306000063146314", model, tokenizer)
     after = time.time_ns()
     print(f"Time: {(after - before) / 1e6} ms")
     before = time.time_ns()
-    result = predict("00610000000d00102025000306000063146314", model, tokenizer)
+    result = model_loader.predict("00610000000d00102025000306000063146314", model, tokenizer)
     after = time.time_ns()
     print(f"Time: {(after - before) / 1e6} ms")
     before = time.time_ns()
-    result = predict("00610000000d00102025000306000063146314", model, tokenizer)
+    result = model_loader.predict("00610000000d00102025000306000063146314", model, tokenizer)
     after = time.time_ns()
     print(f"Time: {(after - before) / 1e6} ms")
     print(result)
