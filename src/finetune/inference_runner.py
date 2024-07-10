@@ -38,7 +38,7 @@ class ModelLoader:
         with torch.no_grad():
             logits = model.model.generate(input_ids,
                                         num_beams=2,
-                                        max_length=512,
+                                        max_length=256,
                                         repetition_penalty=2.5,
                                         length_penalty=1.0,
                                         early_stopping=True,

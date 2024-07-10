@@ -92,8 +92,8 @@ def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: in
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-pcap', default="mbtcp-testbed-sp85-c1-s6400", required=False)
-    parser.add_argument('-csv', default="mbtcp-testbed-sp85-c1-s6400", required=False)
+    parser.add_argument('-pcap', default="mbtcp-testbed-sp65-c1-s3200", required=False)
+    parser.add_argument('-csv', default="mbtcp-testbed-sp65-c1-s3200", required=False)
     parser.add_argument('-p', default="502", type=int, required=False) #10200
     parser.add_argument('-layer', default="mbtcp", required=False) #tpkt
     parser.add_argument('-pr', default="mbtcp", required=False) #s7comm

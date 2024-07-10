@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 import plotly.io as pio
 from scipy import stats
 from scipy.stats import ks_2samp, levene, mannwhitneyu, pearsonr, spearmanr
+from sympy import li
 
 pio.kaleido.scope.mathjax = None
 
@@ -24,6 +25,7 @@ def make_plots(fig: go.Figure, experiment: str, csv_file: str, symbol: str = 'ci
         x: List[float] = []
         y: List[float] = []
         for row in orig_data:
+            # x.append(float(row[0].split('|')[0].split('-')[1]))
             x.append(float(row[0].split('|')[0]))
 
             hex_value = row[1][len(row[1])-4:]
@@ -37,10 +39,20 @@ def make_plots(fig: go.Figure, experiment: str, csv_file: str, symbol: str = 'ci
         return x, y
 
 
-def update_plot(fig: go.Figure, x, x_ai, spacing: int, experiment: str, csv_file: str):
+def update_plot(fig: go.Figure, x, x_ai, y, y_ai, experiment: str, csv_file: str, slots: List[int]):
+
+    # fig.add_shape(type="rect", opacity=0.2, x0=0, y0=32300, x1=slots[0], y1=32800, fillcolor="#C03221", line=dict(width=0))
+    # fig.add_annotation(x=slots[0] - slots[0]/2, y=32320, text="sp=80", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
+    # fig.add_shape(type="rect", opacity=0.2, x0=slots[0], y0=32300, x1=slots[1], y1=32800, fillcolor="#87BCDE", line=dict(width=0))
+    # fig.add_annotation(x=slots[1] - slots[0]/2, y=32320, text="sp=70", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
+    # fig.add_shape(type="rect", opacity=0.2, x0=slots[1], y0=32300, x1=slots[2], y1=32800, fillcolor="#C03221", line=dict(width=0))
+    # fig.add_annotation(x=slots[2] - slots[0]/2, y=32320, text="sp=85", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
+    # fig.add_shape(type="rect", opacity=0.2, x0=slots[2], y0=32300, x1=slots[3], y1=32800, fillcolor="#87BCDE", line=dict(width=0))
+    # fig.add_annotation(x=slots[3] - slots[0]/2, y=32320, text="sp=75", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
+
     fig.update_layout(
         xaxis_title='<b>Time(s)</b>',
-        yaxis_title='<b>Steam Flow Rate(kg/min)</b>',
+        yaxis_title='<b>Steam Flow Rate (kg/min)</b>',
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
         margin=dict(l=0, r=0, b=0, t=5, pad=0),
@@ -50,10 +62,10 @@ def update_plot(fig: go.Figure, x, x_ai, spacing: int, experiment: str, csv_file
     )
 
     fig.update_xaxes(showline=True, linewidth=1.5, linecolor='gray', gridcolor='gray', gridwidth=1, griddash="dot",
-                     zeroline=False, zerolinewidth=3, zerolinecolor='black'
+                     zeroline=False, zerolinewidth=3, zerolinecolor='black', range=[0, slots[3]+4]
                      )
     fig.update_yaxes(showline=True, linewidth=1.5, linecolor='gray', gridcolor='gray', gridwidth=1, griddash="dot",
-                     zeroline=False, zerolinewidth=3, zerolinecolor='black'
+                     zeroline=False, zerolinewidth=3, zerolinecolor='black', range=[min(y, y_ai), max(y, y_ai)]
                      )
 
     x = x + x_ai
@@ -63,14 +75,15 @@ def update_plot(fig: go.Figure, x, x_ai, spacing: int, experiment: str, csv_file
         xaxis=dict(
             tickmode='array',
             tickangle=30,
-            tickvals=x[::spacing],
-            ticktext=x[::spacing],
+            tickvals=[0, 20, 40, 60, 80],
+            ticktext=[0, 20, 40, 60, 80],
         )
     )
 
-    fig.show()
-    # os.makedirs(f"{ASSETS}/{experiment}", exist_ok=True)
-    # fig.write_image(f"{ASSETS}/{experiment}/{csv_file}.pdf")
+
+    # fig.show()
+    os.makedirs(f"{ASSETS}/{experiment}", exist_ok=True)
+    fig.write_image(f"{ASSETS}/{experiment}/{csv_file}.pdf")
 
 
 def strip_file_blank_space(experiment: str, filename: str):
@@ -103,19 +116,25 @@ def main():
     # strip_file_blank_space("mbtcp-testbed.json", "mbtcp-testbed-sp75-c1-s1600.csv_result.csv")
 
     run = 1
+    sizes = [1600, 3200]
+    # sizes = [3200]
+    slots = [20, 40, 60, 80]
+    # slots = [40, 80, 120, 160]
+
+    c = 1
 
     ks_arr = []
     p_arr = []
-    fig_p = go.Figure()
-    for sp in [75]:
-        for size in [6400]:
-            for run in range(12, 13):
+    # fig_p = go.Figure()
+    for sp in [70, 75, 80, 85]:
+        for size in sizes:
+            for run in range(1, 2):
                 opacity = 0.5
                 # print(f"Run: {run} - mbtcp-testbed-sp{sp}-c1-s{size}")
                 fig = go.Figure()
-                x, y = make_plots(fig, "mbtcp-testbed.json", f"mbtcp-testbed-sp{sp}-c1-s{size}")
-                x_ai, y_ai = make_plots(fig, "mbtcp-testbed.json", f"mbtcp-testbed-sp{sp}-c1-s{size}_result_run_{run}", symbol="cross", color=3, name='predicted', opacity=opacity)
-                update_plot(fig, x, x_ai, 400, "mbtcp-testbed.json", f"mbtcp-testbed-sp{sp}-c1-s{size}_result_run_{run}")
+                x, y = make_plots(fig, "mbtcp-testbed.json", f"mbtcp-testbed-sp{sp}-c{c}-s{size}")
+                x_ai, y_ai = make_plots(fig, "mbtcp-testbed.json", f"mbtcp-testbed-sp{sp}-c{c}-s{size}_result_run_{run}", symbol="cross", color=3, name='LLMPot', opacity=opacity)
+                update_plot(fig, x, x_ai, y, y_ai, "mbtcp-testbed.json", f"mbtcp-testbed-sp{sp}-c{c}-s{size}_result_run_{run}", slots)
                 ks, p = calculate_statistics(x, y, x_ai, y_ai)
                 ks_arr.append(ks)
                 p_arr.append(p)
@@ -125,36 +144,31 @@ def main():
             print(f"KS: {' & '.join(map(lambda x: f'{x:.5f}', ks_arr))}")
 
 
-            fig_p.add_trace(go.Scatter(x=[1,2,3,4,5,6,7,8,9,10], y=p_arr, mode='lines', name=f'sp: {sp} size: {size}', line_shape='spline'))
+            # fig_p.add_trace(go.Scatter(x=[1,2,3,4,5,6,7,8,9,10], y=p_arr, mode='lines', name=f'sp: {sp} size: {size}', line_shape='spline'))
+
+
 
             ks_arr = []
             p_arr = []
 
-    fig_p.add_shape(
-        type="line",
-        x0=1,
-        y0=0.05,
-        x1=10,
-        y1=0.05,
-        line=dict(color="black", width=2, dash="dash"),
-    )
+    # fig_p.add_shape(type="line", x0=0, y0=32500, x1=20, y1=32500, line=dict(color="#C03221", width=2))
 
-    fig_p.update_layout(
-        xaxis_title='<b>Time Iteration</b>',
-        yaxis_title='<b>P-value</b>',
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        margin=dict(l=0, r=0, b=0, t=5, pad=0),
-        font=dict(family=FONT_FAMILY, size=32, color="Black"),
-        xaxis=dict(type='linear', categoryorder='array'),
-        legend=dict(yanchor="top", y=1.12, xanchor="right", x=0.9, orientation='h', font=dict(family=FONT_FAMILY, size=28)),
-    )
-    fig_p.update_xaxes(showline=True, linewidth=1.5, linecolor='gray', gridcolor='gray', gridwidth=1, griddash="dot",
-                        zeroline=False, zerolinewidth=3, zerolinecolor='black'
-                        )
-    fig_p.update_yaxes(showline=True, linewidth=1.5, linecolor='gray', gridcolor='gray', gridwidth=1, griddash="dot",
-                        zeroline=False, zerolinewidth=3, zerolinecolor='black'
-                        )
+    # fig_p.update_layout(
+    #     xaxis_title='<b>Time Iteration</b>',
+    #     yaxis_title='<b>P-value</b>',
+    #     plot_bgcolor='rgba(0,0,0,0)',
+    #     paper_bgcolor='rgba(0,0,0,0)',
+    #     margin=dict(l=0, r=0, b=0, t=5, pad=0),
+    #     font=dict(family=FONT_FAMILY, size=32, color="Black"),
+    #     xaxis=dict(type='linear', categoryorder='array'),
+    #     legend=dict(yanchor="top", y=1.12, xanchor="right", x=0.9, orientation='h', font=dict(family=FONT_FAMILY, size=28)),
+    # )
+    # fig_p.update_xaxes(showline=True, linewidth=1.5, linecolor='gray', gridcolor='gray', gridwidth=1, griddash="dot",
+    #                     zeroline=False, zerolinewidth=3, zerolinecolor='black'
+    #                     )
+    # fig_p.update_yaxes(showline=True, linewidth=1.5, linecolor='gray', gridcolor='gray', gridwidth=1, griddash="dot",
+    #                     zeroline=False, zerolinewidth=3, zerolinecolor='black'
+    #                     )
     # fig_p.show()
 
 if __name__ == '__main__':
