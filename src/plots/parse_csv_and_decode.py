@@ -25,8 +25,8 @@ def make_plots(fig: go.Figure, experiment: str, csv_file: str, symbol: str = 'ci
         x: List[float] = []
         y: List[float] = []
         for row in orig_data:
-            # x.append(float(row[0].split('|')[0].split('-')[1]))
-            x.append(float(row[0].split('|')[0]))
+            x.append(float(row[0].split('|')[0].split('-')[1]))
+            # x.append(float(row[0].split('|')[0]))
 
             hex_value = row[1][len(row[1])-4:]
             decimal_value = int(hex_value, 16)
@@ -41,17 +41,17 @@ def make_plots(fig: go.Figure, experiment: str, csv_file: str, symbol: str = 'ci
 
 def update_plot(fig: go.Figure, x, x_ai, y, y_ai, experiment: str, csv_file: str, slots: List[int]):
 
-    # fig.add_shape(type="rect", opacity=0.2, x0=0, y0=32300, x1=slots[0], y1=32800, fillcolor="#C03221", line=dict(width=0))
-    # fig.add_annotation(x=slots[0] - slots[0]/2, y=32320, text="sp=80", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
-    # fig.add_shape(type="rect", opacity=0.2, x0=slots[0], y0=32300, x1=slots[1], y1=32800, fillcolor="#87BCDE", line=dict(width=0))
-    # fig.add_annotation(x=slots[1] - slots[0]/2, y=32320, text="sp=70", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
-    # fig.add_shape(type="rect", opacity=0.2, x0=slots[1], y0=32300, x1=slots[2], y1=32800, fillcolor="#C03221", line=dict(width=0))
-    # fig.add_annotation(x=slots[2] - slots[0]/2, y=32320, text="sp=85", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
-    # fig.add_shape(type="rect", opacity=0.2, x0=slots[2], y0=32300, x1=slots[3], y1=32800, fillcolor="#87BCDE", line=dict(width=0))
-    # fig.add_annotation(x=slots[3] - slots[0]/2, y=32320, text="sp=75", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
+    fig.add_shape(type="rect", opacity=0.2, x0=0, y0=32300, x1=slots[0], y1=32800, fillcolor="#C03221", line=dict(width=0))
+    fig.add_annotation(x=slots[0] - slots[0]/2, y=32320, text="sp=80", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
+    fig.add_shape(type="rect", opacity=0.2, x0=slots[0], y0=32300, x1=slots[1], y1=32800, fillcolor="#87BCDE", line=dict(width=0))
+    fig.add_annotation(x=slots[1] - slots[0]/2, y=32320, text="sp=70", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
+    fig.add_shape(type="rect", opacity=0.2, x0=slots[1], y0=32300, x1=slots[2], y1=32800, fillcolor="#C03221", line=dict(width=0))
+    fig.add_annotation(x=slots[2] - slots[0]/2, y=32320, text="sp=85", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
+    fig.add_shape(type="rect", opacity=0.2, x0=slots[2], y0=32300, x1=slots[3], y1=32800, fillcolor="#87BCDE", line=dict(width=0))
+    fig.add_annotation(x=slots[3] - slots[0]/2, y=32320, text="sp=75", showarrow=False, font=dict(size=22, color="black", family=FONT_FAMILY))
 
     fig.update_layout(
-        xaxis_title='<b>Time(s)</b>',
+        xaxis_title='<b>Time (s)</b>',
         yaxis_title='<b>Steam Flow Rate (kg/min)</b>',
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
@@ -116,17 +116,18 @@ def main():
     # strip_file_blank_space("mbtcp-testbed.json", "mbtcp-testbed-sp75-c1-s1600.csv_result.csv")
 
     run = 1
-    sizes = [1600, 3200]
-    # sizes = [3200]
+    # sizes = [6400, 12800]
+    sizes = [1600]
     slots = [20, 40, 60, 80]
     # slots = [40, 80, 120, 160]
 
-    c = 1
+    c = 2
 
     ks_arr = []
     p_arr = []
     # fig_p = go.Figure()
-    for sp in [70, 75, 80, 85]:
+    # for sp in [65, 70, 75, 80, 85]:
+    for sp in ["00"]:
         for size in sizes:
             for run in range(1, 2):
                 opacity = 0.5

@@ -54,7 +54,7 @@ fig.add_annotation(
     x=-0.07, y=0.5,
     showarrow=False,
     textangle=-90,  # Vertical text
-    font=dict(size=26)
+    font=dict(size=32)
 )
 
 # fig.show()
