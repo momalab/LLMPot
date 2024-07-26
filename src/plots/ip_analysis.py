@@ -24,7 +24,7 @@ print("Sum: ", sum(values))
 
 fig = make_subplots(rows=2, cols=1, shared_xaxes=True,
                     vertical_spacing=0.10,
-                    subplot_titles=('<b>Countries</b>', ''),
+                    # subplot_titles=('<b>Countries</b>', ''),
                     row_heights=[0.3, 0.7],
                     )
 fig.add_shape(type="line", xref="paper", yref="paper", x0=0, y0=0.695, x1=1, y1=0.695,
@@ -39,14 +39,17 @@ fig.update_annotations(font=dict(size=32))
 
 fig.update_layout(
     margin=dict(pad=0, r=0, b=0, t=35, l=100),
-    font=dict(family=FONT_FAMILY, size=26, color="Black"),
+    font=dict(family=FONT_FAMILY, size=32, color="Black"),
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     showlegend=False,
     width=1600,
-    height=400,
+    height=700,
     autosize=False,
+    xaxis_title="<b>Countries</b>",
 )
+
+fig.update_xaxes(tickfont=dict(size=26))
 
 fig.add_annotation(
     text='<b># Distinct IPs</b>',
