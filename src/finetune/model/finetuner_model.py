@@ -134,6 +134,8 @@ class FinetunerModel:
                 self.test_experiment = TestExperiment(**value)
             else:
                 setattr(self, key, value)
+        self.lora = eval(self.lora)
+        self.quantization = eval(self.quantization)
         self.checkpoints_dir = CHECKPOINTS
         self.log_output_dir = LOGS
         self.start_time = time.time()
@@ -147,12 +149,12 @@ class FinetunerModel:
 
     @property
     def the_name(self):
-        return self.current_dataset.__str__()
+        return str(self.current_dataset)
 
     def get_validation_filename(self, epoch: int, validation_type: str):
         if self.test_experiment:
             path = (f"{CHECKPOINTS}/{self.test_experiment.experiment}/{self.test_experiment.dataset}"
-                    f"/val_type_{validation_type}-model_{self.current_dataset.__str__()}.jsonl")
+                    f"/val_type_{validation_type}-model_{self.current_dataset}.jsonl")
         else:
             path = f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/epoch-{epoch}_val_type-{validation_type}.jsonl"
         os.makedirs(os.path.dirname(path), exist_ok=True)

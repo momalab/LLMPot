@@ -1,13 +1,14 @@
 import json
+from typing import List
 
 import torch
+import torch.distributed as dist
 from lightning.pytorch import LightningModule
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, DistributedSampler
-from transformers import PreTrainedModel, PreTrainedTokenizer, GenerationConfig
-import torch.distributed as dist
+from transformers import GenerationConfig, PreTrainedModel, PreTrainedTokenizer
 
-from cfg import EXPERIMENTS, CHECKPOINTS
+from cfg import CHECKPOINTS, EXPERIMENTS
 from finetune.model.finetuner_model import FinetunerModel
 from validation.mbtcp_validator import Validator
 from validation.model.result import Result
@@ -15,8 +16,7 @@ from validation.model.result import Result
 
 class Llama2LightningModule(LightningModule):
 
-    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel,
-                 test_dataset):
+    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, test_dataset):
         super().__init__()
         self._finetuner_model = finetuner_model
         self._test_dataset = test_dataset
@@ -27,19 +27,19 @@ class Llama2LightningModule(LightningModule):
         self._val_loss_const = finetuner_model.val_loss_const
         self._train_loss_const = finetuner_model.train_loss_const
 
-        self._accuracy: [float] = []
-        self._accuracy_exactly: [float] = []
+        self._accuracy: dict[str, List[float]] = {}
+        for validation_type in self._finetuner_model.validation:
+            self._accuracy[validation_type] = []
 
     def forward(self, input_ids, attention_mask, labels=None):
-        output = self._model(
+        output = self.model(
             input_ids=input_ids,
             attention_mask=attention_mask,
             labels=labels,
         )
-
         return output.loss, output.logits
 
-    def training_step(self, batch, batch_size):
+    def training_step(self, batch, batch_idx):
         loss, outputs = self(
             input_ids=batch["source_text_input_ids"],
             attention_mask=batch["source_text_attention_mask"],
@@ -49,7 +49,7 @@ class Llama2LightningModule(LightningModule):
         self.log(self._train_loss_const, loss, prog_bar=True, logger=True, on_epoch=True, on_step=True, sync_dist=True)
         return loss
 
-    def validation_step(self, batch, batch_size):
+    def validation_step(self, batch, batch_idx):
         loss, outputs = self(
             input_ids=batch["source_text_input_ids"],
             attention_mask=batch["source_text_attention_mask"],
@@ -62,50 +62,44 @@ class Llama2LightningModule(LightningModule):
     def on_train_end(self) -> None:
         self.model.save_pretrained(f"{CHECKPOINTS}/{self._finetuner_model.experiment}")
 
-    # def test_step(self, batch, batch_size):
-    #     micro = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "micro"), "micro")
-    #     exactly = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, "exactly"), "exactly")
-    #
-    #     self._accuracy.append(micro)
-    #     self._accuracy_exactly.append(exactly)
-    #
-    #     self.log("accuracy/micro", micro, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True,
-    #              sync_dist=True, on_epoch=True, on_step=False)
-    #     self.log("accuracy/none", exactly, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True,
-    #              sync_dist=True, on_epoch=True, on_step=False)
-    #
-    # def on_test_end(self) -> None:
-    #     micro = torch.tensor(self._accuracy, dtype=torch.float, device=self.device)
-    #     none = torch.tensor(self._accuracy_exactly, dtype=torch.float, device=self.device)
-    #     dist.all_reduce(micro, op=dist.ReduceOp.SUM)
-    #     dist.all_reduce(none, op=dist.ReduceOp.SUM)
-    #     micro = torch.mean(micro)
-    #     none = torch.mean(none)
-    #     micro /= dist.get_world_size()
-    #     none /= dist.get_world_size()
-    #
-    #     if self.global_rank == 0:
-    #         self.logger.experiment.add_scalars('accuracy', {'none': none, 'micro': micro}, self.current_epoch)
-    #
-    #     self._accuracy = []
-    #     self._accuracy_exactly = []
+    def test_step(self, batch, batch_size):
+        for validation_type in self._finetuner_model.validation:
+            validation = self.validate(batch, self._finetuner_model.get_validation_filename(self.current_epoch, validation_type), validation_type)
+
+            self._accuracy[validation_type].append(validation)
+
+            self.log(f"accuracy/{validation_type}", validation, batch_size=self._finetuner_model.batch_size, prog_bar=True, logger=True, sync_dist=True, on_epoch=True, on_step=False)
+
+    def on_test_end(self) -> None:
+        for validation_type in self._finetuner_model.validation:
+            validation = torch.tensor(self._accuracy[validation_type], dtype=torch.float, device=self.device)
+            dist.all_reduce(validation, op=dist.ReduceOp.SUM)
+            validation = torch.mean(validation)
+            validation /= dist.get_world_size()
+
+            if self.global_rank == 0:
+                self.logger.experiment.add_scalars('accuracy', {validation_type: validation}, self.current_epoch)
+
+            self._accuracy[validation_type] = []
 
     def configure_optimizers(self):
         return AdamW(self.parameters(), lr=0.0001)
 
-    # def test_dataloader(self) -> DataLoader:
-    #     return DataLoader(self._test_dataset, batch_size=self._finetuner_model.batch_size,
-    #                       shuffle=False, num_workers=2, sampler=DistributedSampler(self._test_dataset))
+    def test_dataloader(self) -> DataLoader:
+        return DataLoader(self._test_dataset, batch_size=self._finetuner_model.batch_size,
+                          shuffle=False, num_workers=self._finetuner_model.workers,
+                          sampler=DistributedSampler(self._test_dataset))
 
-    # def on_train_epoch_end(self) -> None:
-    #     test_set: DataLoader = self.test_dataloader()
-    #     self.model.eval()
-    #
-    #     for batch in test_set:
-    #         self.test_step(batch, self._finetuner_model.batch_size)
-    #
-    #     self.on_test_end()
-    #     self.model.train()
+    def on_train_epoch_end(self) -> None:
+        test_set: DataLoader = self.test_dataloader()
+        self.model.eval()
+
+        for batch in test_set:
+            self.test_step(batch, self._finetuner_model.batch_size)
+
+        self.on_test_end()
+
+        self.model.train()
 
     @property
     def model(self):
@@ -115,32 +109,10 @@ class Llama2LightningModule(LightningModule):
     def tokenizer(self):
         return self._tokenizer
 
-    """
-      generation_output = model.generate(
-            input_ids=input_ids,
-            generation_config=GenerationConfig(temperature=1.0, top_p=1.0, top_k=50, num_beams=1),
-            return_dict_in_generate=True,
-            output_scores=True,
-            max_new_tokens=256
-            check those attr
-
-    )
-    """
-
     def generate(self, input_str: str):
         input_ids = self._tokenizer.encode(input_str, return_tensors="pt", add_special_tokens=True).to(self.model.device)
         with torch.no_grad():
-            output = self.model.generate(input_ids,
-                                         num_beams=2,
-                                         max_length=512,
-                                         repetition_penalty=2.5,
-                                         length_penalty=1.0,
-                                         early_stopping=True,
-                                         top_p=0.95,
-                                         top_k=50,
-                                         num_return_sequences=1,
-                                         do_sample=True
-                                         )
+            output = self.model.generate(inputs=input_ids, max_length=256, temperature=0.7, num_beams=5, no_repeat_ngram_size=2, early_stopping=True)
 
             return self._tokenizer.batch_decode(output, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
@@ -170,7 +142,7 @@ class Llama2LightningModule(LightningModule):
 
                 except ValueError as exception:
                     to_save.valid = False
-                    to_save.error = exception.__str__()
+                    to_save.error = str(exception)
                 finally:
                     if to_save.valid:
                         valid = valid + 1
@@ -184,13 +156,13 @@ class Llama2LightningModule(LightningModule):
 
     @staticmethod
     def validate_choice(validation_type: str, question: str, response: str, expected_response: str, end_address: int):
-        if response != expected_response:
-            if validation_type == "micro":
-                try:
-                    validation = Validator(question, response, end_address)
-                    validation.check_header_ids()
-                    validation.check_payload()
-                except IndexError:
-                    raise ValueError("Invalid packet.")
-            else:
+        if validation_type == "validator":
+            try:
+                validation = Validator(question, response, expected_response, end_address)
+                validation.check_header_ids()
+                validation.check_payload()
+            except IndexError as exc:
+                raise ValueError("Invalid packet.") from exc
+        else:
+            if response != expected_response:
                 raise ValueError("Not same as expected.")

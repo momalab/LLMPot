@@ -111,7 +111,7 @@ class Byt5LightningModule(LightningModule):
     def generate(self, input_str: str):
         input_ids = self._tokenizer.encode(input_str, return_tensors="pt", add_special_tokens=True).to(self.model.device)
         with torch.no_grad():
-            output = self.model.generate(input_ids,
+            output = self.model.generate(inputs=input_ids,
                                          num_beams=2,
                                          max_length=self._finetuner_model.target_max_token_len,
                                          repetition_penalty=2.5,

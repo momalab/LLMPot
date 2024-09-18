@@ -13,27 +13,26 @@ class Llama2LightningDataModule(pl.LightningDataModule):
 
         self._batch_size = batch_size
         self._tokenizer = tokenizer
-        self._source_max_token_len = source_max_token_len
-        self._target_max_token_len = target_max_token_len
         self._num_workers = num_workers
         self._dataset = dataset
+
         self._train_dataset = Llama2Dataset(
             dataset["train"],
             self._tokenizer,
-            self._source_max_token_len,
-            self._target_max_token_len,
+            source_max_token_len,
+            target_max_token_len,
         )
         self._val_dataset = Llama2Dataset(
             dataset["val"],
             self._tokenizer,
-            self._source_max_token_len,
-            self._target_max_token_len,
+            source_max_token_len,
+            target_max_token_len,
         )
         self._test_dataset = Llama2Dataset(
             dataset["test"],
             self._tokenizer,
-            self._source_max_token_len,
-            self._target_max_token_len,
+            source_max_token_len,
+            target_max_token_len,
         )
 
     def train_dataloader(self):
@@ -44,4 +43,3 @@ class Llama2LightningDataModule(pl.LightningDataModule):
 
     def val_dataloader(self):
         return DataLoader(self._val_dataset, batch_size=self._batch_size, shuffle=False, num_workers=self._num_workers)
-    #
