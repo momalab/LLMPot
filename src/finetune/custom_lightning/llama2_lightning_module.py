@@ -3,12 +3,14 @@ from typing import List
 
 import torch
 import torch.distributed as dist
+from deepspeed.ops.adam import DeepSpeedCPUAdam
 from lightning.pytorch import LightningModule
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, DistributedSampler
-from transformers import GenerationConfig, PreTrainedModel, PreTrainedTokenizer
+from peft.peft_model import PeftModel
+from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from cfg import CHECKPOINTS, EXPERIMENTS
+from cfg import CHECKPOINTS
 from finetune.model.finetuner_model import FinetunerModel
 from validation.mbtcp_validator import Validator
 from validation.model.result import Result
@@ -16,7 +18,7 @@ from validation.model.result import Result
 
 class Llama2LightningModule(LightningModule):
 
-    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, test_dataset):
+    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel|PeftModel, finetuner_model: FinetunerModel, test_dataset):
         super().__init__()
         self._finetuner_model = finetuner_model
         self._test_dataset = test_dataset
@@ -83,7 +85,11 @@ class Llama2LightningModule(LightningModule):
             self._accuracy[validation_type] = []
 
     def configure_optimizers(self):
-        return AdamW(self.parameters(), lr=0.0001)
+        if self._finetuner_model.strategy == "deepspeed_stage_2_offload":
+            return DeepSpeedCPUAdam(self.parameters(), lr=0.0001)
+        else:
+            return AdamW(self.parameters(), lr=0.0001)
+
 
     def test_dataloader(self) -> DataLoader:
         return DataLoader(self._test_dataset, batch_size=self._finetuner_model.batch_size,
@@ -110,9 +116,9 @@ class Llama2LightningModule(LightningModule):
         return self._tokenizer
 
     def generate(self, input_str: str):
-        input_ids = self._tokenizer.encode(input_str, return_tensors="pt", add_special_tokens=True).to(self.model.device)
+        inputs = self._tokenizer(input_str, return_tensors="pt", add_special_tokens=True, padding=True, truncation=True, return_attention_mask=True).to(self.model.device)
         with torch.no_grad():
-            output = self.model.generate(inputs=input_ids, max_length=256, temperature=0.7, num_beams=5, no_repeat_ngram_size=2, early_stopping=True)
+            output = self.model.generate(inputs=inputs["input_ids"], max_length=256, temperature=0.7, num_beams=5, no_repeat_ngram_size=2, early_stopping=True, attention_mask=inputs['attention_mask'])
 
             return self._tokenizer.batch_decode(output, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 

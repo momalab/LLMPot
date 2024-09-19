@@ -1,6 +1,7 @@
 from datasets import Dataset, Features, Value, load_dataset
 from finetuner import Finetuner
-from transformers import PreTrainedModel, AutoTokenizer, AutoModelForCausalLM, PreTrainedTokenizer
+from transformers import PreTrainedModel, AutoTokenizer, AutoModelForCausalLM, PreTrainedTokenizer, PreTrainedTokenizerFast
+from peft.peft_model import PeftModel
 
 from cfg import DATASET_TEST, DATASET_TRAIN, DATASET_VAL
 from finetune.custom_lightning.llama2_lightning_data_module import \
@@ -38,7 +39,7 @@ class Llama2(Finetuner):
             'test': f"{DATASET_TEST}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}.csv"}, features=self._features)
         return dataset.rename_columns({'source_text': 'request', 'target_text': 'response'})
 
-    def _init_tokenizer(self) -> PreTrainedTokenizer:
+    def _init_tokenizer(self) -> PreTrainedTokenizer | PreTrainedTokenizerFast:
         tokenizer = AutoTokenizer.from_pretrained(
             self._finetuner_model.base_model_id(),
             device_map="sequential",
@@ -53,10 +54,13 @@ class Llama2(Finetuner):
 
         return tokenizer
 
-    def _init_model(self) -> PreTrainedModel:
+    def _init_model(self) -> PreTrainedModel | PeftModel:
         self._model = AutoModelForCausalLM.from_pretrained(self._finetuner_model.base_model_id(),
-                                                           quantization_config=self._quantization_config if self._use_quantization else None,
                                                            token="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"
                                                            )
+        self._model.gradient_checkpointing_enable()
+        self._model.config.use_cache = False
+        self._tokenizer.pad_token_id = self._tokenizer.eos_token_id
+
 
         return super()._init_model()

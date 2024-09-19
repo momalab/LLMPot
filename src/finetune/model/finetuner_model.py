@@ -2,84 +2,11 @@ import datetime
 import os
 import time
 from typing import List, Optional
+from lightning.fabric.plugins.precision.precision import _PRECISION_INPUT
 
 from cfg import CHECKPOINTS, LOGS
-
-
-class ServerModel:
-    name: str
-    coils: Optional[int]
-    registers: Optional[int]
-    markers: Optional[int]
-    datablock: Optional[int]
-
-    def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-    def __str__(self) -> str:
-        if hasattr(self, 'coils'):
-            return f"a-{self.coils}_d-{self.registers}"
-        elif hasattr(self, 'markers'):
-            return f"a-{self.markers}_d-{self.datablock}"
-        return f"a-{self.coils}_d-{self.registers}"
-
-
-
-class RangeModel:
-    low: int = 0
-    high: int = 15999 #65535
-
-    def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-    def __str__(self):
-        return f"{self.low}_{self.high}"
-
-
-class DatasetModel:
-    protocol: str
-    size: int
-    client: str
-    server: Optional[ServerModel] = None
-    context: int
-    functions: List[int] = []
-    values = RangeModel()
-    addresses = RangeModel()
-    multi_elements: int = 3
-
-    has_addresses: bool = False
-    has_values: bool = False
-
-    def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            if key == "values":
-                setattr(self, key, RangeModel(**value))
-                self.has_values = True
-            elif key == "addresses":
-                setattr(self, key, RangeModel(**value))
-                self.has_addresses = True
-            elif key == "server":
-                setattr(self, key, ServerModel(**value))
-            else:
-                setattr(self, key, value)
-
-    def functions_str(self, separator="_"):
-        if self.functions:
-            return f"{separator.join([str(x) for x in self.functions])}"
-        return ""
-
-    def __str__(self):
-        return (f"{self.protocol}-{self.client}-c{self.context}-s{self.size}" +
-                (f"-f{self.functions_str()}" if self.functions else "") +
-                (f"-v{self.values}" if self.has_values else "") +
-                (f"-a{self.addresses}" if self.has_addresses else "") +
-                (f"-sc{self.server.coils}" if self.server and hasattr(self.server, "coils") else "") +
-                (f"-sr{self.server.registers}" if self.server and hasattr(self.server, "registers") else "") +
-                (f"-sc{self.server.markers}" if self.server and hasattr(self.server, "markers") else "") +
-                (f"-sr{self.server.datablock}" if self.server and hasattr(self.server, "datablock") else "")
-                )
+from finetune.model.database_model import DatasetModel
+from finetune.model.lora import Lora
 
 
 class TestExperiment:
@@ -106,7 +33,7 @@ class FinetunerModel:
     batch_size: int = 8
     target_max_token_len = 512
     source_max_token_len = 512
-    precision: int = 32
+    precision: _PRECISION_INPUT = "32"
     workers: int = 2
 
     start_time: float
@@ -115,13 +42,13 @@ class FinetunerModel:
     checkpoints_dir: str
     log_output_dir: str
 
-    accelerator = "gpu"
+    lora: Lora
+
+    accelerator: str = "cuda"
     devices = len(str(os.getenv('CUDA_VISIBLE_DEVICES')).split(",")) if os.getenv('CUDA_VISIBLE_DEVICES') else 1
+    strategy: str = "ddp" #"deepspeed_stage_2_offload"
 
     validation = ["exact", "validator"]
-
-    lora: bool = False
-    quantization: bool = False
 
     val_loss_const: str = "val_loss"
     train_loss_const: str = "train_loss"
@@ -134,8 +61,6 @@ class FinetunerModel:
                 self.test_experiment = TestExperiment(**value)
             else:
                 setattr(self, key, value)
-        self.lora = eval(self.lora)
-        self.quantization = eval(self.quantization)
         self.checkpoints_dir = CHECKPOINTS
         self.log_output_dir = LOGS
         self.start_time = time.time()
@@ -159,13 +84,3 @@ class FinetunerModel:
             path = f"{CHECKPOINTS}/{self.experiment}/{self.the_name}/{self.start_datetime}/epoch-{epoch}_val_type-{validation_type}.jsonl"
         os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
-
-    @property
-    def s7comm_args(self):
-        if self.current_dataset.server:
-            return self.current_dataset.server.markers, self.current_dataset.server.datablock
-
-    @property
-    def mbtcp_args(self):
-        if self.current_dataset.server:
-            return self.current_dataset.server.coils, self.current_dataset.server.registers

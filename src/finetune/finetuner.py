@@ -1,4 +1,5 @@
 from abc import abstractmethod
+import re
 from typing import List
 
 from datasets import Dataset
@@ -6,27 +7,24 @@ from lightning import LightningDataModule, LightningModule, Trainer
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
 from lightning.pytorch.loggers.logger import Logger
 from peft.mapping import get_peft_model
+from peft.peft_model import PeftModel
 from peft.tuners.lora import LoraConfig
-from peft.utils.other import prepare_model_for_kbit_training
-from peft.utils.peft_types import TaskType
-import torch
-from transformers import BitsAndBytesConfig, PreTrainedModel, PreTrainedTokenizer
+from transformers import (BitsAndBytesConfig, PreTrainedModel,
+                          PreTrainedTokenizer)
 
 from cfg import OUTPUTS_DIR
 from finetune.callbacks.metrics_logger import MetricsLogger
 from finetune.model.finetuner_model import FinetunerModel
+from finetune.model.lora import Lora
 from utilities.logger import TheLogger
 
 
 class Finetuner:
     _tokenizer: PreTrainedTokenizer
-    _model: PreTrainedModel
+    _model: PreTrainedModel|PeftModel
 
     _quantization_config: BitsAndBytesConfig
     _lora_config: LoraConfig
-
-    _use_lora: bool
-    _use_quantization: bool
 
     _finetuner_model: FinetunerModel
     _start_time: float
@@ -40,10 +38,6 @@ class Finetuner:
         self._finetuner_model = finetuner_model
         self._logger = TheLogger(self._finetuner_model.__str__(), f"{OUTPUTS_DIR}/logs")
 
-        self._use_quantization = finetuner_model.quantization
-        self._quantization_config = self._init_quantization()
-
-        self._use_lora = finetuner_model.lora
         self._lora_config = self._init_lora_config()
 
         self._tokenizer = self._init_tokenizer()
@@ -58,41 +52,25 @@ class Finetuner:
         pass
 
     @abstractmethod
-    def _init_model(self) -> PreTrainedModel:
-        if self._use_quantization:
-            self._model.gradient_checkpointing_enable()
-            self._model = prepare_model_for_kbit_training(self._model, use_gradient_checkpointing=True)
-            self._model.config.use_cache = False
-
-        if self._use_lora:
-            self._model = get_peft_model(self._model, self._lora_config)
-
-            # accelerator = Accelerator(gradient_accumulation_steps=2)
-            # self._model = accelerator.prepare_model(self._model)
-            #
-            # self._model.is_parallelizable = True
-            # self._model.model_parallel = True
+    def _init_model(self) -> PreTrainedModel|PeftModel:
+        if hasattr(self._finetuner_model, "lora"):
+            if isinstance(self._model, PreTrainedModel):
+                self._model = get_peft_model(self._model, self._lora_config)
 
         return self._model
 
-    def _init_lora_config(self) -> LoraConfig:
-        return LoraConfig(
-            r=16,
-            lora_alpha=32,
-            target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "lm_head"],
-            bias="none",
-            lora_dropout=0.05,
-            task_type=TaskType.CAUSAL_LM,
-            inference_mode=False
-        )
-
-    def _init_quantization(self) -> BitsAndBytesConfig:
-        return BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_use_double_quant=True,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.bfloat16
-        )
+    def _init_lora_config(self) -> LoraConfig | None:
+        if hasattr(self._finetuner_model, "lora"):
+            return LoraConfig(
+                r=self._finetuner_model.lora.r,
+                lora_alpha=self._finetuner_model.lora.alpha,
+                target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "lm_head"],
+                bias="none",
+                lora_dropout=self._finetuner_model.lora.dropout,
+                task_type=self._finetuner_model.lora.task_type,
+                inference_mode=False
+            )
+        return None
 
     def train(self, loggers: List[Logger]):
         with open(f"{self._finetuner_model.log_output_dir}/{str(self._finetuner_model)}", "a") as f:
@@ -118,9 +96,11 @@ class Finetuner:
                               max_epochs=self._finetuner_model.max_epochs,
                               precision=self._finetuner_model.precision,
                               log_every_n_steps=1,
+                              accumulate_grad_batches=8,
                               accelerator=self._finetuner_model.accelerator,
                               devices=self._finetuner_model.devices,
-                              strategy="ddp")
+                              strategy=self._finetuner_model.strategy,
+                              )
             # if os.path.exists(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}"):
             #     trainer.fit(self._custom_module, self._data_module,
             #                 ckpt_path=f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.start_datetime}/checkpoints/last.ckpt")
