@@ -4,6 +4,7 @@ from typing import List
 import torch
 import torch.distributed as dist
 from lightning.pytorch import LightningModule
+from peft.peft_model import PeftModel
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, DistributedSampler
 from transformers import PreTrainedModel, PreTrainedTokenizer
@@ -15,7 +16,7 @@ from validation.model.result import Result
 
 class Byt5LightningModule(LightningModule):
 
-    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, test_dataset):
+    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel | PeftModel, finetuner_model: FinetunerModel, test_dataset):
         super().__init__()
         self._finetuner_model = finetuner_model
         self._test_dataset = test_dataset

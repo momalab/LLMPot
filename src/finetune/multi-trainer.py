@@ -1,46 +1,60 @@
 import argparse
+import datetime
 import json
 import os
 import sys
+import time
 
-from tqdm import tqdm
+from lightning.pytorch.loggers import CSVLogger, TensorBoardLogger
 
-from cfg import EXPERIMENTS, CHECKPOINTS
-from finetune import trainer
+from cfg import EXPERIMENTS
+from finetune.byt5 import Byt5
+from finetune.llama2 import Llama2
 from finetune.model.finetuner_model import FinetunerModel
 from utilities.logger import TheLogger
 
 
-def main(experiment: str, resume: bool):
+def main(model: str, experiment: str):
+    print(f"Experiment: {model}  / {experiment}")
+    with open(f"{EXPERIMENTS}/{model}/{experiment}", "r") as cfg:
+        config = cfg.read()
+        config = json.loads(config)
+        finetuner_model = FinetunerModel(experiment, **config)
 
-    try:
-        with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
-            config = cfg.read()
-            config = json.loads(config)
-            finetuner_model = FinetunerModel(**config)
-            finetuner_model.experiment = experiment
 
-        for dataset in tqdm(finetuner_model.datasets):
+    for dataset in finetuner_model.datasets:
+        try:
             finetuner_model.current_dataset = dataset
             log = TheLogger(str(finetuner_model), finetuner_model.log_output_dir)
-            if os.path.exists(f"{CHECKPOINTS}/{experiment}/{dataset}"):
+            if os.path.exists(f"{finetuner_model.experiment_dataset_result_path}/{finetuner_model.start_datetime}"):
                 log.warning(f'Experiment {dataset} already exists.')
-                if resume:
-                    log.info(f'Resuming {dataset} ...')
-                    finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{experiment}/{dataset}")[0]
-                else:
-                    continue
-            log.info(f'Fine tuning {dataset} ...')
-            trainer.main(finetuner_model)
-    except KeyboardInterrupt:
-        print("User interrupted the process.")
-        os.remove(f"{CHECKPOINTS}/{experiment}/{dataset}")
-        sys.exit(0)
+                continue
+            log.info(f'Fine tuning {dataset}, instance: {finetuner_model.start_datetime}')
+            log.info(f"Start time: {finetuner_model.start_time} - {datetime.datetime.fromtimestamp(finetuner_model.start_time)}")
+
+            tensor_logger = TensorBoardLogger(finetuner_model.experiment_result_path, name=finetuner_model.the_name, version=finetuner_model.start_datetime)
+            csv_logger = CSVLogger(finetuner_model.experiment_result_path, name=finetuner_model.the_name, version=f"csv/{finetuner_model.start_datetime}", prefix="csv")
+
+            if finetuner_model.model_type == "meta-llama":
+                finetuner = Llama2(finetuner_model)
+                finetuner.train([tensor_logger, csv_logger])
+            elif finetuner_model.model_type == "google":
+                finetuner = Byt5(finetuner_model)
+                finetuner.train([tensor_logger, csv_logger])
+
+            end_time = time.time()
+            log.info(f"End time: {end_time} - {datetime.datetime.fromtimestamp(end_time)}")
+            duration = end_time - finetuner_model.start_time
+            log.info(f"Duration: {duration}")
+            log.info(f"DurationTime: {datetime.timedelta(seconds=duration)}")
+        except KeyboardInterrupt:
+            print("User interrupted the process.")
+            sys.exit(1)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-cfg', default="mbtcp-testbed.json", required=False)
-    parser.add_argument('-r', default=False, type=bool, required=False)
+    parser.add_argument('-model', default="byt5-small", required=False)
+    parser.add_argument('-cfg', default="mbtcp-protocol-emulation.json", required=False)
     args = parser.parse_args()
-    main(args.cfg, args.r)
+    main(args.model, args.cfg)

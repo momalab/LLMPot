@@ -1,5 +1,5 @@
+import os
 from abc import abstractmethod
-import re
 from typing import List
 
 from datasets import Dataset
@@ -12,10 +12,10 @@ from peft.tuners.lora import LoraConfig
 from transformers import (BitsAndBytesConfig, PreTrainedModel,
                           PreTrainedTokenizer)
 
-from cfg import OUTPUTS_DIR
+from cfg import CHECKPOINTS, OUTPUTS_DIR
 from finetune.callbacks.metrics_logger import MetricsLogger
+from finetune.model import finetuner_model
 from finetune.model.finetuner_model import FinetunerModel
-from finetune.model.lora import Lora
 from utilities.logger import TheLogger
 
 
@@ -24,7 +24,7 @@ class Finetuner:
     _model: PreTrainedModel|PeftModel
 
     _quantization_config: BitsAndBytesConfig
-    _lora_config: LoraConfig
+    _lora_config: LoraConfig | None
 
     _finetuner_model: FinetunerModel
     _start_time: float
@@ -33,9 +33,10 @@ class Finetuner:
     _data_module: LightningDataModule
 
     _logger: TheLogger
+    _trainer: Trainer
 
-    def __init__(self, finetuner_model: FinetunerModel):
-        self._finetuner_model = finetuner_model
+    def __init__(self, model: FinetunerModel):
+        self._finetuner_model = model
         self._logger = TheLogger(self._finetuner_model.__str__(), f"{OUTPUTS_DIR}/logs")
 
         self._lora_config = self._init_lora_config()
@@ -53,7 +54,7 @@ class Finetuner:
 
     @abstractmethod
     def _init_model(self) -> PreTrainedModel|PeftModel:
-        if hasattr(self._finetuner_model, "lora"):
+        if hasattr(self._finetuner_model, "lora") and self._lora_config is not None:
             if isinstance(self._model, PreTrainedModel):
                 self._model = get_peft_model(self._model, self._lora_config)
 
@@ -73,36 +74,40 @@ class Finetuner:
         return None
 
     def train(self, loggers: List[Logger]):
-        with open(f"{self._finetuner_model.log_output_dir}/{str(self._finetuner_model)}", "a") as f:
-            checkpoint_callback = ModelCheckpoint(
-                monitor=self._finetuner_model.val_loss_const,
-                filename='best-{epoch}',
-                save_top_k=1,
-                save_last=True,
-                mode='min',
-                auto_insert_metric_name=False
-            )
-            callbacks = [checkpoint_callback, MetricsLogger()]
+        checkpoint_callback = ModelCheckpoint(
+            monitor=self._finetuner_model.val_loss_const,
+            filename='best-{epoch}',
+            save_top_k=1,
+            save_last=True,
+            mode='min',
+            auto_insert_metric_name=False
+        )
+        callbacks = [checkpoint_callback, MetricsLogger()]
 
-            if self._finetuner_model.patience > 0:
-                early_stop_callback = EarlyStopping(monitor=self._finetuner_model.val_loss_const, min_delta=0.00,
-                                                    patience=self._finetuner_model.patience, verbose=True, mode="min",
-                                                    log_rank_zero_only=True)
+        if self._finetuner_model.patience > 0:
+            early_stop_callback = EarlyStopping(monitor=self._finetuner_model.val_loss_const, min_delta=0.00,
+                                                patience=self._finetuner_model.patience, verbose=True, mode="min",
+                                                log_rank_zero_only=True)
 
-                callbacks.append(early_stop_callback)
+            callbacks.append(early_stop_callback)
 
-            trainer = Trainer(logger=loggers,
-                              callbacks=callbacks,
-                              max_epochs=self._finetuner_model.max_epochs,
-                              precision=self._finetuner_model.precision,
-                              log_every_n_steps=1,
-                              accumulate_grad_batches=8,
-                              accelerator=self._finetuner_model.accelerator,
-                              devices=self._finetuner_model.devices,
-                              strategy=self._finetuner_model.strategy,
-                              )
-            # if os.path.exists(f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}"):
-            #     trainer.fit(self._custom_module, self._data_module,
-            #                 ckpt_path=f"{CHECKPOINTS}/{self._finetuner_model.experiment}/{self._finetuner_model.current_dataset}/{self._finetuner_model.start_datetime}/checkpoints/last.ckpt")
-            # else:
-            trainer.fit(self._custom_module, self._data_module)
+        self._trainer = Trainer(logger=loggers,
+                            callbacks=callbacks,
+                            max_epochs=self._finetuner_model.max_epochs,
+                            precision=self._finetuner_model.precision,
+                            log_every_n_steps=1,
+                            # accumulate_grad_batches=8,
+                            accelerator=self._finetuner_model.accelerator,
+                            devices=self._finetuner_model.devices,
+                            strategy=self._finetuner_model.strategy,
+                            )
+        if os.path.exists(self._finetuner_model.experiment_dataset_result_path) \
+            and not os.path.exists(self._finetuner_model.experiment_instance_status_result_path) \
+                and os.path.exists(self._finetuner_model.experiment_instance_last_result_path):
+            self._trainer.fit(self._custom_module, self._data_module, ckpt_path=self._finetuner_model.experiment_instance_last_result_path)
+        else:
+            self._trainer.fit(self._custom_module, self._data_module)
+
+    @property
+    def trainer(self):
+        return self._trainer

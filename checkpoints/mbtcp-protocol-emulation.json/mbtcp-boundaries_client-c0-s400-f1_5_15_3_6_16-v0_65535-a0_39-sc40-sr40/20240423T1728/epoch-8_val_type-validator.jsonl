@@ -1,5 +1,0 @@
-{"valid": false, "error": "num_registers: 0, expected: 1", "context": "", "request": "014600000006000300260001", "response": "0146000000060003002", "expected_response": "0146000000050003027ce8"}
-{"valid": false, "error": "Trans_ID: ['03', '60'], expected: ['00', '66']", "context": "", "request": "00660000000600052a0cff00", "response": "0360000000200052a0cff00", "expected_response": "006600000003008502"}
-{"valid": false, "error": "Trans_ID: ['0b', '00'], expected: ['00', '0b']", "context": "", "request": "000b00000006000300220002", "response": "0b00000003002", "expected_response": "000b0000000700030400000000"}
-{"valid": false, "error": "Trans_ID: ['0c', 'b0'], expected: ['00', 'cb']", "context": "", "request": "00cb00000006000300000002", "response": "0cb00000006000300000002", "expected_response": "00cb0000000700030400006801"}
-{"valid": false, "error": "Should have thrown an exception since requested address: 37324 exceeds: 39", "context": "", "request": "012d00000006000591ccff00", "response": "012d00000006000591ccff003", "expected_response": "012d00000003008502"}
