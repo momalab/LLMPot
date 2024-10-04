@@ -55,7 +55,9 @@ class FinetunerModel:
 
     def __init__(self, experiment: str, **kwargs):
         for key, value in kwargs.items():
-            if key == "datasets":
+            if key == "lora":
+                self.lora = Lora(**value)
+            elif key == "datasets":
                 self.datasets = [DatasetModel(**x) for x in value]
             elif key == "test_experiment":
                 self.test_experiment = TestExperiment(**value)

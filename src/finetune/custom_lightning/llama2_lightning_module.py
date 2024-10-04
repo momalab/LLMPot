@@ -138,7 +138,6 @@ class Llama2LightningModule(LightningModule):
                 try:
                     question = request
                     response = self.generate(question)
-                    print(response)
                     if "|" in request:
                         question = request[request.rindex("|") + 1:len(request)]
                         context = request[:request.rindex("|")]
