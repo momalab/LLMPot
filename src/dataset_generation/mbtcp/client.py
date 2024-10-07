@@ -29,7 +29,7 @@ class MbtcpClient(ModbusTcpClient):
     def start_client(self):
         pass
 
-    def execute_functions(self, delay: float):
+    def execute_functions(self, delay: float = 0):
         self.connect()
         for function, args, kwargs in self._functions:
             response = function(*args, **kwargs)

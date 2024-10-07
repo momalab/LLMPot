@@ -17,9 +17,9 @@ from finetune.model.finetuner_model import FinetunerModel
 
 def parse_packets(port: int, protocol: str, context_length: int, output_filename: str, experiment: str):
     if protocol == "s7comm":
-        parse_with_file(protocol, "tpkt", port, "temp", output_filename, context_length, experiment)
+        parse_with_file(protocol, "tpkt", port, "temp", output_filename, context_length, False, experiment)
     else:
-        parse_with_file(protocol, protocol, port, "temp", output_filename, context_length, experiment)
+        parse_with_file(protocol, protocol, port, "temp", output_filename, context_length, False, experiment)
     split(output_filename, experiment)
 
 
@@ -31,12 +31,12 @@ def server(ip: str, port: int, finetuner_model: FinetunerModel, args: Any, serve
     server_inst.run()
 
 
-async def main(ip: str, port: int, interface: str, experiment: str, overwrite: bool = False):
+async def main(ip: str, port: int, interface: str, model: str, experiment: str, overwrite: bool = False):
     try:
-        with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
+        with open(f"{EXPERIMENTS}/{model}/{experiment}", "r") as cfg:
             config = cfg.read()
             config = json.loads(config)
-            finetuner_model = FinetunerModel(**config)
+            finetuner_model = FinetunerModel(experiment, **config)
             finetuner_model.experiment = experiment
 
         for dataset in finetuner_model.datasets:
@@ -58,19 +58,19 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
 
             tcpdump_process = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
 
-            args = getattr(finetuner_model, f"{finetuner_model.current_dataset.protocol}_args")
+            args = getattr(finetuner_model.current_dataset, f"{finetuner_model.current_dataset.protocol}_args")
             server_inst = server_class(ip, port, *args)
 
             server_thread = Process()
-            update_thread = Process()
+            # update_thread = Process()
             if finetuner_model.datasets[0].protocol == "mbtcp":
-                server_thread = Process(target=server_inst.run, daemon=True)
+                server_thread = Process(target=server_inst.start, daemon=True)
                 server_thread.start()
 
-                update_thread = Process(target=server_inst.update_control_logic, daemon=True)
-                update_thread.start()
+                # update_thread = Process(target=server_inst.update_control_logic, daemon=True)
+                # update_thread.start()
 
-            time.sleep(2)
+            time.sleep(10)
 
             client_inst = client_class(ip, port,
                                        finetuner_model.current_dataset.size,
@@ -86,8 +86,8 @@ async def main(ip: str, port: int, interface: str, experiment: str, overwrite: b
             thread.join()
 
             if finetuner_model.datasets[0].protocol == "mbtcp":
-                update_thread.terminate()
-                update_thread.join()
+                # update_thread.terminate()
+                # update_thread.join()
 
                 server_thread.terminate()
                 server_thread.join()
@@ -113,17 +113,19 @@ def init():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="127.0.0.1", type=str, required=False)
     parser.add_argument('-p', default=5020, type=int, required=False)
-    parser.add_argument('-intrf', default="lo", type=str, required=False)
-    parser.add_argument('-exp', default="mbtcp-diff-functions.json", type=str, required=False)
+    parser.add_argument('-intrf', default="lo0", type=str, required=False)
+    parser.add_argument('-model', default="Llama-3.2-1B", type=str, required=False)
+    parser.add_argument('-exp', default="mbtcp-protocol-emulation-big.json", type=str, required=False)
     parser.add_argument('-o', default=False, type=bool, required=False)
     args = parser.parse_args()
 
     server_address = args.ip
     server_port = args.p
     interface = args.intrf
+    model = args.model
     experiment = args.exp
 
-    asyncio.run(main(ip=server_address, port=server_port, interface=interface, experiment=experiment, overwrite=args.o))
+    asyncio.run(main(ip=server_address, port=server_port, interface=interface, model=model, experiment=experiment, overwrite=args.o))
 
 
 if __name__ == '__main__':

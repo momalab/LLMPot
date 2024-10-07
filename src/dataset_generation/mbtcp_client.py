@@ -63,17 +63,17 @@ class MbtcpClient:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
-    parser.add_argument('-p', default=5020, required=False)
-    parser.add_argument('-num', default=2, required=False)
-    parser.add_argument('-c', default="False", required=False)
-    parser.add_argument('-fun', default=6, required=False)
+    parser.add_argument('-p', type=int, default=5020, required=False)
+    parser.add_argument('-num', type=int, default=2, required=False)
+    parser.add_argument('-c', type=bool, default=False, required=False)
+    parser.add_argument('-fun', type=int, default=6, required=False)
     args = parser.parse_args()
 
     server_address = args.ip
-    server_port = int(args.p)
-    samples_num = int(args.num)
-    has_context = eval(args.c)
-    function_code = int(args.fun)
+    server_port = args.p
+    samples_num = args.num
+    has_context = args.c
+    function_code = args.fun
 
     mbtcp_client = MbtcpClient(server_address, server_port)
     mbtcp_client.start_client(samples_num, has_context, function_code)

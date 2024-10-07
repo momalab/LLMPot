@@ -3,7 +3,7 @@ from typing import List, Callable, Any
 
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
 from dataset_generation.utils import value_generator
-from finetune.model.finetuner_model import RangeModel
+from finetune.model.range_model import RangeModel
 
 # def execute(m_elem, addr_low, addr_high, max_addr, val_low, val_high):
 #     i = 0
@@ -134,7 +134,6 @@ class BoundariesClient(MbtcpClient):
             functions.extend(coils_functions_multiple_exceptions)
             functions.extend(register_functions_exceptions)
             functions.extend(register_functions_multiple_exceptions)
-            print(len(functions))
 
         random.shuffle(functions)
         functions = functions[:self._samples_num]
