@@ -4,6 +4,7 @@ from typing import List
 import torch
 import torch.distributed as dist
 from lightning.pytorch import LightningModule
+from peft.peft_model import PeftModel
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, DistributedSampler
 from transformers import PreTrainedModel, PreTrainedTokenizer
@@ -15,7 +16,7 @@ from validation.model.result import Result
 
 class Byt5LightningModule(LightningModule):
 
-    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, finetuner_model: FinetunerModel, test_dataset):
+    def __init__(self, tokenizer: PreTrainedTokenizer, model: PreTrainedModel | PeftModel, finetuner_model: FinetunerModel, test_dataset):
         super().__init__()
         self._finetuner_model = finetuner_model
         self._test_dataset = test_dataset
@@ -111,7 +112,7 @@ class Byt5LightningModule(LightningModule):
     def generate(self, input_str: str):
         input_ids = self._tokenizer.encode(input_str, return_tensors="pt", add_special_tokens=True).to(self.model.device)
         with torch.no_grad():
-            output = self.model.generate(input_ids,
+            output = self.model.generate(inputs=input_ids,
                                          num_beams=2,
                                          max_length=self._finetuner_model.target_max_token_len,
                                          repetition_penalty=2.5,

@@ -20,7 +20,6 @@ class Llama2Dataset(Dataset):
         data_row = self._data[index]
 
         source_text_encoding = self._tokenizer(
-            #data_row["source_text"],
             data_row["request"],
             max_length=self._source_max_token_len,
             padding="max_length",
@@ -31,7 +30,6 @@ class Llama2Dataset(Dataset):
         )
 
         target_text_encoding = self._tokenizer(
-            #data_row["target_text"],
             data_row["response"],
             max_length=self._target_max_token_len,
             padding="max_length",
@@ -49,6 +47,3 @@ class Llama2Dataset(Dataset):
             source_text_attention_mask=source_text_encoding["attention_mask"].flatten(),
             labels=labels.flatten(),
         )
-    
-    def f():
-        pass  

@@ -16,8 +16,8 @@ def get_ip_info(ip):
 
 # df1 = pd.read_csv('ips.csv', header=None)
 df2 = pd.read_csv('ips.csv')
-print(len(df2))
-exit()
+# print(len(df2))
+# exit()
 access_token = '0ebf08812946ec'
 handler = ipinfo.getHandler(access_token)
 

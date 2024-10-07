@@ -8,6 +8,10 @@ from transformers import ByT5Tokenizer, T5ForConditionalGeneration, AutoTokenize
 from cfg import OUTPUTS_DIR, EXPERIMENTS, CHECKPOINTS
 from finetune.model.finetuner_model import FinetunerModel
 
+import torch
+import torch.nn.utils.prune as prune
+import torch.nn as nn
+
 
 class Inference:
 

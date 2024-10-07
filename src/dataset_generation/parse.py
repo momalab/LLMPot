@@ -84,7 +84,7 @@ def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: in
             with open(f"{DATASET_PARSED}/{experiment}/{csv_filename}.csv", "w") as csv_context:
                 csv_context.write(f"{SOURCE_TEXT},{TARGET_TEXT}\n")
                 for i in range(0, len(dataset_df)):
-                    csv_context.write(f"{'%.1f' % (dataset_df[SOURCE_TEXT][i]['offset'])}|{dataset_df[SOURCE_TEXT][i]['packet']}:,{dataset_df[TARGET_TEXT][i]}\n")
+                    csv_context.write(f"{'%.2f' % (dataset_df[SOURCE_TEXT][i]['offset'])}|{dataset_df[SOURCE_TEXT][i]['packet']}:,{dataset_df[TARGET_TEXT][i]}\n")
 
         else:
             dataset_df.to_csv(f"{DATASET_PARSED}/{experiment}/{csv_filename}.csv", index=False)
@@ -92,8 +92,8 @@ def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: in
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-pcap', default="mbtcp-testbed-sp90-s3200", required=False)
-    parser.add_argument('-csv', default="mbtcp-testbed-sp90-s3200", required=False)
+    parser.add_argument('-pcap', default="mbtcp-testbed-sp65-c1-s3200", required=False)
+    parser.add_argument('-csv', default="mbtcp-testbed-sp65-c1-s3200", required=False)
     parser.add_argument('-p', default="502", type=int, required=False) #10200
     parser.add_argument('-layer', default="mbtcp", required=False) #tpkt
     parser.add_argument('-pr', default="mbtcp", required=False) #s7comm

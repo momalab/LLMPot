@@ -23,7 +23,7 @@ def split(csv: str, experiment: str):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-csv', default="mbtcp-testbed-sp85-c1-s3200", required=False)
+    parser.add_argument('-csv', default="mbtcp-testbed-sp65-c1-s3200", required=False)
     parser.add_argument('-exp', default="mbtcp-testbed.json", required=False)
     args = parser.parse_args()
 

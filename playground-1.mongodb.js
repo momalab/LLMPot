@@ -36,3 +36,4 @@ db.Client.aggregate([
 // db.Client.find({first_contact: { $gt: new Date("2024-08-01T00:00:00Z") }});
 
 // db.Request.count()
+db.Client.find()

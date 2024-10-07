@@ -37,7 +37,7 @@ async def query():
         {
             "$match": {
                 "numberOfRequests": {"$gt": 1},
-                "first_contact": {"$gt": datetime.strptime('2024-05-01T00:00:00Z', '%Y-%m-%dT%H:%M:%SZ')}
+                "first_contact": {"$gt": datetime.strptime('2023-05-01T00:00:00Z', '%Y-%m-%dT%H:%M:%SZ')}
             }
         },
         {
@@ -55,7 +55,7 @@ async def query():
     # clients = await Client.aggregate(pipeline).to_list(None)
     # clients = await Client.find_all().to_list(None)
     # requests = await Request.find_all().to_list(None)
-    specific_datetime = datetime(2024, 6, 10, 0, 0, 0)
+    specific_datetime = datetime(2023, 6, 10, 0, 0, 0)
     requests = await Request.find(Request.request_time > specific_datetime).to_list()
     print(f"Number of clients: {len(requests)}")
     total = len(requests)
@@ -110,7 +110,7 @@ def validate_modbus_tcp_request(hex_str: str):
     func_code = message_bytes[7]
     valid_func_codes = [43]
     # valid_func_codes = [43, 1, 5, 15, 3, 6, 16]
-    # valid_func_codes.extend([2, 4, 7, 8, 17, 20, 21, 22, 23, 24])
+    valid_func_codes.extend([2, 4, 7, 8, 17, 20, 21, 22, 23, 24])
     if func_code not in valid_func_codes:
         return False, f"Invalid function code: {func_code}"
 
