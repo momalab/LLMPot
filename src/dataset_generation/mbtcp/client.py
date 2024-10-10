@@ -1,8 +1,10 @@
 import argparse
 import random
+import re
 import time
 from typing import Tuple, List
 
+import numpy as np
 from pymodbus.client import ModbusTcpClient
 
 from dataset_generation.mbtcp.invalid_function import MbtcpCustomInvalidFunctionRequest
@@ -20,6 +22,16 @@ class MbtcpClient(ModbusTcpClient):
         self._functions = []
         self._codes = codes
 
+        extra_samples_num = samples_num // 100
+        samples = np.random.uniform(0, 65535, samples_num - extra_samples_num)
+        samples_list = samples.tolist()
+
+        samples_list.extend([0] * extra_samples_num)
+        samples_list.extend([65535] * extra_samples_num)
+        random.shuffle(samples_list)
+
+        self.transaction_ids: List[int] = samples_list
+
     def illegal_function(self):
         valid_function_code = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
         false_function_code = random.choice([x for x in range(0, 254) if x not in valid_function_code])
@@ -32,7 +44,9 @@ class MbtcpClient(ModbusTcpClient):
     def execute_functions(self, delay: float = 0):
         self.connect()
         for function, args, kwargs in self._functions:
-            response = function(*args, **kwargs)
+            request = function(*args, **kwargs)
+            self.transaction.tid = self.transaction_ids.pop()
+            response = self.execute(request)
             time.sleep(delay)
             if not response:
                 print(f"Not received response to request: {function.__name__} and {args}")

@@ -9,8 +9,8 @@ from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 
 import pdb
 
-SERVER_HOST = "10.224.33.30"
-# SERVER_HOST = "localhost"
+# SERVER_HOST = "10.224.33.30"
+SERVER_HOST = "91.230.41.210"
 
 client: ModbusTcpClient = ModbusTcpClient(SERVER_HOST, 502)
 
@@ -104,7 +104,7 @@ log = logging.getLogger()
 log.setLevel(logging.DEBUG)
 
 try:
-    function_code, address, num_elements, data_to_write, single_data_to_write = 16, 0, 2, [-1], 1
+    function_code, address, num_elements, data_to_write, single_data_to_write = 3, 0, 1, [-1], 1
 
     if function_code == 1:  # Read Coils (FC 01)
         read_data("Coils", address, 1, num_elements)

@@ -42,7 +42,7 @@ async def main(ip: str, port: int, interface: str, model: str, experiment: str, 
         for dataset in finetuner_model.datasets:
             print(f'Experiment {dataset} running...')
 
-            if os.path.exists(f"{DATASET_PARSED}/{dataset}.csv") and overwrite is False:
+            if os.path.exists(f"{DATASET_PARSED}/{experiment}/{dataset}.csv") and overwrite is False:
                 print(f'Experiment {dataset} already exists. Skipping...')
                 continue
             elif overwrite:
@@ -113,9 +113,9 @@ def init():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="127.0.0.1", type=str, required=False)
     parser.add_argument('-p', default=5020, type=int, required=False)
-    parser.add_argument('-intrf', default="lo0", type=str, required=False)
+    parser.add_argument('-intrf', default="lo", type=str, required=False)
     parser.add_argument('-model', default="Llama-3.2-1B", type=str, required=False)
-    parser.add_argument('-exp', default="mbtcp-protocol-emulation-big.json", type=str, required=False)
+    parser.add_argument('-exp', default="mbtcp-protocol-emulation-2.json", type=str, required=False)
     parser.add_argument('-o', default=False, type=bool, required=False)
     args = parser.parse_args()
 

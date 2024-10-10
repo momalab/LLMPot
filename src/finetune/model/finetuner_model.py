@@ -106,7 +106,7 @@ class FinetunerModel:
 
     @property
     def experiment_instance_last_result_path(self):
-        return f"{self.experiment_instance_result_path}/checkpoint/last.ckpt"
+        return f"{self.experiment_instance_result_path}/checkpoints/last.ckpt"
 
     @property
     def experiment_instance_status_result_path(self):

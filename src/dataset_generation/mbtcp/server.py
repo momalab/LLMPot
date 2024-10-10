@@ -1,13 +1,18 @@
 import argparse
-import multiprocessing
+import logging
 import threading
 from typing import Tuple
 
-from pymodbus.datastore import ModbusServerContext, ModbusSlaveContext
-from pymodbus.datastore import ModbusSparseDataBlock
+from pymodbus.datastore import (ModbusServerContext, ModbusSlaveContext,
+                                ModbusSparseDataBlock)
 from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.server.async_io import StartTcpServer
 
+FORMAT = ('%(asctime)-15s %(threadName)-15s'
+          ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
+logging.basicConfig(format=FORMAT)
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
 
 class MbtcpServer:
 
@@ -43,7 +48,6 @@ class MbtcpServer:
     @staticmethod
     def update_control_logic(context: ModbusServerContext):
         pass
-
 
 def retrieve_args() -> Tuple[str, int]:
     parser = argparse.ArgumentParser()

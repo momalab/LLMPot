@@ -35,9 +35,7 @@ class ModelLoader:
             device_map="cuda")
 
         model = Byt5LightningModule.load_from_checkpoint(
-            checkpoint_path=f"{CHECKPOINTS}/{self.finetuner_model.experiment}/"
-                            f"{self.finetuner_model.the_name}/"
-                            f"{self.finetuner_model.start_datetime}/checkpoints/last.ckpt",
+            checkpoint_path=f"{self.finetuner_model.experiment_instance_last_result_path}",
             finetuner_model=self.finetuner_model,
             tokenizer=tokenizer,
             model=model_orig,
@@ -55,43 +53,44 @@ class ModelLoader:
         with torch.no_grad():
             # model.model.eval(input_ids)
             logits = model.model.generate(input_ids,
-                                        num_beams=1,
-                                        # max_length=256,
-                                        # repetition_penalty=2.5,
-                                        # length_penalty=1.0,
-                                        # early_stopping=True,
-                                        # top_p=0.95,
-                                        # top_k=50,
-                                        # num_return_sequences=1,
-                                        # do_sample=True
+                                        num_beams=3,
+                                        max_length=256,
+                                        repetition_penalty=1.5,
+                                        length_penalty=2,
+                                        early_stopping=True,
+                                        top_p=1.0,
+                                        top_k=50,
+                                        temperature=2.0,
+                                        num_return_sequences=1,
+                                        do_sample=True
                                         ).to("cuda")
             return tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
 
 def main():
-    with open(f"{EXPERIMENTS}/mbtcp-protocol-emulation.json", "r") as cfg:
+    with open(f"{EXPERIMENTS}/byt5-small/mbtcp-protocol-emulation.json", "r") as cfg:
         config = cfg.read()
         config = json.loads(config)
-        finetuner_model = FinetunerModel(**config)
+        finetuner_model = FinetunerModel(experiment="mbtcp-protocol-emulation.json", **config)
         finetuner_model.experiment = "mbtcp-protocol-emulation.json"
         finetuner_model.current_dataset = finetuner_model.datasets[4]
         print(finetuner_model.current_dataset)
-        finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.the_name}")[0]
+        finetuner_model.start_datetime = os.listdir(f"{finetuner_model.experiment_dataset_result_path}")[0]
 
     model_loader = ModelLoader(finetuner_model, 7)
     model, tokenizer = model_loader.load_model(finetuner_model)
 
     timing = []
-    for i in range(200):
+    for i in range(30):
         before = time.time_ns()
-        result = model_loader.predict(f"006{i}0000000d0010202500030600006314631{i}", model, tokenizer)
+        result = model_loader.predict(f"06da00000006000300000002", model, tokenizer)
+
         after = time.time_ns()
         dur = (after - before) / 1e6
-        print(f"Time: {dur} ms")
+        print(f"{result} - Time: {dur} ms")
         timing.append(dur)
     timing  = timing[1:]
     print(f"Average time: {sum(timing) / len(timing)} ms")
-    print(result)
 
 def apply_pruning_to_linear_layers(module):
     for submodule_name, submodule in module.named_children():
