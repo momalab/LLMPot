@@ -1,4 +1,5 @@
 import random
+import traceback
 from typing import Any, Callable, List
 
 from pymodbus.bit_read_message import ReadCoilsRequest
@@ -154,6 +155,8 @@ def main():
         client.execute_functions()
     except KeyboardInterrupt:
         print("Client stopped by user.")
+    except Exception as e:
+        traceback.print_exception(e)
     finally:
         client.close()
 

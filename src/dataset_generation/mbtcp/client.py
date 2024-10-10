@@ -23,14 +23,14 @@ class MbtcpClient(ModbusTcpClient):
         self._codes = codes
 
         extra_samples_num = samples_num // 100
-        samples = np.random.uniform(0, 65535, samples_num - extra_samples_num)
+        samples = np.random.randint(0, 65535, samples_num - extra_samples_num)
         samples_list = samples.tolist()
 
         samples_list.extend([0] * extra_samples_num)
         samples_list.extend([65535] * extra_samples_num)
         random.shuffle(samples_list)
 
-        self.transaction_ids: List[int] = samples_list
+        self.transaction_ids = samples_list
 
     def illegal_function(self):
         valid_function_code = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 15, 16, 17, 20, 21, 22, 23, 24, 43, 128]
@@ -46,6 +46,7 @@ class MbtcpClient(ModbusTcpClient):
         for function, args, kwargs in self._functions:
             request = function(*args, **kwargs)
             self.transaction.tid = self.transaction_ids.pop()
+            request.slave_id = 0
             response = self.execute(request)
             time.sleep(delay)
             if not response:
@@ -58,7 +59,7 @@ def retrieve_args() -> Tuple[str, int, int, List[int]]:
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
     parser.add_argument('-p', default=5020, required=False)
-    parser.add_argument('-num', default=1000, required=False)
+    parser.add_argument('-num', default=50, required=False)
     args = parser.parse_args()
 
     return args.ip, int(args.p), int(args.num), [1,5,15,3,6,16]
