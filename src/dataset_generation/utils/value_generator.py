@@ -41,3 +41,13 @@ def generate_triplet_value(values: RangeModel, elements=0):
 
 def generate_exception_ranges(addresses: RangeModel, max_address: int, elements=0):
     return [addresses.high + 1, random.randrange(addresses.high, max_address - elements - 2), max_address - elements - 1]
+
+def generate_including_min_max(low: int, high: int, size: int) -> List[int]:
+    random_numbers = [random.randint(low, high) for _ in range(size - 2)]
+
+    random_numbers.append(low)
+    random_numbers.append(high)
+
+    random.shuffle(random_numbers)
+
+    return random_numbers

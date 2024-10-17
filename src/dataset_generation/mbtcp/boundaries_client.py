@@ -10,6 +10,7 @@ from pymodbus.register_read_message import ReadHoldingRegistersRequest
 from pymodbus.register_write_message import WriteSingleRegisterRequest, WriteMultipleRegistersRequest
 
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
+from pymodbus.other_message import ReportSlaveIdRequest
 from dataset_generation.utils import value_generator
 from finetune.model.range_model import RangeModel
 
@@ -38,13 +39,19 @@ class BoundariesClient(MbtcpClient):
     def start_client(self):
         functions = []
         while len(functions) < self._samples_num:
-
+            self.read_device_information()
 
             device_functions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 43 in self._codes:
                 for _ in range(int(0.1 * self._samples_num)):
                     object_id = random.randint(0, 3)
                     device_functions.append((ReadDeviceInformationRequest, [], {"object_id": object_id}))
+
+            report_slave_functions: List[tuple[Callable[..., Any], List[Any], dict]] = []
+            if 11 in self._codes:
+                nums = value_generator.generate_including_min_max(0, 255, int(0.05 * self._samples_num))
+                for num in nums:
+                    report_slave_functions.append((ReportSlaveIdRequest, [num], {}))
 
             coil_functions: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 1 in self._codes and 5 in self._codes:
@@ -134,6 +141,7 @@ class BoundariesClient(MbtcpClient):
                             ])
 
             functions.extend(device_functions)
+            functions.extend(report_slave_functions)
             functions.extend(coil_functions)
             functions.extend(coils_functions_multiple)
             functions.extend(register_functions)
