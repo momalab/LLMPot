@@ -3,7 +3,7 @@ from typing import Any, Callable, List
 
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
 from dataset_generation.utils import value_generator
-from finetune.model.finetuner_model import RangeModel
+from finetune.model.range_model import RangeModel
 
 MAX_ADDRESS = 65535
 MAX_REG_VALUE = 65535
@@ -54,7 +54,7 @@ class RandomClient(MbtcpClient):
             if 1 in self._codes and 15 in self._codes:
                 for elements in range(1, self._max_elements):
                     address = value_generator.generate_random_value(self._addresses, elements)
-                    coils_combinations = value_generator.generate_multiple_coil_requests(elements)
+                    coils_combinations = value_generator.generate_multiple_requests(self._max_elements, [True, False])
                     for coil_values in coils_combinations:
                         coils_functions_multiple.extend([
                             (self.read_coils, [address, elements], []),

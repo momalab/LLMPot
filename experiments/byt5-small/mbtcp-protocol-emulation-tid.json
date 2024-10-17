@@ -1,11 +1,10 @@
 {
-  "model_type": "meta-llama",
-  "model_name": "Llama-3.2-1B",
+  "model_type": "google",
+  "model_name": "byt5-small",
   "max_epochs": 100,
-  "patience": 50,
-  "batch_size": 2,
+  "patience": 10,
+  "batch_size": 8,
   "precision": "32",
-  "strategy": "deepspeed_stage_2_offload",
   "datasets": [
     {
       "protocol": "mbtcp",
