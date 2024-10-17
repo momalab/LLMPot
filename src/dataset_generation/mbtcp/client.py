@@ -46,7 +46,11 @@ class MbtcpClient(ModbusTcpClient):
         for function, args, kwargs in self._functions:
             request = function(*args, **kwargs)
             self.transaction.tid = self.transaction_ids.pop()
-            request.slave_id = 0
+
+            print(f"Request: {function.__name__} attributes: {request.__dict__}")
+            if hasattr(request, "slave_id") and request.slave_id == None:
+                request.slave_id = 0
+
             response = self.execute(request)
             time.sleep(delay)
             if not response:
@@ -59,7 +63,7 @@ def retrieve_args() -> Tuple[str, int, int, List[int]]:
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="localhost", required=False)
     parser.add_argument('-p', default=5020, required=False)
-    parser.add_argument('-num', default=50, required=False)
+    parser.add_argument('-num', default=1000, required=False)
     args = parser.parse_args()
 
-    return args.ip, int(args.p), int(args.num), [1,5,15,3,6,16]
+    return args.ip, int(args.p), int(args.num), [1,5,15,3,6,16,11]

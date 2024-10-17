@@ -6,11 +6,12 @@ from pymodbus.bit_read_message import ReadCoilsRequest
 from pymodbus.bit_write_message import (WriteMultipleCoilsRequest,
                                         WriteSingleCoilRequest)
 from pymodbus.mei_message import ReadDeviceInformationRequest
+from pymodbus.other_message import ReportSlaveIdRequest
 from pymodbus.register_read_message import ReadHoldingRegistersRequest
-from pymodbus.register_write_message import WriteSingleRegisterRequest, WriteMultipleRegistersRequest
+from pymodbus.register_write_message import (WriteMultipleRegistersRequest,
+                                             WriteSingleRegisterRequest)
 
 from dataset_generation.mbtcp.client import MbtcpClient, retrieve_args
-from pymodbus.other_message import ReportSlaveIdRequest
 from dataset_generation.utils import value_generator
 from finetune.model.range_model import RangeModel
 
@@ -157,7 +158,7 @@ class BoundariesClient(MbtcpClient):
 
 
 def main():
-    client = BoundariesClient(*retrieve_args(), RangeModel(low=0, high=10), RangeModel(low=0, high=10), 2)
+    client = BoundariesClient(*retrieve_args(), addresses=RangeModel(low=0, high=10), values=RangeModel(low=0, high=10), max_elements=2)
     try:
         client.start_client()
         client.execute_functions()

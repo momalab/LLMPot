@@ -113,9 +113,9 @@ def init():
     parser = argparse.ArgumentParser()
     parser.add_argument('-ip', default="127.0.0.1", type=str, required=False)
     parser.add_argument('-p', default=5020, type=int, required=False)
-    parser.add_argument('-intrf', default="lo", type=str, required=False)
-    parser.add_argument('-model', default="Llama-3.2-1B", type=str, required=False)
-    parser.add_argument('-exp', default="mbtcp-protocol-emulation-2.json", type=str, required=False)
+    parser.add_argument('-intrf', default="lo0", type=str, required=False)
+    parser.add_argument('-model', default="byt5-small", type=str, required=False)
+    parser.add_argument('-exp', default="mbtcp-protocol-emulation-add-11.json", type=str, required=False)
     parser.add_argument('-o', default=False, type=bool, required=False)
     args = parser.parse_args()
 
