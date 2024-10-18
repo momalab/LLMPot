@@ -1,4 +1,4 @@
-FROM python:3.10-slim as python-base
+FROM python:3.10-slim AS python-base
 WORKDIR /app
 
 RUN apt-get -y update && apt-get -y install gunicorn
@@ -10,7 +10,7 @@ RUN pip install -r requirements_web.txt
 ENV PYTHONPATH "/app/emulator:/app/src"
 ENV DOCKER_ENV "True"
 
-FROM python-base as web
+FROM python-base AS web
 WORKDIR /app
 
 COPY ./src /app/src

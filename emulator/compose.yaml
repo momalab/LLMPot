@@ -4,6 +4,9 @@ services:
     build:
       context: ..
       dockerfile: emulator/modbus.Dockerfile
+      args:
+        CHECKPOINT_PATH: "./checkpoints/byt5-small/mbtcp-protocol-emulation-add-11.json"
+        EXPERIMENT_PATH: "./experiments/byt5-small/mbtcp-protocol-emulation-add-11.json"
     restart: always
     depends_on:
       - mongo

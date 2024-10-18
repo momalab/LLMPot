@@ -1,4 +1,8 @@
-FROM python:3.10-slim as python-base
+FROM python:3.10-slim AS python-base
+
+ARG CHECKPOINT_PATH
+ARG EXPERIMENT_PATH
+
 WORKDIR /app
 
 COPY ./requirements.txt /app
@@ -9,16 +13,16 @@ RUN pip install -r ./requirements_modbus.txt
 ENV PYTHONPATH "/app/emulator:/app/src"
 ENV DOCKER_ENV "True"
 
-FROM python-base as model
+FROM python-base AS model
 WORKDIR /app
 
-COPY ./checkpoints/honeypot-with-43.json /app/checkpoints/honeypot.json
+COPY ${CHECKPOINT_PATH} /app/checkpoints/honeypot.json
 
-FROM model as modbus
+FROM model AS modbus
 
 COPY ./src /app/src
 COPY ./emulator /app/emulator
-COPY ./experiments/honeypot-with-43.json /app/experiments/honeypot.json
+COPY ${EXPERIMENT_PATH} /app/experiments/honeypot.json
 
 EXPOSE 5020
 
