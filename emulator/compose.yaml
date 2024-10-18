@@ -5,8 +5,10 @@ services:
       context: ..
       dockerfile: emulator/modbus.Dockerfile
       args:
-        CHECKPOINT_PATH: "./checkpoints/byt5-small/mbtcp-protocol-emulation-add-11.json"
-        EXPERIMENT_PATH: "./experiments/byt5-small/mbtcp-protocol-emulation-add-11.json"
+        - CHECKPOINT_PATH=./honeypot/byt5-small/mbtcp-protocol-emulation-add-11.json/
+        - CHECKPOINT_PATH_TARGET=./checkpoints/byt5-small/mbtcp-protocol-emulation-add-11.json/
+        - EXPERIMENT_PATH=./experiments/byt5-small/mbtcp-protocol-emulation-add-11.json
+        - EXPERIMENT=mbtcp-protocol-emulation-add-11.json
     restart: always
     depends_on:
       - mongo
@@ -16,7 +18,7 @@ services:
   web_app:
     build:
       context: ..
-      dockerfile: emulator/web.Dockerfile
+      dockerfile: ./emulator/web.Dockerfile
     restart: always
     depends_on:
       - mongo
@@ -42,5 +44,5 @@ services:
       - modbus_app
       - web_app
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"
+      - "8443:443"

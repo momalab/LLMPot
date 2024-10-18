@@ -4,4 +4,5 @@ motor~=3.3.2
 pydantic~=2.5.2
 torch
 transformers
+peft~=0.5.0
 lightning[extra]

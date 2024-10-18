@@ -9,11 +9,11 @@ from beanie import init_beanie, WriteRules
 from motor.motor_asyncio import AsyncIOMotorClient
 from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
-from cfg import EXPERIMENTS, PROJECT_ROOT_DIR, CHECKPOINTS
-from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
-from finetune.model.finetuner_model import FinetunerModel
 from model.modbus.client import Client
 from model.modbus.request import Request
+from cfg import PROJECT_ROOT_DIR
+from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
+from finetune.model.finetuner_model import FinetunerModel
 from utilities.logger import TheLogger
 
 logger = TheLogger("modbus_server", f"{PROJECT_ROOT_DIR}/logs")
@@ -33,27 +33,27 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 def load_model(finetuner_model: FinetunerModel):
     logger.info("Loading model...")
     tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
-    model = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id()).to(device)
+    model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id(), device_map="cuda")
     model = Byt5LightningModule.load_from_checkpoint(
-        checkpoint_path=f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[0]}/{finetuner_model.start_datetime}/checkpoints/last.ckpt",
+        checkpoint_path=f"{finetuner_model.experiment_instance_last_result_path}",
         finetuner_model=finetuner_model,
         tokenizer=tokenizer,
-        model=model,
+        model=model_orig,
         test_dataset=None,
-        map_location=device)
+        trust_remote_code=True,
+        device_map="cuda",
+    )
     logger.info("Loading model... Done.")
     model.eval()
     return model, tokenizer
 
-
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
-
-    with open(f"{EXPERIMENTS}/honeypot.json", "r") as cfg:
+    with open(f"/app/{os.environ['EXPERIMENT_PATH']}", "r") as cfg:
         config = cfg.read()
         config = json.loads(config)
-        finetuner_model = FinetunerModel(**config)
-        finetuner_model.experiment = "honeypot.json"
-        finetuner_model.start_datetime = os.listdir(f"{CHECKPOINTS}/{finetuner_model.experiment}/{finetuner_model.datasets[0]}")[1]
+
+    finetuner_model = FinetunerModel(experiment=os.environ['EXPERIMENT'], **config)
+    finetuner_model.start_datetime = os.listdir(f"{finetuner_model.experiment_dataset_result_path}")[0]
     model, tokenizer = load_model(finetuner_model)
 
     def handle(self):
@@ -63,7 +63,6 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         incoming_raw = self.request.recv(1024)
         client_ip = self.client_address[0]
         client_port = self.client_address[1]
-        server_port = self.server.server_address[1]
 
 
         try:
@@ -78,7 +77,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         if client is None:
             client = Client(ip=client_ip)
 
-        client_request = Request(client=client.id.__str__(), request=incoming_str, client_port=client_port)
+        client_request = Request(client=str(client.id), request=incoming_str, client_port=client_port)
 
         outgoing_str = self.model.generate(incoming_str)
         try:
