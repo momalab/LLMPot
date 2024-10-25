@@ -25,3 +25,4 @@ outputs/validation_data
 
 checkpoints/
 dump/
+honeypot/

@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from datetime import datetime
 
 from beanie import init_beanie
@@ -111,7 +112,7 @@ def get_login():
 
 async def init_mongo_connection():
     logger.info(f"Server initializing..")
-    client = AsyncIOMotorClient('mongo', 27017, username='root', password='root', authSource='admin')
+    client = AsyncIOMotorClient('mongo', 27017, username='root', password=os.environ['MONGO_PWD'], authSource='admin')
     await init_beanie(database=client.web, document_models=[Client, Request], multiprocessing_mode=True)
     logger.info(f"Server connected to mongo server..")
 

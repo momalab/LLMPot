@@ -1,6 +1,5 @@
 {
     "python.terminal.launchArgs": [],
-    // "sarif-viewer.connectToGithubCodeScanning": "off",
     "cSpell.enabled": false,
     "pylint.args": [
         "--disable=C0114",
@@ -26,5 +25,6 @@
         "**/.git": true,
         "**/__pycache__": true
     },
-    "files.trimTrailingWhitespace": true
+    "files.trimTrailingWhitespace": true,
+    "sarif-viewer.connectToGithubCodeScanning": "off"
 }

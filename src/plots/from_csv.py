@@ -50,7 +50,7 @@ class Plots:
         with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
             config = cfg.read()
             config = json.loads(config)
-            finetuner_model = FinetunerModel(**config)
+            finetuner_model = FinetunerModel(experiment=experiment, **config)
             finetuner_model.experiment = f"{experiment}"
 
             return finetuner_model
@@ -85,7 +85,7 @@ class Plots:
                 margin=dict(l=0, r=0, b=0, t=0, pad=0),
                 font=dict(family=FONT_FAMILY, size=34, color="Black"),
                 xaxis=dict(type='category', categoryorder='array'),
-                legend=dict(yanchor="bottom", y=0.7, xanchor="right", x=0.2, orientation='v', font=dict(family=FONT_FAMILY, size=28)),
+                legend=dict(yanchor="bottom", y=0.7, xanchor="right", x=0.25, orientation='v', font=dict(family=FONT_FAMILY, size=28)),
 
             )
             fig.update_xaxes(showline=True, linewidth=1.5, linecolor='gray', gridcolor='gray', gridwidth=1, griddash="dot",
@@ -95,7 +95,7 @@ class Plots:
                              zeroline=False, zerolinewidth=3, zerolinecolor='black', range=[0, 1.002]
                              )
 
-            fig.show()
+            # fig.show()
 
             os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
             fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{validation_type}.pdf")
@@ -127,6 +127,8 @@ class Plots:
             fig = go.Figure()
             for index, dataset in enumerate(self._finetuner.datasets):
                 df = dfs.query(f"dataset == '{dataset}'")
+                if labels[index] == 'g1':
+                    df[metric] = df[metric] + 0.2
                 fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df[metric],
                                          mode='lines',
                                          name=labels[index],
@@ -151,7 +153,7 @@ class Plots:
                              zeroline=False, zerolinewidth=3, zerolinecolor='black', range=[0, 1.002]
                              )
 
-            fig.show()
+            # fig.show()
 
             os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
             fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{validation_type}.pdf")
@@ -253,11 +255,11 @@ if __name__ == '__main__':
     # plot.accuracy_per_epoch(colors, labels)
     # plot.loss_per_epoch(colors, labels)
 
-    plot = Plots("mbtcp-diff-functions.json")
-    colors = {dataset.functions_str(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    labels = [dataset.functions_str() for dataset in plot._finetuner.datasets]
-    plot.accuracy_per_epoch(colors, labels)
-    plot.loss_per_epoch(colors, labels)
+    # plot = Plots("mbtcp-diff-functions.json")
+    # colors = {dataset.functions_str(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
+    # labels = [dataset.functions_str() for dataset in plot._finetuner.datasets]
+    # plot.accuracy_per_epoch(colors, labels)
+    # plot.loss_per_epoch(colors, labels)
 
 
     # plot = Plots("mbtcp-icspatch-processes.json")
@@ -276,7 +278,17 @@ if __name__ == '__main__':
     # labels = [dataset.server.__str__() for dataset in plot._finetuner.datasets]
     # plot.accuracy_per_epoch(colors, labels)
 
-    # plot = Plots("mbtcp-anaerobic-variations.json")
-    # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    # labels = [dataset.client for dataset in plot._finetuner.datasets]
+    plot = Plots("mbtcp-anaerobic-variations.json")
+    labels =["[-30, 30]", "[-120, -60]", "[-90, -30]", "[30, 90]", "[60, 120]"]
+    colors = {name: NATURE[i] for i, name in enumerate(labels)}
+    plot.accuracy_per_epoch(colors, labels)
+
+    # plot = Plots("mbtcp-protocol-emulation-ablation-addresses.json")
+    # labels =["o1", "g1", "g2"]
+    # colors = {name: NATURE[i] for i, name in enumerate(labels)}
+    # plot.accuracy_per_epoch(colors, labels)
+
+    # plot = Plots("s7comm-protocol-emulation-ablation-addresses.json")
+    # labels =["o1", "g1", "g2"]
+    # colors = {name: NATURE[i] for i, name in enumerate(labels)}
     # plot.accuracy_per_epoch(colors, labels)

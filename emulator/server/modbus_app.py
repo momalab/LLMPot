@@ -105,7 +105,7 @@ async def async_server():
 
 
 async def modbus_app():
-    client = AsyncIOMotorClient('mongo', 27017, username='root', password='root', authSource='admin')
+    client = AsyncIOMotorClient('mongo', 27017, username='root', password=os.environ['MONGO_PWD'], authSource='admin')
     await init_beanie(database=client.modbus, document_models=[Client, Request], multiprocessing_mode=True)
 
     await async_server()

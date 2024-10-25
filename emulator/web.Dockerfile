@@ -7,8 +7,10 @@ COPY ./requirements.txt /app
 COPY ./emulator/requirements_web.txt /app
 RUN pip install -r requirements_web.txt
 
+ARG MONGO_PWD
 ENV PYTHONPATH "/app/emulator:/app/src"
 ENV DOCKER_ENV "True"
+ENV MONGO_PWD ${MONGO_PWD}
 
 FROM python-base AS web
 WORKDIR /app
