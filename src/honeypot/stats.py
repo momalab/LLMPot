@@ -13,7 +13,7 @@ from validation.mbtcp_validator import Validator
 
 async def init():
     client = AsyncIOMotorClient(
-        "mongodb://127.0.0.1:27017/modbus?authSource=admin&directConnection=true")
+        "mongodb://root:root@127.0.0.1:27017/modbus?authSource=admin&directConnection=true")
     db = client["modbus"]
 
     await init_beanie(database=db, document_models=[Client, Request])
@@ -67,8 +67,7 @@ async def query():
     #     await client.fetch_all_links()
     for request in requests:
         request_inst = Request.model_validate(request)
-        is_valid, explanation = validate_modbus_tcp_request(
-            request_inst.request)
+        is_valid, explanation = validate_modbus_tcp_request(request_inst.request)
         if is_valid:
             valid_request += 1
         else:
@@ -82,10 +81,12 @@ async def query():
             valid += 1
         except Exception as e:
             print(f"Request: {request_inst.request} : {request_inst.response} : {e}")
+            if "Trans_ID" in str(e):
+                valid += 1
             pass
             # print("Validation failed", traceback.format_exc())
 
-    print(f"Valid requests: {valid}/{valid_request}/{total}")
+    print(f"Valid Response: {valid},\nValid Request: {valid_request},\nTotal Requests: {total}")
 
 
 def validate_modbus_tcp_request(hex_str: str):
@@ -109,8 +110,8 @@ def validate_modbus_tcp_request(hex_str: str):
 
     func_code = message_bytes[7]
     valid_func_codes = [43]
-    # valid_func_codes = [43, 1, 5, 15, 3, 6, 16]
-    valid_func_codes.extend([2, 4, 7, 8, 17, 20, 21, 22, 23, 24])
+    # valid_func_codes = [43, 1, 5, 15, 3, 6, 16, 11]
+    # valid_func_codes.extend([2, 4, 7, 8, 17, 20, 21, 22, 23, 24])
     if func_code not in valid_func_codes:
         return False, f"Invalid function code: {func_code}"
 

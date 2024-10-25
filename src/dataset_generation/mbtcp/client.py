@@ -47,7 +47,6 @@ class MbtcpClient(ModbusTcpClient):
             request = function(*args, **kwargs)
             self.transaction.tid = self.transaction_ids.pop()
 
-            print(f"Request: {function.__name__} attributes: {request.__dict__}")
             if hasattr(request, "slave_id") and request.slave_id == None:
                 request.slave_id = 0
 

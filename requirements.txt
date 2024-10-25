@@ -36,4 +36,4 @@ tensorflow~=2.16.1
 sentencepiece
 huggingface_hub
 
-deepspeed
+ipinfo

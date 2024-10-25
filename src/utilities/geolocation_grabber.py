@@ -2,6 +2,8 @@ import pandas as pd
 import ipinfo
 import json
 
+from cfg import PROJECT_ROOT_DIR
+
 
 def get_ip_info(ip):
     try:
@@ -15,10 +17,10 @@ def get_ip_info(ip):
 
 
 # df1 = pd.read_csv('ips.csv', header=None)
-df2 = pd.read_csv('ips.csv')
+df2 = pd.read_csv(f'{PROJECT_ROOT_DIR}/src/utilities/ips.csv')
 # print(len(df2))
 # exit()
-access_token = '0ebf08812946ec'
+access_token = 'a5e6890683aa51'
 handler = ipinfo.getHandler(access_token)
 
 country_count = {}
@@ -35,6 +37,7 @@ for index, row in df2.iterrows():
             country_count[country] = 1
     else:
         unknown_ips.append(info['IP'])
+    print(info)
 
 # with open('unknown_ips.log', 'w') as log_file:
 #     for ip in unknown_ips:

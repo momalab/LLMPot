@@ -1,5 +1,7 @@
 {
     "python.terminal.launchArgs": [],
+    "sarif-viewer.connectToGithubCodeScanning": "off",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "cSpell.enabled": false,
     "pylint.args": [
         "--disable=C0114",
@@ -26,5 +28,13 @@
         "**/__pycache__": true
     },
     "files.trimTrailingWhitespace": true,
-    "sarif-viewer.connectToGithubCodeScanning": "off"
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+      },
+      "autopep8.args": ["--max-line-length=200"],
+      "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": true
+      }
 }
