@@ -65,3 +65,31 @@ async function run() {
 }
 
 run().catch(console.dir);
+
+
+db.Client.aggregate([
+  {
+    $lookup: {
+      from: "Request",
+      localField: "requests.$id",
+      foreignField: "_id",
+      as: "requestDetails",
+    },
+  },
+  {
+    $match: {
+      "requestDetails.request.password": { $exists: true },
+      "requestDetails.uri": "/wbm/php/authentication/login.php",
+    },
+  },
+  { $unwind: "$requestDetails" },
+  {
+    $project: {
+      ip: 1,
+      requestDetails: 1,
+    },
+  },
+  {
+    $limit: 10000,
+  },
+]);
