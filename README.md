@@ -1,1 +1,1 @@
-# ICSPot
+# LLMPot: Dynamically Configured LLM-based Honeypot for Industrial Protocol and Physical Process Emulation
