@@ -10,7 +10,8 @@ from torch.utils.data import DataLoader, DistributedSampler
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from finetune.model.finetuner_model import FinetunerModel
-from validation.mbtcp_validator import Validator
+from validation.mbtcp_validator import Validator as MBTCPValidator
+from validation.s7comm_validator import Validator as S7Validator
 from validation.model.result import Result
 
 
@@ -147,7 +148,7 @@ class Byt5LightningModule(LightningModule):
                         question = request[request.rindex("|") + 1:len(request)]
                         context = request[:request.rindex("|")]
 
-                    self.validate_choice(validation_type, question, response, expected_response, self._finetuner_model.current_dataset.addresses.high)
+                    self.validate_choice(validation_type, question, response, expected_response, self._finetuner_model.current_dataset.addresses.high, self._finetuner_model.current_dataset.protocol)
 
                     to_save.valid = True
 
@@ -166,7 +167,11 @@ class Byt5LightningModule(LightningModule):
         return valid / batch_size
 
     @staticmethod
-    def validate_choice(validation_type: str, question: str, response: str, expected_response: str, end_address: int):
+    def validate_choice(validation_type: str, question: str, response: str, expected_response: str, end_address: int, protocol: str = "mbtcp"):
+        if protocol == "mbtcp":
+            Validator = MBTCPValidator
+        else:
+            Validator = S7Validator
         if validation_type == "validator":
             try:
                 validation = Validator(question, response, expected_response, end_address)

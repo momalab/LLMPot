@@ -1,10 +1,9 @@
 import random
 from typing import List, Callable, Any
-from snap7.util import set_word
 from snap7.types import Areas
 from dataset_generation.s7comm.client import S7Client, retrieve_args
 from dataset_generation.utils import value_generator
-from finetune.model.finetuner_model import RangeModel
+from finetune.model.range_model import RangeModel
 
 
 class BoundariesClient(S7Client):
@@ -79,7 +78,7 @@ class BoundariesClient(S7Client):
 def main():
     ip, port, samples_num = retrieve_args()
 
-    client = BoundariesClient(ip, port, samples_num, [1, 5, 15, 3, 6, 16], RangeModel(low=0, high=10), RangeModel(low=0, high=10), 2)
+    client = BoundariesClient(ip, port, samples_num, [1, 5, 15, 3, 6, 16], RangeModel(low=0, high=99), RangeModel(low=0, high=99), 2)
     client.start_client()
     try:
         client.execute_functions()

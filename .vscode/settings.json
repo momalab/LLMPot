@@ -12,6 +12,7 @@
         "--disable=W0718",
         "--max-line-length=240",
         "--disable=W1203",
+        "--disable=W0702",
     ],
     "python.analysis.autoImportCompletions": true,
     "python.analysis.typeCheckingMode": "basic",
@@ -31,7 +32,6 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.autopep8"
       },
-      "autopep8.args": ["--max-line-length=200"],
       "editor.quickSuggestions": {
         "other": true,
         "comments": false,

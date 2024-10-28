@@ -17,8 +17,7 @@ def sgn(x):
 def sgn_derivative(x): #2*Dirac delta function
     if x == 0:
         return np.inf  # Represents the Dirac delta spike at x = 0
-    else:
-        return 0
+    return 0
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))

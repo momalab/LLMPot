@@ -8,7 +8,6 @@ from snap7.client import Client
 from snap7.types import Areas
 from snap7.util import get_word, get_bool
 
-from finetune.model.finetuner_model import RangeModel
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.CRITICAL)
