@@ -57,12 +57,11 @@ class Plots:
     def accuracy_with_random_dataset(self):
         dfs = pd.DataFrame()
         for dataset in self._finetuner.datasets:
-            the_dir = f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}"
-            start_datetime_path = [name for name in os.listdir(the_dir) if os.path.isdir(os.path.join(the_dir, name))][1]
-            if not os.path.exists(f"{the_dir}/csv/{start_datetime_path}/metrics2.csv"):
-                continue
+            self._finetuner.current_dataset = dataset
+            if not os.path.exists(self.finetuner.experiment_csv_metrics_path):
+                raise FileNotFoundError(f"{self.finetuner.experiment_csv_metrics_path} not found")
 
-            df = pd.read_csv(f"{the_dir}/csv/{start_datetime_path}/metrics2.csv")
+            df = pd.read_csv(self.finetuner.experiment_csv_metrics_path)
             df.loc[:, 'test_dataset'] = dataset.server.datablock if hasattr(dataset.server, "datablock") else dataset.server.coils
             df.loc[:, 'plc_cfg'] = df['test_dataset'].apply(lambda x: "same" if x == 40 else "different")
             df.loc[:, 'size'] = df['dataset'].apply(lambda x: f"{x.split('-')[3]}")
@@ -223,39 +222,13 @@ class Plots:
 
 
 # if __name__ == '__main__':
-    # plot = Plots("mbtcp-protocol-test.json")
-    # plot.accuracy_with_random_dataset()
-
-    # plot = Plots("s7comm-protocol-test.json")
-    # plot.accuracy_with_random_dataset()
-
     # plot = Plots("mbtcp-icspatch-processes.json")
     # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
     # labels = [f"{dataset.client}" for dataset in plot._finetuner.datasets]
     # plot.accuracy_per_epoch(colors, labels)
     # plot.loss_per_epoch(colors, labels, False)
 
-    # plot = Plots("mbtcp-protocol-generalization.json")
-    # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    # labels = [dataset.server.__str__() for dataset in plot._finetuner.datasets]
-    # plot.accuracy_per_epoch(colors, labels)
-
-    # plot = Plots("s7comm-protocol-generalization.json")
-    # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    # labels = [dataset.server.__str__() for dataset in plot._finetuner.datasets]
-    # plot.accuracy_per_epoch(colors, labels)
-
     # plot = Plots("mbtcp-anaerobic-variations.json")
     # labels =["[-30, 30]", "[-120, -60]", "[-90, -30]", "[30, 90]", "[60, 120]"]
-    # colors = {name: NATURE[i] for i, name in enumerate(labels)}
-    # plot.accuracy_per_epoch(colors, labels)
-
-    # plot = Plots("mbtcp-protocol-emulation-ablation-addresses.json")
-    # labels =["o1", "g1", "g2"]
-    # colors = {name: NATURE[i] for i, name in enumerate(labels)}
-    # plot.accuracy_per_epoch(colors, labels)
-
-    # plot = Plots("s7comm-protocol-emulation-ablation-addresses.json")
-    # labels =["o1", "g1", "g2"]
     # colors = {name: NATURE[i] for i, name in enumerate(labels)}
     # plot.accuracy_per_epoch(colors, labels)

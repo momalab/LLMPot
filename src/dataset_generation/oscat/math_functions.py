@@ -1,22 +1,24 @@
 import time
 
-import numpy
-from dataset_generation.oscat.client import MbtcpClient, retrieve_args
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadBuilder
-from dataset_generation.math import func
+
+from dataset_generation.math.func import Function
+from dataset_generation.oscat.client import MbtcpClient, retrieve_args
 
 
 class MathClient(MbtcpClient):
     def start_client(self):
         functions = []
         x = []
-        if self._function_name == "sgn":
-            x = numpy.linspace(-3, 3, self._samples_num)
+
+        func = Function(self._function_name)
+
+        if self.sampling:
+            x, y, _, _, _, _ = func.func_values_sampled(x, self._samples_num)
         else:
-            x, y = func.func_values(-10, 10, self._samples_num)
-            # x, y = func.func_values_sampled(x, self._samples_num)
-            x, y = func.remove_decimals(x, y)
+            x, y = func.func_values(self.range_low, self.range_high, self._samples_num)
+        x, y = func.remove_decimals(x, y)
 
         for input_x in x:
             builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
@@ -33,8 +35,8 @@ class MathClient(MbtcpClient):
                 time.sleep(0.05)
 
 def main():
-    ip, port, samples_num, function_name = retrieve_args()
-    client = MathClient(ip, port, samples_num, function_name)
+    ip, port, samples_num, function_name, sampling, range_low, range_high = retrieve_args()
+    client = MathClient(ip, port, samples_num, function_name, sampling, range_low, range_high)
     try:
         client.start_client()
     except KeyboardInterrupt:
