@@ -118,8 +118,6 @@ class Plots:
             for index, dataset in enumerate(self._finetuner.datasets):
                 self._finetuner.current_dataset = dataset
                 df = dfs.query(f"dataset == '{dataset}'")
-                if labels[index] == 'g1':
-                    df[metric] = df[metric] + 0.2
                 fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df[metric],
                                          mode='lines',
                                          name=labels[index],
