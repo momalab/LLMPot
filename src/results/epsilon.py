@@ -1,23 +1,22 @@
-import dis
+import argparse
 import json
-import sys
-import traceback
+import os
+import re
 from typing import Tuple
-from unittest import result
 
 import pandas as pd
-from param import Callable
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 
-from cfg import CHECKPOINTS
+from finetune.model.finetuner_model import FinetunerModel
+from utilities.utils import load_cfg
 
 
-def calculate_error_margin(path: str, file: str, output_registers: int, input_registers: int, func) -> Tuple[float, float, float]:
-    with open(f"{path}/{file}.jsonl", "r") as data:
+def calculate_error_margin(finetuner_model: FinetunerModel, file: str, output_registers: int, input_registers: int, func) -> Tuple[float, float, float]:
+    with open(f"{finetuner_model.experiment_instance_result_path}/{file}", "r") as data:
         data = [json.loads(line) for line in data]
 
-    return calculate(pd.DataFrame(data), path, file, output_registers, input_registers, func)
+    return calculate(pd.DataFrame(data), finetuner_model.experiment_instance_result_path, file, output_registers, input_registers, func)
 
 def calculate(df: pd.DataFrame, path: str, file: str, output_registers: int, input_registers: int, func) -> Tuple[float, float, float]:
 
@@ -106,7 +105,7 @@ def calculate(df: pd.DataFrame, path: str, file: str, output_registers: int, inp
 
     results = pd.DataFrame(results_data)
     results.to_json(f"{path}/epsilon-{file}.jsonl", orient='records', lines=True)
-    results.query(f"distance != 'invalid'", inplace=True)
+    results.query("distance != 'invalid'", inplace=True)
     print(f"Total: {len(results)}")
     mean_value = results['distance'].mean()
     std_dev = results['distance'].std()
@@ -121,6 +120,31 @@ def calculate(df: pd.DataFrame, path: str, file: str, output_registers: int, inp
 
     return mean_value, std_dev, mean_percentage
 
+def find_latest_jsonl_file(directory: str) -> str:
+    jsonl_files = [f for f in os.listdir(directory) if f.endswith('.jsonl')]
+    if not jsonl_files:
+        raise FileNotFoundError("No .jsonl files found in the directory")
+
+    def extract_epoch_number(filename: str) -> int:
+        match = re.search(r'epoch-(\d+)_val_type-exact\.jsonl', filename)
+        return int(match.group(1)) if match else -1
+
+    latest_file = max(jsonl_files, key=extract_epoch_number)
+    return latest_file
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-exp', default="mbtcp-math-functions.json", required=False)
+    parser.add_argument('-timestamp', default="20240427T1812", required=False)
+    args = parser.parse_args()
+
+    finetuner_model = load_cfg("byt5-small", args.exp, timestamp=args.timestamp)
+
+
+    latest_file = find_latest_jsonl_file(finetuner_model.experiment_instance_result_path)
+    print(f"Latest file: {latest_file}")
+
+    calculate_error_margin(finetuner_model, latest_file, 1, 1, "int")
 
 if __name__ == "__main__":
-    calculate_error_margin(f"{CHECKPOINTS}/mbtcp-testbed.json/mbtcp-none-c1-s1600/20240626T1729", "epoch-99_val_type-exact", 1, 1, "int")
+    main()

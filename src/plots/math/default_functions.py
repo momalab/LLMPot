@@ -9,8 +9,8 @@ from plots.from_csv import FONT_FAMILY
 NATURE = ['#C03221', '#87BCDE', '#EDB88B', '#545E75', '#3F826D', '#88498F']
 
 def plot(func: Function, the_function:str, samples: int, low: int, high: int):
-    x, y = func.func_values(low, high, samples)
-    x, y, sampled_x_values, y_orig, pdf, scale_factor_pdf = func.func_values_sampled(x, samples)
+    x, _ = func.func_values(low, high, samples)
+    x, _, sampled_x_values, y_orig, pdf, scale_factor_pdf = func.func_values_sampled(x, samples)
 
     fig_combined = go.Figure()
     fig_combined.add_trace(go.Scatter(x=x, y=y_orig, mode='lines', name=the_function, line=dict(color=NATURE[0])))

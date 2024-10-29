@@ -6,11 +6,11 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
 
+from cfg import ASSETS, EXPERIMENTS
+from finetune.model.finetuner_model import FinetunerModel
+
 pio.kaleido.scope.mathjax = None
 pd.options.mode.copy_on_write = True
-
-from cfg import ASSETS, CHECKPOINTS, EXPERIMENTS
-from finetune.model.finetuner_model import FinetunerModel
 
 
 FONT_FAMILY = "Serif"
@@ -19,16 +19,16 @@ NATURE = ['#C03221', '#87BCDE', '#EDB88B', '#545E75', '#3F826D', '#C03221', '#87
 
 
 class MathPlots:
-    def __init__(self, experiment: str):
+    def __init__(self, experiment: str, timestamp: str):
         self._finetuner = self._load_experiment(experiment)
+        self._finetuner.start_datetime = timestamp
 
     @staticmethod
     def _load_experiment(experiment: str):
-        with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
+        with open(f"{EXPERIMENTS}/byt5-small/{experiment}", "r") as cfg:
             config = cfg.read()
             config = json.loads(config)
-            finetuner_model = FinetunerModel(**config)
-            finetuner_model.experiment = f"{experiment}"
+            finetuner_model = FinetunerModel(experiment, **config)
 
             return finetuner_model
 
@@ -36,10 +36,7 @@ class MathPlots:
         dfs = pd.DataFrame()
         colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
         for dataset in self._finetuner.datasets:
-            the_dir = f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}"
-            the_datetime = os.listdir(f"{the_dir}")[0]
-            the_dir = the_dir + "/" + the_datetime
-            epsilon_file = glob.glob(f"{the_dir}/epsilon*.jsonl")[0]
+            epsilon_file = glob.glob(f"{self._finetuner.experiment_dataset_result_path}/epsilon*.jsonl")[0]
 
             with open(epsilon_file, 'r') as file:
                 data = []
@@ -102,5 +99,5 @@ class MathPlots:
 
 
 if __name__ == '__main__':
-    plot = MathPlots("mbtcp-math-functions.json")
+    plot = MathPlots("mbtcp-math-functions.json", "20240430T1018")
     plot.rva_e()

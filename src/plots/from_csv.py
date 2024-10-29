@@ -7,7 +7,7 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 
-from cfg import EXPERIMENTS, CHECKPOINTS, ASSETS
+from cfg import EXPERIMENTS, ASSETS
 from finetune.model.finetuner_model import FinetunerModel
 
 import plotly.io as pio

@@ -41,3 +41,31 @@ Provide the model name either byt5-small or byt5-base in order to generate the B
 ```shell
 python ./results/bca_rva_per_model_size.py -model {model_name}
 ```
+
+## Protocol Generalization
+
+```shell
+python ./src/plots/mbtcp/bca_rva_protocol_generalization.py
+
+python ./src/plots/s7comm/bca_rva_protocol_generalization.py
+```
+
+## Barplot Different-Same PLC configuration
+
+Note: The metrics.csv files need manual population through the original ones to produce the bar plots.
+
+```shell
+python ./src/plots/mbtcp/bca_rva_barplot_protocol-diff-same-plc-cfg.py
+```
+
+## Protocol Different Functions
+
+```shell
+python ./src/plots/mbtcp/bca_rva_diff_functions.py
+```
+
+## Math Function Plots
+
+```shell
+python ./src/plots/math/default_functions.py -func sigmoid -samples 1000 -low -10 -high 10
+```

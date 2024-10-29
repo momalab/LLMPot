@@ -1,4 +1,3 @@
-import os
 from abc import abstractmethod
 from typing import List
 
@@ -100,12 +99,7 @@ class Finetuner:
                             devices=self._finetuner_model.devices,
                             strategy=self._finetuner_model.strategy,
                             )
-        if os.path.exists(self._finetuner_model.experiment_dataset_result_path) \
-            and not os.path.exists(self._finetuner_model.experiment_instance_status_result_path) \
-                and os.path.exists(self._finetuner_model.experiment_instance_last_result_path):
-            self._trainer.fit(self._custom_module, self._data_module, ckpt_path=self._finetuner_model.experiment_instance_last_result_path)
-        else:
-            self._trainer.fit(self._custom_module, self._data_module)
+        self._trainer.fit(self._custom_module, self._data_module)
 
     @property
     def trainer(self):
