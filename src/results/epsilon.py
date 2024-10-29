@@ -12,7 +12,7 @@ from finetune.model.finetuner_model import FinetunerModel
 from utilities.utils import load_cfg
 
 
-def calculate_error_margin(finetuner_model: FinetunerModel, file: str, output_registers: int, input_registers: int, func) -> Tuple[float, float, float]:
+def calculate_error_margin(finetuner_model: FinetunerModel, file: str, output_registers: int, input_registers: int, func: str) -> Tuple[float, float, float]:
     with open(f"{finetuner_model.experiment_instance_result_path}/{file}", "r") as data:
         data = [json.loads(line) for line in data]
 
@@ -60,9 +60,9 @@ def calculate(df: pd.DataFrame, path: str, file: str, output_registers: int, inp
 
             bytes.fromhex(response) # just check if it is a valid packet
 
-            # reg_values = context.split(":")[0][-4*input_registers:]
-            # context_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
-            # context_chunks = [int(chunk, 16) for chunk in context_chunks]
+            reg_values = context.split(":")[0][-4*input_registers:]
+            context_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
+            context_chunks = [int(chunk, 16) for chunk in context_chunks]
 
             reg_values = response[-4*output_registers:]
             response_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
@@ -72,11 +72,11 @@ def calculate(df: pd.DataFrame, path: str, file: str, output_registers: int, inp
             e_response_chunks = [reg_values[i:i + 4] for i in range(0, len(reg_values), 4)]
             e_response_chunks = [int(chunk, 16) for chunk in e_response_chunks]
 
-            # x = BinaryPayloadDecoder.fromRegisters(context_chunks, Endian.BIG, wordorder=Endian.LITTLE)
+            x = BinaryPayloadDecoder.fromRegisters(context_chunks, Endian.BIG, wordorder=Endian.LITTLE)
             y = BinaryPayloadDecoder.fromRegisters(response_chunks, Endian.BIG, wordorder=Endian.LITTLE)
             y_orig = BinaryPayloadDecoder.fromRegisters(e_response_chunks, Endian.BIG, wordorder=Endian.LITTLE)
 
-            # x = input_func(x)
+            x = input_func(x)
             y = output_func(y)
             y_orig = output_func(y_orig)
 
@@ -104,7 +104,7 @@ def calculate(df: pd.DataFrame, path: str, file: str, output_registers: int, inp
 
 
     results = pd.DataFrame(results_data)
-    results.to_json(f"{path}/epsilon-{file}.jsonl", orient='records', lines=True)
+    results.to_json(f"{path}/epsilon-{file}", orient='records', lines=True)
     results.query("distance != 'invalid'", inplace=True)
     print(f"Total: {len(results)}")
     mean_value = results['distance'].mean()
@@ -136,15 +136,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-exp', default="mbtcp-math-functions.json", required=False)
     parser.add_argument('-timestamp', default="20240427T1812", required=False)
+    parser.add_argument('-type', default="float", required=False)
     args = parser.parse_args()
 
     finetuner_model = load_cfg("byt5-small", args.exp, timestamp=args.timestamp)
 
-
-    latest_file = find_latest_jsonl_file(finetuner_model.experiment_instance_result_path)
-    print(f"Latest file: {latest_file}")
-
-    calculate_error_margin(finetuner_model, latest_file, 1, 1, "int")
+    for dataset in finetuner_model.datasets:
+        finetuner_model.current_dataset = dataset
+        latest_file = find_latest_jsonl_file(finetuner_model.experiment_instance_result_path)
+        calculate_error_margin(finetuner_model, latest_file, 2, 2, args.type)
 
 if __name__ == "__main__":
     main()

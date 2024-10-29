@@ -219,16 +219,3 @@ class Plots:
 
         os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
         fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/losses.pdf")
-
-
-# if __name__ == '__main__':
-    # plot = Plots("mbtcp-icspatch-processes.json")
-    # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    # labels = [f"{dataset.client}" for dataset in plot._finetuner.datasets]
-    # plot.accuracy_per_epoch(colors, labels)
-    # plot.loss_per_epoch(colors, labels, False)
-
-    # plot = Plots("mbtcp-anaerobic-variations.json")
-    # labels =["[-30, 30]", "[-120, -60]", "[-90, -30]", "[30, 90]", "[60, 120]"]
-    # colors = {name: NATURE[i] for i, name in enumerate(labels)}
-    # plot.accuracy_per_epoch(colors, labels)

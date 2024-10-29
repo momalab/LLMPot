@@ -69,3 +69,21 @@ python ./src/plots/mbtcp/bca_rva_diff_functions.py
 ```shell
 python ./src/plots/math/default_functions.py -func sigmoid -samples 1000 -low -10 -high 10
 ```
+
+## RVA-e for Math Function
+
+```shell
+python ./src/plots/math/math_rva_e.py -exp mbtcp-math-functions.json -timestamp 20240427T1812
+```
+
+## ICSPatch Processes
+
+```shell
+python ./src/plots/mbtcp/bca_rva_icspatch_processes.py
+```
+
+## Anaerobic Variations
+
+```shell
+python ./src/plots/mbtcp/bca_rva_anaerobic_variations.py
+```
