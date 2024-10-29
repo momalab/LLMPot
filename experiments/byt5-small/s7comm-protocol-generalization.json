@@ -1,0 +1,54 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 100,
+  "patience": 10,
+  "datasets": [
+    {
+      "protocol": "s7comm",
+      "size": 1600,
+      "functions": [1,5,15,3,6,16],
+      "values": {"low": 0, "high": 27648},
+      "addresses": {"low": 0, "high": 39},
+      "client": "boundaries_client",
+      "server": {
+        "name": "no_logic_server",
+        "markers": 40,
+        "datablock": 40
+      },
+      "context": 0,
+      "multi_elements": 3
+    },
+    {
+      "protocol": "s7comm",
+      "size": 1600,
+      "functions": [1,5,15,3,6,16],
+      "values": {"low": 0, "high": 27648},
+      "addresses": {"low": 0, "high": 99},
+      "client": "boundaries_client",
+      "server": {
+        "name": "no_logic_server",
+        "markers": 100,
+        "datablock": 100
+      },
+      "context": 0,
+      "multi_elements": 3
+    },
+    {
+      "protocol": "s7comm",
+      "size": 1600,
+      "functions": [1,5,15,3,6,16],
+      "values": {"low": 0, "high": 27648},
+      "addresses": {"low": 0, "high": 49999},
+      "client": "boundaries_client",
+      "server": {
+        "name": "no_logic_server",
+        "markers": 50000,
+        "datablock": 50000
+      },
+      "context": 0,
+      "multi_elements": 3
+    }
+  ]
+}
+
