@@ -3,36 +3,30 @@ import os
 import time
 
 import torch
-from transformers import ByT5Tokenizer, T5ForConditionalGeneration, BitsAndBytesConfig
+from transformers import ByT5Tokenizer, T5ForConditionalGeneration
 
 from cfg import CHECKPOINTS, EXPERIMENTS
 from finetune.custom_lightning.byt5_lightning_module import Byt5LightningModule
 from finetune.model.finetuner_model import FinetunerModel
 
-import torch
-import torch.nn as nn
-import torch.nn.utils.prune as prune
-
-
 class ModelLoader:
 
     def __init__(self, finetuner_cfg: FinetunerModel, cuda: int = 0) -> None:
         self.finetuner_model = finetuner_cfg
-        self.cuda = cuda
-        os.environ["CUDA_VISIBLE_DEVICES"] = str(cuda)
-        print(f"Using CUDA device {cuda}")
+        # self.cuda = cuda
+        os.environ["CUDA_VISIBLE_DEVICES"] = "" #str(cuda)
+        # print(f"Using CUDA device {cuda}")
 
     def load_model(self, finetuner_model: FinetunerModel):
         tokenizer = ByT5Tokenizer.from_pretrained(finetuner_model.base_model_id())
 
-        bnb_config = BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_use_double_quant=False,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.bfloat16,
-        )
-        model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id(),
-            device_map="cuda")
+        # bnb_config = BitsAndBytesConfig(
+        #     load_in_4bit=True,
+        #     bnb_4bit_use_double_quant=False,
+        #     bnb_4bit_quant_type="nf4",
+        #     bnb_4bit_compute_dtype=torch.bfloat16,
+        # )
+        model_orig = T5ForConditionalGeneration.from_pretrained(finetuner_model.base_model_id(), device_map="cpu")
 
         model = Byt5LightningModule.load_from_checkpoint(
             checkpoint_path=f"{self.finetuner_model.experiment_instance_last_result_path}",
@@ -40,16 +34,16 @@ class ModelLoader:
             tokenizer=tokenizer,
             model=model_orig,
             test_dataset=None,
-            quantization_config=bnb_config,
-            trust_remote_code=True,
-            device_map="cuda",
+            # quantization_config=bnb_config,
+            # trust_remote_code=True,
+            device_map="cpu",
         )
         model.eval()
         return model, tokenizer
 
 
     def predict(self, request: str, model, tokenizer):
-        input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True).to("cuda")
+        input_ids = tokenizer.encode(request, return_tensors="pt", add_special_tokens=True).to("cpu")
         with torch.no_grad():
             # model.model.eval(input_ids)
             logits = model.model.generate(input_ids,
@@ -63,7 +57,7 @@ class ModelLoader:
                                         temperature=2.0,
                                         num_return_sequences=1,
                                         do_sample=True
-                                        ).to("cuda")
+                                        ).to("cpu")
             return tokenizer.batch_decode(logits, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
 
@@ -72,7 +66,6 @@ def main():
         config = cfg.read()
         config = json.loads(config)
         finetuner_model = FinetunerModel(experiment="mbtcp-protocol-emulation.json", **config)
-        finetuner_model.experiment = "mbtcp-protocol-emulation.json"
         finetuner_model.current_dataset = finetuner_model.datasets[4]
         print(finetuner_model.current_dataset)
         finetuner_model.start_datetime = os.listdir(f"{finetuner_model.experiment_dataset_result_path}")[0]
@@ -91,13 +84,6 @@ def main():
         timing.append(dur)
     timing  = timing[1:]
     print(f"Average time: {sum(timing) / len(timing)} ms")
-
-def apply_pruning_to_linear_layers(module):
-    for submodule_name, submodule in module.named_children():
-        if isinstance(submodule, torch.nn.Linear):
-            print(f"Pruning linear layer {submodule_name}")
-            prune.l1_unstructured(submodule, name='weight', amount=0.9)  # Example: prune 20% of weights
-        apply_pruning_to_linear_layers(submodule)
 
 if __name__ == '__main__':
     main()

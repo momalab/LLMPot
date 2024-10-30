@@ -97,8 +97,8 @@ def calculate_statistics(x, y, x_ai, y_ai):
     data_ai = np.column_stack((x_ai, y_ai))
 
     ks_stat, ks_p = ks_2samp(y, y_ai)
-    return ks_stat, ks_p
     print(f"KS-test statistic: {ks_stat}, P-value: {ks_p}")
+    return ks_stat, ks_p
 
     # spearman_corr, _ = spearmanr(x, y)
     # print(f"Spearman Correlation (Dataset 1): {spearman_corr}")
