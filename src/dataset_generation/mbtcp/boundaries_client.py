@@ -154,6 +154,7 @@ class BoundariesClient(MbtcpClient):
 
         random.shuffle(functions)
         functions = functions[:self._samples_num]
+        print(len(functions))
         self._functions = functions
 
 
