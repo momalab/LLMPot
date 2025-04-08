@@ -6,7 +6,7 @@
   "datasets": [
     {
       "protocol": "mbtcp",
-      "size": 6400,
+      "size": 200,
       "functions": [1,5,15,3,6,16],
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 39},
@@ -21,7 +21,7 @@
     },
     {
       "protocol": "mbtcp",
-      "size": 6400,
+      "size": 400,
       "functions": [1,5,15,3,6,16],
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 39},
@@ -36,7 +36,7 @@
     },
     {
       "protocol": "mbtcp",
-      "size": 6400,
+      "size": 800,
       "functions": [1,5,15,3,6,16],
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 39},
@@ -51,7 +51,7 @@
     },
     {
       "protocol": "mbtcp",
-      "size": 6400,
+      "size": 1600,
       "functions": [1,5,15,3,6,16],
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 39},
@@ -66,7 +66,7 @@
     },
     {
       "protocol": "mbtcp",
-      "size": 6400,
+      "size": 3200,
       "functions": [1,5,15,3,6,16],
       "values": {"low": 0, "high": 65535},
       "addresses": {"low": 0, "high": 39},
@@ -96,7 +96,7 @@
     },
     {
         "protocol": "mbtcp",
-        "size": 6400,
+        "size": 12800,
         "functions": [1,5,15,3,6,16],
         "values": {"low": 0, "high": 65535},
         "addresses": {"low": 0, "high": 39},
