@@ -1,9 +1,6 @@
 .DS_Store
 __pycache__/
-*.py[cod]
-*$py.class
 *.ckpt
-.ipynb_checkpoints
 
 .env
 .venv
@@ -11,14 +8,6 @@ env/
 venv/
 ENV/
 
-.idea/
-
-*.ckpt
-
 nohup.out
 outputs/logs
 outputs/datasets/dumps
-
-honeypot/
-
-node_modules/
