@@ -1,2 +1,0 @@
-epoch,accuracy/exact,step,accuracy/validator,dataset
-0,0.49951171875,0,0.99951171875,mbtcp-aircraft-c1-s4096

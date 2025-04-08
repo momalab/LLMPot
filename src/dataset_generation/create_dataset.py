@@ -31,8 +31,9 @@ def server(ip: str, port: int, finetuner_model: FinetunerModel, args: Any, serve
     server_inst.run()
 
 
-async def main(ip: str, port: int, interface: str, model: str, experiment: str, overwrite: bool = False):
+async def main(port: int, interface: str, model: str, experiment: str, overwrite: bool = False):
     try:
+        connection_ip_addr = "127.0.0.1"
         with open(f"{EXPERIMENTS}/{model}/{experiment}", "r") as cfg:
             config = cfg.read()
             config = json.loads(config)
@@ -59,20 +60,15 @@ async def main(ip: str, port: int, interface: str, model: str, experiment: str, 
             tcpdump_process = subprocess.Popen(["tcpdump", "-i", interface, "-w", f"{DATASET_DUMPS}/temp.pcap"])
 
             args = getattr(finetuner_model.current_dataset, f"{finetuner_model.current_dataset.protocol}_args")
-            server_inst = server_class(ip, port, *args)
+            print(*args)
+            server_inst = server_class(connection_ip_addr, port, *args)
 
-            server_thread = Process()
-            # update_thread = Process()
-            if finetuner_model.datasets[0].protocol == "mbtcp":
-                server_thread = Process(target=server_inst.start, daemon=True)
-                server_thread.start()
-
-                # update_thread = Process(target=server_inst.update_control_logic, daemon=True)
-                # update_thread.start()
+            server_thread = Process(target=server_inst.start, daemon=True)
+            server_thread.start()
 
             time.sleep(10)
 
-            client_inst = client_class(ip, port,
+            client_inst = client_class(connection_ip_addr, port,
                                        finetuner_model.current_dataset.size,
                                        finetuner_model.current_dataset.functions,
                                        finetuner_model.current_dataset.addresses,
@@ -85,12 +81,8 @@ async def main(ip: str, port: int, interface: str, model: str, experiment: str, 
             thread.start()
             thread.join()
 
-            if finetuner_model.datasets[0].protocol == "mbtcp":
-                # update_thread.terminate()
-                # update_thread.join()
-
-                server_thread.terminate()
-                server_thread.join()
+            server_thread.terminate()
+            server_thread.join()
 
             time.sleep(1)
 
@@ -111,21 +103,19 @@ async def main(ip: str, port: int, interface: str, model: str, experiment: str, 
 
 def init():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-ip', default="127.0.0.1", type=str, required=False)
-    parser.add_argument('-p', default=5020, type=int, required=False)
-    parser.add_argument('-intrf', default="lo0", type=str, required=False)
+    parser.add_argument('-p', default=10200, type=int, required=False)
+    parser.add_argument('-intrf', default="lo", type=str, required=False)
     parser.add_argument('-model', default="byt5-small", type=str, required=False)
-    parser.add_argument('-exp', default="mbtcp-protocol-emulation-add-11.json", type=str, required=False)
+    parser.add_argument('-exp', default="s7comm-protocol-emulation.json", type=str, required=False)
     parser.add_argument('-o', default=False, type=bool, required=False)
     args = parser.parse_args()
 
-    server_address = args.ip
     server_port = args.p
     interface = args.intrf
     model = args.model
     experiment = args.exp
 
-    asyncio.run(main(ip=server_address, port=server_port, interface=interface, model=model, experiment=experiment, overwrite=args.o))
+    asyncio.run(main(port=server_port, interface=interface, model=model, experiment=experiment, overwrite=args.o))
 
 
 if __name__ == '__main__':

@@ -93,6 +93,21 @@
       },
       "context": 0,
       "multi_elements": 3
-    }
+    },
+    {
+        "protocol": "mbtcp",
+        "size": 12800,
+        "functions": [1,5,15,3,6,16],
+        "values": {"low": 0, "high": 65535},
+        "addresses": {"low": 0, "high": 39},
+        "client": "boundaries_client",
+        "server": {
+          "name": "no_logic_server",
+          "coils": 40,
+          "registers": 40
+        },
+        "context": 0,
+        "multi_elements": 3
+      }
   ]
 }

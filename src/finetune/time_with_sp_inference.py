@@ -5,37 +5,42 @@ import random
 
 import tqdm
 
-from inference_runner import ModelLoader
+from finetune.utils.inference_runner import ModelLoader
 
 from cfg import DATASET_PARSED, EXPERIMENTS
 from finetune.model.finetuner_model import DatasetModel, FinetunerModel
 import argparse
 
-experiment_path = os.path.join(DATASET_PARSED, "mbtcp-testbed.json")
+EXPERIMENT_FILE_NAME = "mbtcp-testbed.json"
+experiment_path = os.path.join(DATASET_PARSED, EXPERIMENT_FILE_NAME)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--sp", type=str, default="00", help="sp")
-parser.add_argument("--size", type=int, default=12800, help="size")
 parser.add_argument("--cuda", type=int, default=0, help="cuda device")
 parser.add_argument("--runs", nargs="+", default=[1], help="list of values")
+parser.add_argument("--model", type=str, default="byt5-small", help="the model to use")
+parser.add_argument("--timestamp", type=str, default="20240708T1621", help="timestamp of finetuning")
 args = parser.parse_args()
 
-slots = [20, 40, 60, 80]
-# slots = [40, 80, 120, 160]
+EXPERIMENT_TIMESTAMP = args.timestamp
 
-with open(f"{EXPERIMENTS}/mbtcp-testbed.json", "r") as cfg:
+slots = [20, 40, 60, 80]
+
+with open(f"{EXPERIMENTS}/{args.model}/{EXPERIMENT_FILE_NAME}", "r") as cfg:
     config = cfg.read()
     config = json.loads(config)
-    finetuner_model = FinetunerModel(**config)
-    finetuner_model.experiment = "mbtcp-testbed.json"
-    finetuner_model.current_dataset = DatasetModel(protocol="mbtcp", size=12800, client=f"testbed-sp{args.sp}", context=1)
-    finetuner_model.start_datetime = "20240708T1621"
+    finetuner_model = FinetunerModel(experiment=EXPERIMENT_FILE_NAME, **config)
+    # finetuner_model.current_dataset = DatasetModel(protocol="mbtcp", size=args.size, client=f"testbed-sp{args.sp}", context=1)
+    finetuner_model.start_datetime = EXPERIMENT_TIMESTAMP
 
     model_loader = ModelLoader(finetuner_model, cuda=args.cuda)
     model, tokenizer = model_loader.load_model(finetuner_model)
 
 for csv_file in os.listdir(experiment_path):
-    if "result" in csv_file or ((f"sp{args.sp}-c2-s{args.size}") not in csv_file):
+    if not csv_file.endswith(".csv"):
+        continue
+    size = int(csv_file.split('-')[4].split('.')[0][1:])
+    if "result" in csv_file or (f"sp{args.sp}-c2-s{size}" not in csv_file):
         print(f"Skipping {csv_file}")
         continue
 
@@ -66,7 +71,7 @@ for csv_file in os.listdir(experiment_path):
                         continue
 
                 new_lines.append(str(sp) + "-" + str("{:.2f}".format(float(time))) + "|" + row[0].split('|')[1])
-                if len(new_lines) > 1600:
+                if len(new_lines) > size:
                     break
         print(f"Total lines: {len(new_lines)}")
         with open(f"{file.name.split('.csv')[0]}_result_run_{i}.csv", 'w', newline='') as result_file:

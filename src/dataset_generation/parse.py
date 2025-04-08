@@ -29,7 +29,7 @@ def parse_without_file(protocol: str, port: int, cap, csv_filename: str, context
 def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: int, has_time: bool, experiment: str):
     dataset_dict = {SOURCE_TEXT: [], TARGET_TEXT: []}
     request_packets: Dict[int, Any] = {}
-    response_packets: Dict[int, str] = {}
+    response_packets: Dict[int, Any] = {}
     packet: Packet
 
     if protocol == "s7comm":
@@ -45,6 +45,8 @@ def __parse(protocol: str, port: int, cap, csv_filename: str, context_length: in
             fragments.append(eval(item))
         the_value = ''.join(fragments)
 
+        if packet.sniff_timestamp is None:
+            raise ValueError("No timestamp")
         the_time: float = float(packet.sniff_timestamp)
         if index == 0:
             prev_time = the_time
@@ -98,7 +100,7 @@ def main():
     parser.add_argument('-layer', default="mbtcp", required=False) #tpkt
     parser.add_argument('-pr', default="mbtcp", required=False) #s7comm
     parser.add_argument('-clen', default=0, type= int, required=False)
-    parser.add_argument('-t', default=True, type=bool, required=False)
+    parser.add_argument('-t', action="store_true", required=False)
     parser.add_argument('-exp', default="mbtcp-testbed.json", required=False)
     args = parser.parse_args()
 
@@ -110,6 +112,8 @@ def main():
     context_length = args.clen
     has_time = args.t
     experiment = args.exp
+
+    print(f"has_time: {has_time}")
 
     if has_time and context_length > 0:
         raise ValueError("Cannot have time and context length at the same time")

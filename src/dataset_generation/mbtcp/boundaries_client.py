@@ -93,6 +93,7 @@ class BoundariesClient(MbtcpClient):
                         (ReadHoldingRegistersRequest, [address, 1], {}),
                     ])
 
+
             register_functions_multiple: List[tuple[Callable[..., Any], List[Any], dict]] = []
             if 3 in self._codes and 16 in self._codes:
                 for elements in range(1, self._max_elements):
@@ -154,6 +155,7 @@ class BoundariesClient(MbtcpClient):
 
         random.shuffle(functions)
         functions = functions[:self._samples_num]
+        print(len(functions))
         self._functions = functions
 
 

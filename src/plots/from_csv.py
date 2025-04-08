@@ -1,20 +1,15 @@
-import glob
 import json
 import os
 from typing import List
 
-from matplotlib import legend
-from matplotlib.patches import Shadow
-import plotly
 import plotly.express as px
 
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.colors import qualitative
-from regex import F
 
-from cfg import EXPERIMENTS, CHECKPOINTS, ASSETS, TEST_METRICS, TRAINING_METRICS
+from cfg import EXPERIMENTS, ASSETS
 from finetune.model.finetuner_model import FinetunerModel
+
 import plotly.io as pio
 pio.kaleido.scope.mathjax = None
 
@@ -26,10 +21,14 @@ NATURE = ['#C03221', '#87BCDE', '#EDB88B', '#545E75', '#3F826D', '#88498F']
 
 
 class Plots:
-    def __init__(self, experiment: str):
+    def __init__(self, experiment: str, timestamp: str):
         self._metrics = ['csv-accuracy/validator', 'csv-accuracy/exact']
         self._test_metrics = ['accuracy/validator', 'accuracy/exact']
-        self._finetuner = self._load_experiment(experiment)
+        self._finetuner = self._load_experiment(experiment, timestamp)
+
+    @property
+    def finetuner(self):
+        return self._finetuner
 
     @staticmethod
     def get_symbol(key: str, keys: List, options: List):
@@ -46,24 +45,23 @@ class Plots:
         return "#{:02X}{:02X}{:02X}".format(r, g, b)
 
     @staticmethod
-    def _load_experiment(experiment: str):
-        with open(f"{EXPERIMENTS}/{experiment}", "r") as cfg:
+    def _load_experiment(experiment: str, timestamp: str):
+        with open(f"{EXPERIMENTS}/byt5-small/{experiment}", "r") as cfg:
             config = cfg.read()
             config = json.loads(config)
             finetuner_model = FinetunerModel(experiment=experiment, **config)
-            finetuner_model.experiment = f"{experiment}"
+            finetuner_model.start_datetime = timestamp
 
             return finetuner_model
 
     def accuracy_with_random_dataset(self):
         dfs = pd.DataFrame()
         for dataset in self._finetuner.datasets:
-            the_dir = f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}"
-            start_datetime_path = [name for name in os.listdir(the_dir) if os.path.isdir(os.path.join(the_dir, name))][1]
-            if not os.path.exists(f"{the_dir}/csv/{start_datetime_path}/metrics2.csv"):
-                continue
+            self._finetuner.current_dataset = dataset
+            if not os.path.exists(self.finetuner.experiment_csv_metrics_path):
+                raise FileNotFoundError(f"{self.finetuner.experiment_csv_metrics_path} not found")
 
-            df = pd.read_csv(f"{the_dir}/csv/{start_datetime_path}/metrics2.csv")
+            df = pd.read_csv(self.finetuner.experiment_csv_metrics_path)
             df.loc[:, 'test_dataset'] = dataset.server.datablock if hasattr(dataset.server, "datablock") else dataset.server.coils
             df.loc[:, 'plc_cfg'] = df['test_dataset'].apply(lambda x: "same" if x == 40 else "different")
             df.loc[:, 'size'] = df['dataset'].apply(lambda x: f"{x.split('-')[3]}")
@@ -100,23 +98,14 @@ class Plots:
             os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
             fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{validation_type}.pdf")
 
-    def accuracy_per_epoch(self, colors: dict, labels: List):
-        # names =["[-120, -60]", "[-90, -30]", "[30, 90]", "[60, 120]"]
-        # names =["a-40_d-40", "a-100_d-100", "a-5000_d-5000"]
+    def accuracy_per_epoch(self, colors: dict, labels: List, max_epochs: int = 1000):
         dfs = pd.DataFrame()
-        # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
-        # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
-        # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(self._finetuner.datasets)}
-        # colors = {name: NATURE[i] for i, name in enumerate(names)}
         for dataset in self._finetuner.datasets:
-            for file in os.listdir(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/"):
-                if file != "csv":
-                    start_datetime_path = file
-                    break
-            if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv"):
-                continue
+            self._finetuner.current_dataset = dataset
+            if not os.path.exists(self.finetuner.experiment_csv_metrics_path):
+                raise FileNotFoundError(f"{self.finetuner.experiment_csv_metrics_path} not found")
 
-            df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv")
+            df = pd.read_csv(self.finetuner.experiment_csv_metrics_path)
             df.drop(columns=['csv-val_loss_step', 'csv-val_loss_epoch', 'csv-train_loss_step', 'csv-train_loss_epoch'], inplace=True)
             df.dropna(subset=["csv-accuracy/validator", "csv-accuracy/exact"], inplace=True)
             df.loc[:, 'dataset'] = str(dataset)
@@ -126,9 +115,8 @@ class Plots:
             validation_type = metric.split("/")[1]
             fig = go.Figure()
             for index, dataset in enumerate(self._finetuner.datasets):
+                self._finetuner.current_dataset = dataset
                 df = dfs.query(f"dataset == '{dataset}'")
-                if labels[index] == 'g1':
-                    df[metric] = df[metric] + 0.2
                 fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df[metric],
                                          mode='lines',
                                          name=labels[index],
@@ -161,27 +149,24 @@ class Plots:
     def loss_per_epoch(self, colors: dict, labels: List, log_y_axis: bool = True):
         dfs = pd.DataFrame()
         for dataset in self._finetuner.datasets:
-            for file in os.listdir(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/"):
-                if file != "csv":
-                    start_datetime_path = file
-                    break
-
-            if not os.path.exists(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv"):
+            self._finetuner.current_dataset = dataset
+            if not os.path.exists(self.finetuner.experiment_csv_metrics_path):
                 continue
-            df = pd.read_csv(f"{CHECKPOINTS}/{self._finetuner.experiment}/{dataset}/csv/{start_datetime_path}/metrics.csv")
+            df = pd.read_csv(self.finetuner.experiment_csv_metrics_path)
             df.drop(columns=['csv-val_loss_step', 'csv-train_loss_step', 'csv-accuracy/validator', 'csv-accuracy/exact', 'step'], inplace=True)
 
             val_df = df.dropna(subset=["csv-val_loss_epoch"]).drop(columns=["csv-train_loss_epoch"])
             train_df = df.dropna(subset=["csv-train_loss_epoch"]).drop(columns=["csv-val_loss_epoch"])
 
             df = pd.merge(val_df, train_df, on="csv-epoch", how="inner")
-            df.loc[:, 'dataset'] = dataset.__str__()
+            df.loc[:, 'dataset'] = str(dataset)
             df.loc[:, 'functions'] = dataset.functions_str()
             dfs = pd.concat([dfs, df])
 
         fig = go.Figure()
         for index, dataset in enumerate(self._finetuner.datasets):
-            df = dfs.query(f"dataset == '{dataset.__str__()}'")
+            self._finetuner.current_dataset = dataset
+            df = dfs.query(f"dataset == '{dataset}'")
             fig.add_trace(go.Scatter(x=df['csv-epoch'], y=df['csv-val_loss_epoch'],
                                      mode='lines',
                                      name=f"v-{labels[index]}",
@@ -234,61 +219,3 @@ class Plots:
 
         os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
         fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/losses.pdf")
-
-
-if __name__ == '__main__':
-    # plot = Plots("mbtcp-protocol-test.json")
-    # plot.accuracy_with_random_dataset()
-
-    # plot = Plots("s7comm-protocol-test.json")
-    # plot.accuracy_with_random_dataset()
-
-    # plot = Plots("s7comm-protocol-emulation.json")
-    # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    # labels = [dataset.size for dataset in plot._finetuner.datasets]
-    # plot.accuracy_per_epoch(colors, labels)
-    # plot.loss_per_epoch(colors, labels)
-
-    # plot = Plots("mbtcp-protocol-emulation.json")
-    # colors = {dataset.size: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    # labels = [dataset.size for dataset in plot._finetuner.datasets]
-    # plot.accuracy_per_epoch(colors, labels)
-    # plot.loss_per_epoch(colors, labels)
-
-    # plot = Plots("mbtcp-diff-functions.json")
-    # colors = {dataset.functions_str(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    # labels = [dataset.functions_str() for dataset in plot._finetuner.datasets]
-    # plot.accuracy_per_epoch(colors, labels)
-    # plot.loss_per_epoch(colors, labels)
-
-
-    # plot = Plots("mbtcp-icspatch-processes.json")
-    # colors = {dataset.client: NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    # labels = [f"{dataset.client}" for dataset in plot._finetuner.datasets]
-    # plot.accuracy_per_epoch(colors, labels)
-    # plot.loss_per_epoch(colors, labels, False)
-
-    # plot = Plots("mbtcp-protocol-generalization.json")
-    # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    # labels = [dataset.server.__str__() for dataset in plot._finetuner.datasets]
-    # plot.accuracy_per_epoch(colors, labels)
-
-    # plot = Plots("s7comm-protocol-generalization.json")
-    # colors = {dataset.server.__str__(): NATURE[i] for i, dataset in enumerate(plot._finetuner.datasets)}
-    # labels = [dataset.server.__str__() for dataset in plot._finetuner.datasets]
-    # plot.accuracy_per_epoch(colors, labels)
-
-    plot = Plots("mbtcp-anaerobic-variations.json")
-    labels =["[-30, 30]", "[-120, -60]", "[-90, -30]", "[30, 90]", "[60, 120]"]
-    colors = {name: NATURE[i] for i, name in enumerate(labels)}
-    plot.accuracy_per_epoch(colors, labels)
-
-    # plot = Plots("mbtcp-protocol-emulation-ablation-addresses.json")
-    # labels =["o1", "g1", "g2"]
-    # colors = {name: NATURE[i] for i, name in enumerate(labels)}
-    # plot.accuracy_per_epoch(colors, labels)
-
-    # plot = Plots("s7comm-protocol-emulation-ablation-addresses.json")
-    # labels =["o1", "g1", "g2"]
-    # colors = {name: NATURE[i] for i, name in enumerate(labels)}
-    # plot.accuracy_per_epoch(colors, labels)

@@ -1,12 +1,13 @@
 class Validator:
 
-    def __init__(self, request, response, end_address):
+    def __init__(self, request, response, expected_response, end_address):
 
         self.request = request
         if ":" in request:
             self.request = request[:-1]
         self.response = response
         self._end_address = end_address
+        self._expected_response = expected_response
         hex_chunks_query = [self.request[i:i + 2] for i in range(0, len(self.request), 2)]
         hex_chunks_response = [self.response[i:i + 2] for i in range(0, len(self.response), 2)]
 
@@ -57,5 +58,5 @@ class Validator:
 
 
 if __name__ == '__main__':
-    val = Validator("0300001902f080320300002f0000020004000004010a000004", "0300001902f080320300002f0000020004000004010a000004", 3)
+    val = Validator("0300001902f080320300002f0000020004000004010a000004", "0300001902f080320300002f0000020004000004010a000004", "0300001902f080320300002f0000020004000004010a000004", 3)
     val.check_payload()

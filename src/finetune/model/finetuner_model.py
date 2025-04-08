@@ -109,9 +109,5 @@ class FinetunerModel:
         return f"{self.experiment_instance_result_path}/checkpoints/last.ckpt"
 
     @property
-    def experiment_instance_status_result_path(self):
-        return f"{self.experiment_instance_result_path}/interrupted.end"
-
-    @property
     def experiment_csv_metrics_path(self):
         return f"{self.experiment_dataset_result_path}/csv/{self.start_datetime}/metrics.csv"

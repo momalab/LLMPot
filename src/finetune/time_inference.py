@@ -5,7 +5,7 @@ import random
 
 import tqdm
 
-from inference_runner import ModelLoader
+from finetune.utils.inference_runner import ModelLoader
 
 from cfg import DATASET_PARSED, EXPERIMENTS
 from finetune.model.finetuner_model import DatasetModel, FinetunerModel

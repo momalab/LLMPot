@@ -1,5 +1,5 @@
-from dataset_generation.s7comm.server import S7Comm, retrieve_args
 from snap7.types import srvAreaDB, srvAreaMK
+from dataset_generation.s7comm.server import S7Comm, retrieve_args
 
 
 class NoLogicServer(S7Comm):
@@ -9,7 +9,7 @@ class NoLogicServer(S7Comm):
 
 def main():
     ip, port = retrieve_args()
-    server = NoLogicServer(ip, port, 1, 40)
+    server = NoLogicServer(ip, port, 1, 100)
     server.start()
 
 

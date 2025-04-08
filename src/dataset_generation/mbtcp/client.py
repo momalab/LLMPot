@@ -1,6 +1,5 @@
 import argparse
 import random
-import re
 import time
 from typing import Tuple, List
 
@@ -47,7 +46,7 @@ class MbtcpClient(ModbusTcpClient):
             request = function(*args, **kwargs)
             self.transaction.tid = self.transaction_ids.pop()
 
-            if hasattr(request, "slave_id") and request.slave_id == None:
+            if hasattr(request, "slave_id") and request.slave_id is None:
                 request.slave_id = 0
 
             response = self.execute(request)
