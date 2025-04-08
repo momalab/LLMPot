@@ -37,3 +37,4 @@ sentencepiece
 huggingface_hub
 
 ipinfo
+pycomm3

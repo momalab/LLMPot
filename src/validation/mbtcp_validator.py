@@ -71,8 +71,8 @@ class Validator:
             else:
                 raise ValueError(f"Information request expected same values but, payload: {self.response}, expected: {self.expected_response}")
 
-        # if self.address > self._end_address:
-        #     raise ValueError(f"Should have thrown an exception since requested address: {self.address} exceeds: {self._end_address}")
+        if self.address > self._end_address:
+            raise ValueError(f"Should have thrown an exception since requested address: {self.address} exceeds: {self._end_address}")
 
         elif r_fc == q_fc:
             if fc == "01":

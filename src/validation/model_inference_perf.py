@@ -11,6 +11,7 @@ MODELS = 1
 N = 100
 
 
+
 def inference(model: SimpleT5, requests: DataFrame) -> [str]:
     predicted_responses = []
     for request in requests.iterrows():
@@ -29,7 +30,7 @@ def main():
         model = SimpleT5()
         model.load_model("byt5", "/home/dam10098/ICSPot/finetuned_models/outputs/simplet5-epoch-4-train-loss-0.4035-val-loss-0.3972", use_gpu=True)
         # simplet5-epoch-4-train-loss-0.4064-val-loss-0.4183
-        # 
+        #
         models.append(model)
 
     try:

@@ -98,7 +98,7 @@ class Plots:
             os.makedirs(f"{ASSETS}/{self._finetuner.experiment}/", exist_ok=True)
             fig.write_image(f"{ASSETS}/{self._finetuner.experiment}/{validation_type}.pdf")
 
-    def accuracy_per_epoch(self, colors: dict, labels: List):
+    def accuracy_per_epoch(self, colors: dict, labels: List, max_epochs: int = 1000):
         dfs = pd.DataFrame()
         for dataset in self._finetuner.datasets:
             self._finetuner.current_dataset = dataset
