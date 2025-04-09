@@ -1,0 +1,51 @@
+services:
+
+  modbus_app:
+    build:
+      context: ..
+      dockerfile: emulator/modbus.Dockerfile
+      args:
+        - CHECKPOINT_PATH=./honeypot/byt5-small/mbtcp-protocol-emulation-add-11.json/
+        - CHECKPOINT_PATH_TARGET=./checkpoints/byt5-small/mbtcp-protocol-emulation-add-11.json/
+        - EXPERIMENT_PATH=./experiments/byt5-small/mbtcp-protocol-emulation-add-11.json
+        - EXPERIMENT=mbtcp-protocol-emulation-add-11.json
+        - MONGO_PWD=m0m@l@b202$
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - "502:5020"
+
+  web_app:
+    build:
+      context: ..
+      dockerfile: ./emulator/web.Dockerfile
+      args:
+        - MONGO_PWD=m0m@l@b202$
+    restart: always
+    depends_on:
+      - mongo
+
+  mongo:
+    hostname: mongo
+    image: mongo
+    restart: always
+    volumes:
+      - /Users/cv43/mongo/data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: m0m@l@b202$
+    ports:
+      - "27017:27017"
+
+  proxy:
+    build:
+      context: .
+      dockerfile: haproxy.Dockerfile
+    restart: always
+    depends_on:
+      - modbus_app
+      - web_app
+    ports:
+      - "8080:80"
+      - "8443:443"

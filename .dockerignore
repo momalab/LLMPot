@@ -1,0 +1,6 @@
+.vscode/
+assets/
+checkpoints/
+docker/
+outputs/
+scripts/

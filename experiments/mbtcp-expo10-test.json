@@ -1,0 +1,30 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 30,
+  "patience": 5,
+  "target_max_token_len": 512,
+  "source_max_token_len": 512,
+  "batch_size": 8,
+  "datasets": [
+    {
+      "protocol": "mbtcp",
+      "size": 4096,
+      "client": "expo10",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 4096,
+      "client": "expo10_linear",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    }
+  ],
+  "experiment_filename": "mbtcp-expo10-ablation.json"
+}

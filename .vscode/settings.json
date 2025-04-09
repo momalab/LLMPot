@@ -1,0 +1,60 @@
+{
+    "python.terminal.launchArgs": [],
+    "sarif-viewer.connectToGithubCodeScanning": "off",
+    "cSpell.enabled": false,
+    "pylint.args": [
+        "--disable=C0114",
+        "--disable=C0115",
+        "--disable=C0116",
+        "--disable=W1514",
+        "--disable=R0903",
+        "--disable=W0718",
+        "--max-line-length=240",
+        "--disable=W1203",
+        "--disable=W0702"
+    ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "files.exclude": {
+        "**/.icspot": true,
+        "**/.idea": true,
+        "**/.git": true,
+        "**/__pycache__": true
+    },
+    "files.watcherExclude": {
+        "**/.icspot": true,
+        "**/.idea": true,
+        "**/.git": true,
+        "**/__pycache__": true
+    },
+    "files.trimTrailingWhitespace": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "autopep8.args": ["--max-line-length=240"],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "[json]": {
+        "editor.indentSize": "tabSize",
+        "editor.quickSuggestions": {
+            "strings": true
+        },
+        "editor.suggest.insertMode": "replace"
+    },
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "save",
+        "source.unusedImports": "save"
+    },
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": true
+    },
+    "prettier.tabWidth": 4,
+    "prettier.useTabs": false
+}

@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+
+#  honeyd:
+#    image: honeyd/base:v1
+#    privileged: true
+#    command: tail -f /dev/null
+#    deploy:
+#      mode: replicated
+#      replicas: 2

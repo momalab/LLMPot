@@ -1,0 +1,27 @@
+services:
+
+  mongo:
+    volumes:
+      - /home/chris/mongo:/data/db
+    command: --quiet
+
+  web_app:
+    volumes:
+      - /home/chris/logs/web:/app/logs
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+
+  modbus_app:
+    volumes:
+      - /home/chris/logs/modbus:/app/logs
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
