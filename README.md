@@ -87,3 +87,21 @@ python ./src/plots/mbtcp/bca_rva_icspatch_processes.py
 ```shell
 python ./src/plots/mbtcp/bca_rva_anaerobic_variations.py
 ```
+
+## Cite Us
+
+If you find our work interesting and use it in your research, please cite our paper:
+
+Christoforos Vasilatos, Dunia J. Mahboobeh, Hithem Lamri, Manaar Alam and Michail Maniatakos, "LLMPot: Automated LLM-based Industrial Protocol and Physical Process Emulation for ICS Honeypots".
+
+```
+@misc{vasilatos2024llmpotautomatedllmbasedindustrial,
+      title={LLMPot: Automated LLM-based Industrial Protocol and Physical Process Emulation for ICS Honeypots},
+      author={Christoforos Vasilatos and Dunia J. Mahboobeh and Hithem Lamri and Manaar Alam and Michail Maniatakos},
+      year={2024},
+      eprint={2405.05999},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2405.05999},
+}
+```
