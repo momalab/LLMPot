@@ -139,13 +139,13 @@ Christoforos Vasilatos, Dunia J. Mahboobeh, Hithem Lamri, Manaar Alam, and Micha
 "LLMPot: Automated LLM-based Industrial Protocol and Physical Process Emulation for ICS Honeypots".
 
 ```bibtex
-@misc{vasilatos2024llmpotautomatedllmbasedindustrial,
-    title={LLMPot: Automated LLM-based Industrial Protocol and Physical Process Emulation for ICS Honeypots},
-    author={Christoforos Vasilatos and Dunia J. Mahboobeh and Hithem Lamri and Manaar Alam and Michail Maniatakos},
-    year={2024},
-    eprint={2405.05999},
-    archivePrefix={arXiv},
-    primaryClass={cs.CR},
-    url={https://arxiv.org/abs/2405.05999},
+@misc{vasilatos2025llmpotdynamicallyconfiguredllmbased,
+      title={LLMPot: Dynamically Configured LLM-based Honeypot for Industrial Protocol and Physical Process Emulation}, 
+      author={Christoforos Vasilatos and Dunia J. Mahboobeh and Hithem Lamri and Manaar Alam and Michail Maniatakos},
+      year={2025},
+      eprint={2405.05999},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2405.05999}, 
 }
 ```
