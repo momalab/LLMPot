@@ -1,0 +1,4 @@
+emulator/server/wbm/** linguist-vendored
+emulator/server/json_files/** linguist-vendored
+emulator/server/templates/** linguist-vendored
+*.php linguist-language=PHP

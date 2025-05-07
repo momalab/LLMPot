@@ -1,0 +1,12 @@
+step,accuracy/exact,epoch,accuracy/validator,dataset
+0,0.0,0,0.0,mbtcp-boundaries_client-c0-s200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40
+0,0.0,0,0.0,mbtcp-boundaries_client-c0-s200-f1_15_3_16-v0_65535-a0_39-sc40-sr40
+0,0.6832031607627869,0,0.703125,mbtcp-boundaries_client-c0-s400-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40
+0,0.792187511920929,0,0.850390613079071,mbtcp-boundaries_client-c0-s400-f1_15_3_16-v0_65535-a0_39-sc40-sr40
+0,0.7939453125,0,0.80078125,mbtcp-boundaries_client-c0-s800-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40
+0,0.580078125,0,0.59375,mbtcp-boundaries_client-c0-s800-f1_15_3_16-v0_65535-a0_39-sc40-sr40
+0,0.845703125,0,0.845703125,mbtcp-boundaries_client-c0-s1600-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40
+0,0.812695324420929,0,0.828320324420929,mbtcp-boundaries_client-c0-s1600-f1_15_3_16-v0_65535-a0_39-sc40-sr40
+0,0.905468761920929,0,0.906445324420929,mbtcp-boundaries_client-c0-s3200-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40
+0,0.7998046875,0,0.8921875357627869,mbtcp-boundaries_client-c0-s3200-f1_15_3_16-v0_65535-a0_39-sc40-sr40
+0,0.8251953125,0,0.8291015625,mbtcp-boundaries_client-c0-s6400-f1_5_15_3_6_16-v0_65535-a0_39-sc40-sr40

@@ -1,0 +1,30 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 200,
+  "patience": 5,
+  "source_max_token_len": 128,
+  "target_max_token_len": 128,
+  "batch_size": 8,
+  "validation": ["exact"],
+  "datasets": [
+    {
+      "protocol": "mbtcp",
+      "size": 1024,
+      "client": "expo10",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    },
+    {
+      "protocol": "mbtcp",
+      "size": 1024,
+      "client": "expo10_linear",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "model_type": "google",
+  "model_name": "byt5-small",
+  "max_epochs": 30,
+  "patience": 5,
+  "target_max_token_len": 256,
+  "source_max_token_len": 256,
+  "batch_size": 8,
+  "datasets": [
+    {
+      "protocol": "mbtcp",
+      "size": 4096,
+      "client": "cauchy",
+      "server": {
+        "name": "no_logic_server"
+      },
+      "context": 1
+    }
+  ]
+}

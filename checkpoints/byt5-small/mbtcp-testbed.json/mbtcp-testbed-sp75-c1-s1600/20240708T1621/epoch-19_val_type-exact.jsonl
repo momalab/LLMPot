@@ -1,0 +1,160 @@
+{"valid": true, "context": "8.58", "request": "00a800000006000300030001:", "response": "00a8000000050003027fff", "expected_response": "00a8000000050003027fff"}
+{"valid": true, "context": "37.53", "request": "02db00000006000300030001:", "response": "02db000000050003027fff", "expected_response": "02db000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "9.97", "request": "00c300000006000300030001:", "response": "00c3000000050003027fff", "expected_response": "00c3000000050003027faa"}
+{"valid": false, "error": "Not same as expected.", "context": "19.01", "request": "017300000006000300030001:", "response": "0173000000050003027fff", "expected_response": "0173000000050003027f66"}
+{"valid": true, "context": "9.09", "request": "00b200000006000300030001:", "response": "00b2000000050003027fff", "expected_response": "00b2000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "13.56", "request": "010900000006000300030001:", "response": "0109000000050003027fff", "expected_response": "0109000000050003027fa4"}
+{"valid": false, "error": "Not same as expected.", "context": "54.95", "request": "042e00000006000300030001:", "response": "042e000000050003027fff", "expected_response": "042e000000050003027f4e"}
+{"valid": true, "context": "4.06", "request": "005000000006000300030001:", "response": "0050000000050003027fff", "expected_response": "0050000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "41.23", "request": "032300000006000300030001:", "response": "0323000000050003027fff", "expected_response": "0323000000050003027fbc"}
+{"valid": true, "context": "57.66", "request": "046300000006000300030001:", "response": "0463000000050003027fff", "expected_response": "0463000000050003027fff"}
+{"valid": true, "context": "16.50", "request": "014200000006000300030001:", "response": "0142000000050003027fff", "expected_response": "0142000000050003027fff"}
+{"valid": true, "context": "26.22", "request": "01ff00000006000300030001:", "response": "01ff000000050003027fff", "expected_response": "01ff000000050003027fff"}
+{"valid": true, "context": "40.92", "request": "031d00000006000300030001:", "response": "031d000000050003027fff", "expected_response": "031d000000050003027fff"}
+{"valid": true, "context": "72.26", "request": "057f00000006000300030001:", "response": "057f000000050003027fff", "expected_response": "057f000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "48.27", "request": "03ac00000006000300030001:", "response": "03ac000000050003027fff", "expected_response": "03ac000000050003027fe1"}
+{"valid": true, "context": "55.61", "request": "043b00000006000300030001:", "response": "043b000000050003027fff", "expected_response": "043b000000050003027fff"}
+{"valid": true, "context": "72.62", "request": "058600000006000300030001:", "response": "0586000000050003027fff", "expected_response": "0586000000050003027fff"}
+{"valid": true, "context": "64.76", "request": "04ed00000006000300030001:", "response": "04ed000000050003027fff", "expected_response": "04ed000000050003027fff"}
+{"valid": true, "context": "2.67", "request": "003500000006000300030001:", "response": "0035000000050003027fff", "expected_response": "0035000000050003027fff"}
+{"valid": true, "context": "30.23", "request": "024d00000006000300030001:", "response": "024d000000050003027fff", "expected_response": "024d000000050003027fff"}
+{"valid": true, "context": "11.30", "request": "00dd00000006000300030001:", "response": "00dd000000050003027fff", "expected_response": "00dd000000050003027fff"}
+{"valid": true, "context": "49.91", "request": "03cc00000006000300030001:", "response": "03cc000000050003027fff", "expected_response": "03cc000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "59.36", "request": "048400000006000300030001:", "response": "0484000000050003027fff", "expected_response": "0484000000050003027f9e"}
+{"valid": true, "context": "65.69", "request": "04ff00000006000300030001:", "response": "04ff000000050003027fff", "expected_response": "04ff000000050003027fff"}
+{"valid": true, "context": "69.74", "request": "054e00000006000300030001:", "response": "054e000000050003027fff", "expected_response": "054e000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "11.51", "request": "00e100000006000300030001:", "response": "00e1000000050003027fff", "expected_response": "00e1000000050003027fdb"}
+{"valid": false, "error": "Not same as expected.", "context": "40.25", "request": "031000000006000300030001:", "response": "0310000000050003027fff", "expected_response": "0310000000050003027fa8"}
+{"valid": true, "context": "51.50", "request": "03eb00000006000300030001:", "response": "03eb000000050003027fff", "expected_response": "03eb000000050003027fff"}
+{"valid": true, "context": "34.96", "request": "02a900000006000300030001:", "response": "02a9000000050003027fff", "expected_response": "02a9000000050003027fff"}
+{"valid": true, "context": "79.19", "request": "060600000006000300030001:", "response": "0606000000050003027fff", "expected_response": "0606000000050003027fff"}
+{"valid": true, "context": "28.58", "request": "022d00000006000300030001:", "response": "022d000000050003027fff", "expected_response": "022d000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "10.38", "request": "00cb00000006000300030001:", "response": "00cb000000050003027fff", "expected_response": "00cb000000050003027faa"}
+{"valid": true, "context": "23.08", "request": "01c200000006000300030001:", "response": "01c2000000050003027fff", "expected_response": "01c2000000050003027fff"}
+{"valid": true, "context": "77.39", "request": "05e300000006000300030001:", "response": "05e3000000050003027fff", "expected_response": "05e3000000050003027fff"}
+{"valid": true, "context": "71.13", "request": "056900000006000300030001:", "response": "0569000000050003027fff", "expected_response": "0569000000050003027fff"}
+{"valid": true, "context": "5.20", "request": "006600000006000300030001:", "response": "0066000000050003027fff", "expected_response": "0066000000050003027fff"}
+{"valid": true, "context": "79.70", "request": "061000000006000300030001:", "response": "0610000000050003027fff", "expected_response": "0610000000050003027fff"}
+{"valid": true, "context": "48.32", "request": "03ad00000006000300030001:", "response": "03ad000000050003027fff", "expected_response": "03ad000000050003027fff"}
+{"valid": true, "context": "53.76", "request": "041700000006000300030001:", "response": "0417000000050003027fff", "expected_response": "0417000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "12.02", "request": "00eb00000006000300030001:", "response": "00eb000000050003027fff", "expected_response": "00eb000000050003027fb0"}
+{"valid": false, "error": "Not same as expected.", "context": "28.43", "request": "022a00000006000300030001:", "response": "022a000000050003027fff", "expected_response": "022a000000050003027faa"}
+{"valid": false, "error": "Not same as expected.", "context": "76.42", "request": "05d000000006000300030001:", "response": "05d0000000050003027fff", "expected_response": "05d0000000050003027fe5"}
+{"valid": true, "context": "73.69", "request": "059b00000006000300030001:", "response": "059b000000050003027fff", "expected_response": "059b000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "48.22", "request": "03ab00000006000300030001:", "response": "03ab000000050003027fff", "expected_response": "03ab000000050003027fe1"}
+{"valid": true, "context": "30.74", "request": "025700000006000300030001:", "response": "0257000000050003027fff", "expected_response": "0257000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "54.38", "request": "042300000006000300030001:", "response": "0423000000050003027fff", "expected_response": "0423000000050003027fdd"}
+{"valid": true, "context": "60.44", "request": "049900000006000300030001:", "response": "0499000000050003027fff", "expected_response": "0499000000050003027fff"}
+{"valid": true, "context": "69.12", "request": "054200000006000300030001:", "response": "0542000000050003027fff", "expected_response": "0542000000050003027fff"}
+{"valid": true, "context": "34.65", "request": "02a300000006000300030001:", "response": "02a3000000050003027fff", "expected_response": "02a3000000050003027fff"}
+{"valid": true, "context": "29.15", "request": "023800000006000300030001:", "response": "0238000000050003027fff", "expected_response": "0238000000050003027fff"}
+{"valid": true, "context": "6.79", "request": "008500000006000300030001:", "response": "0085000000050003027fff", "expected_response": "0085000000050003027fff"}
+{"valid": true, "context": "14.28", "request": "011700000006000300030001:", "response": "0117000000050003027fff", "expected_response": "0117000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "77.60", "request": "05e700000006000300030001:", "response": "05e7000000050003027fff", "expected_response": "05e7000000050003027fab"}
+{"valid": true, "context": "16.34", "request": "013f00000006000300030001:", "response": "013f000000050003027fff", "expected_response": "013f000000050003027fff"}
+{"valid": true, "context": "60.90", "request": "04a200000006000300030001:", "response": "04a2000000050003027fff", "expected_response": "04a2000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "22.72", "request": "01bb00000006000300030001:", "response": "01bb000000050003027fff", "expected_response": "01bb000000050003027ff0"}
+{"valid": true, "context": "49.55", "request": "03c500000006000300030001:", "response": "03c5000000050003027fff", "expected_response": "03c5000000050003027fff"}
+{"valid": true, "context": "40.46", "request": "031400000006000300030001:", "response": "0314000000050003027fff", "expected_response": "0314000000050003027fff"}
+{"valid": true, "context": "28.84", "request": "023200000006000300030001:", "response": "0232000000050003027fff", "expected_response": "0232000000050003027fff"}
+{"valid": true, "context": "16.44", "request": "014100000006000300030001:", "response": "0141000000050003027fff", "expected_response": "0141000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "76.93", "request": "05da00000006000300030001:", "response": "05da000000050003027fff", "expected_response": "05da000000050003027fcb"}
+{"valid": false, "error": "Not same as expected.", "context": "75.59", "request": "05c000000006000300030001:", "response": "05c0000000050003027fff", "expected_response": "05c0000000050003027f9f"}
+{"valid": true, "context": "67.23", "request": "051d00000006000300030001:", "response": "051d000000050003027fff", "expected_response": "051d000000050003027fff"}
+{"valid": true, "context": "15.83", "request": "013500000006000300030001:", "response": "0135000000050003027fff", "expected_response": "0135000000050003027fff"}
+{"valid": true, "context": "32.29", "request": "027500000006000300030001:", "response": "0275000000050003027fff", "expected_response": "0275000000050003027fff"}
+{"valid": true, "context": "51.04", "request": "03e200000006000300030001:", "response": "03e2000000050003027fff", "expected_response": "03e2000000050003027fff"}
+{"valid": true, "context": "21.23", "request": "019e00000006000300030001:", "response": "019e000000050003027fff", "expected_response": "019e000000050003027fff"}
+{"valid": true, "context": "58.54", "request": "047400000006000300030001:", "response": "0474000000050003027fff", "expected_response": "0474000000050003027fff"}
+{"valid": true, "context": "34.55", "request": "02a100000006000300030001:", "response": "02a1000000050003027fff", "expected_response": "02a1000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "62.29", "request": "04bd00000006000300030001:", "response": "04bd000000050003027fff", "expected_response": "04bd000000050003027ffa"}
+{"valid": false, "error": "Not same as expected.", "context": "58.28", "request": "046f00000006000300030001:", "response": "046f000000050003027fff", "expected_response": "046f000000050003027f58"}
+{"valid": true, "context": "13.92", "request": "011000000006000300030001:", "response": "0110000000050003027fff", "expected_response": "0110000000050003027fff"}
+{"valid": true, "context": "29.20", "request": "023900000006000300030001:", "response": "0239000000050003027fff", "expected_response": "0239000000050003027fff"}
+{"valid": true, "context": "30.28", "request": "024e00000006000300030001:", "response": "024e000000050003027fff", "expected_response": "024e000000050003027fff"}
+{"valid": true, "context": "62.65", "request": "04c400000006000300030001:", "response": "04c4000000050003027fff", "expected_response": "04c4000000050003027fff"}
+{"valid": true, "context": "38.61", "request": "02f000000006000300030001:", "response": "02f0000000050003027fff", "expected_response": "02f0000000050003027fff"}
+{"valid": true, "context": "79.14", "request": "060500000006000300030001:", "response": "0605000000050003027fff", "expected_response": "0605000000050003027fff"}
+{"valid": true, "context": "20.20", "request": "018a00000006000300030001:", "response": "018a000000050003027fff", "expected_response": "018a000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "13.05", "request": "00ff00000006000300030001:", "response": "00ff000000050003027fff", "expected_response": "00ff000000050003027fa4"}
+{"valid": true, "context": "1.85", "request": "002500000006000300030001:", "response": "0025000000050003027fff", "expected_response": "0025000000050003027fff"}
+{"valid": true, "context": "66.71", "request": "051300000006000300030001:", "response": "0513000000050003027fff", "expected_response": "0513000000050003027fff"}
+{"valid": true, "context": "39.02", "request": "02f800000006000300030001:", "response": "02f8000000050003027fff", "expected_response": "02f8000000050003027fff"}
+{"valid": true, "context": "9.71", "request": "00be00000006000300030001:", "response": "00be000000050003027fff", "expected_response": "00be000000050003027fff"}
+{"valid": true, "context": "37.94", "request": "02e300000006000300030001:", "response": "02e3000000050003027fff", "expected_response": "02e3000000050003027fff"}
+{"valid": true, "context": "43.95", "request": "035800000006000300030001:", "response": "0358000000050003027fff", "expected_response": "0358000000050003027fff"}
+{"valid": true, "context": "61.11", "request": "04a600000006000300030001:", "response": "04a6000000050003027fff", "expected_response": "04a6000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "22.98", "request": "01c000000006000300030001:", "response": "01c0000000050003027fff", "expected_response": "01c0000000050003027fb0"}
+{"valid": false, "error": "Not same as expected.", "context": "75.80", "request": "05c400000006000300030001:", "response": "05c4000000050003027fff", "expected_response": "05c4000000050003027ffe"}
+{"valid": false, "error": "Not same as expected.", "context": "71.59", "request": "057200000006000300030001:", "response": "0572000000050003027fff", "expected_response": "0572000000050003027fee"}
+{"valid": true, "context": "27.30", "request": "021400000006000300030001:", "response": "0214000000050003027fff", "expected_response": "0214000000050003027fff"}
+{"valid": true, "context": "12.18", "request": "00ee00000006000300030001:", "response": "00ee000000050003027fff", "expected_response": "00ee000000050003027fff"}
+{"valid": true, "context": "50.94", "request": "03e000000006000300030001:", "response": "03e0000000050003027fff", "expected_response": "03e0000000050003027fff"}
+{"valid": true, "context": "67.18", "request": "051c00000006000300030001:", "response": "051c000000050003027fff", "expected_response": "051c000000050003027fff"}
+{"valid": true, "context": "49.40", "request": "03c200000006000300030001:", "response": "03c2000000050003027fff", "expected_response": "03c2000000050003027fff"}
+{"valid": true, "context": "52.63", "request": "040100000006000300030001:", "response": "0401000000050003027fff", "expected_response": "0401000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "32.70", "request": "027d00000006000300030001:", "response": "027d000000050003027fff", "expected_response": "027d000000050003027fd0"}
+{"valid": false, "error": "Not same as expected.", "context": "26.99", "request": "020e00000006000300030001:", "response": "020e000000050003027fff", "expected_response": "020e000000050003027f9d"}
+{"valid": true, "context": "25.86", "request": "01f800000006000300030001:", "response": "01f8000000050003027fff", "expected_response": "01f8000000050003027fff"}
+{"valid": true, "context": "51.66", "request": "03ee00000006000300030001:", "response": "03ee000000050003027fff", "expected_response": "03ee000000050003027fff"}
+{"valid": true, "context": "15.36", "request": "012c00000006000300030001:", "response": "012c000000050003027fff", "expected_response": "012c000000050003027fff"}
+{"valid": true, "context": "56.02", "request": "044300000006000300030001:", "response": "0443000000050003027fff", "expected_response": "0443000000050003027fff"}
+{"valid": true, "context": "11.72", "request": "00e500000006000300030001:", "response": "00e5000000050003027fff", "expected_response": "00e5000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "69.94", "request": "055200000006000300030001:", "response": "0552000000050003027fff", "expected_response": "0552000000050003027f90"}
+{"valid": true, "context": "35.83", "request": "02ba00000006000300030001:", "response": "02ba000000050003027fff", "expected_response": "02ba000000050003027fff"}
+{"valid": true, "context": "1.29", "request": "001a00000006000300030001:", "response": "001a000000050003027fff", "expected_response": "001a000000050003027fff"}
+{"valid": true, "context": "42.05", "request": "033300000006000300030001:", "response": "0333000000050003027fff", "expected_response": "0333000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "67.28", "request": "051e00000006000300030001:", "response": "051e000000050003027fff", "expected_response": "051e000000050003027f58"}
+{"valid": true, "context": "81.66", "request": "063600000006000300030001:", "response": "0636000000050003027fff", "expected_response": "0636000000050003027fff"}
+{"valid": true, "context": "61.52", "request": "04ae00000006000300030001:", "response": "04ae000000050003027fff", "expected_response": "04ae000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "12.64", "request": "00f700000006000300030001:", "response": "00f7000000050003027fff", "expected_response": "00f7000000050003027fdd"}
+{"valid": false, "error": "Not same as expected.", "context": "43.28", "request": "034b00000006000300030001:", "response": "034b000000050003027fff", "expected_response": "034b000000050003027fca"}
+{"valid": false, "error": "Not same as expected.", "context": "75.44", "request": "05bd00000006000300030001:", "response": "05bd000000050003027fff", "expected_response": "05bd000000050003027fd8"}
+{"valid": true, "context": "1.65", "request": "002100000006000300030001:", "response": "0021000000050003027fff", "expected_response": "0021000000050003027fff"}
+{"valid": true, "context": "73.59", "request": "059900000006000300030001:", "response": "0599000000050003027fff", "expected_response": "0599000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "69.28", "request": "054500000006000300030001:", "response": "0545000000050003027fff", "expected_response": "0545000000050003027efc"}
+{"valid": true, "context": "53.20", "request": "040c00000006000300030001:", "response": "040c000000050003027fff", "expected_response": "040c000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "71.90", "request": "057800000006000300030001:", "response": "0578000000050003027fff", "expected_response": "0578000000050003027fa8"}
+{"valid": true, "context": "18.76", "request": "016e00000006000300030001:", "response": "016e000000050003027fff", "expected_response": "016e000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "6.53", "request": "008000000006000300030001:", "response": "0080000000050003027fff", "expected_response": "0080000000050003027f9c"}
+{"valid": true, "context": "63.94", "request": "04dd00000006000300030001:", "response": "04dd000000050003027fff", "expected_response": "04dd000000050003027fff"}
+{"valid": true, "context": "16.80", "request": "014800000006000300030001:", "response": "0148000000050003027fff", "expected_response": "0148000000050003027fff"}
+{"valid": true, "context": "23.29", "request": "01c600000006000300030001:", "response": "01c6000000050003027fff", "expected_response": "01c6000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "38.71", "request": "02f200000006000300030001:", "response": "02f2000000050003027fff", "expected_response": "02f2000000050003027ff4"}
+{"valid": true, "context": "74.62", "request": "05ad00000006000300030001:", "response": "05ad000000050003027fff", "expected_response": "05ad000000050003027fff"}
+{"valid": true, "context": "26.83", "request": "020b00000006000300030001:", "response": "020b000000050003027fff", "expected_response": "020b000000050003027fff"}
+{"valid": true, "context": "66.25", "request": "050a00000006000300030001:", "response": "050a000000050003027fff", "expected_response": "050a000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "65.79", "request": "050100000006000300030001:", "response": "0501000000050003027fff", "expected_response": "0501000000050003027f08"}
+{"valid": true, "context": "54.12", "request": "041e00000006000300030001:", "response": "041e000000050003027fff", "expected_response": "041e000000050003027fff"}
+{"valid": true, "context": "0.05", "request": "000200000006000300030001:", "response": "0002000000050003027fff", "expected_response": "0002000000050003027fff"}
+{"valid": true, "context": "74.51", "request": "05ab00000006000300030001:", "response": "05ab000000050003027fff", "expected_response": "05ab000000050003027fff"}
+{"valid": true, "context": "54.79", "request": "042b00000006000300030001:", "response": "042b000000050003027fff", "expected_response": "042b000000050003027fff"}
+{"valid": true, "context": "1.70", "request": "002200000006000300030001:", "response": "0022000000050003027fff", "expected_response": "0022000000050003027fff"}
+{"valid": true, "context": "65.07", "request": "04f300000006000300030001:", "response": "04f3000000050003027fff", "expected_response": "04f3000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "50.22", "request": "03d200000006000300030001:", "response": "03d2000000050003027fff", "expected_response": "03d2000000050003027ffc"}
+{"valid": false, "error": "Not same as expected.", "context": "11.20", "request": "00db00000006000300030001:", "response": "00db000000050003027fff", "expected_response": "00db000000050003027fe4"}
+{"valid": true, "context": "81.25", "request": "062e00000006000300030001:", "response": "062e000000050003027fff", "expected_response": "062e000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "7.55", "request": "009400000006000300030001:", "response": "0094000000050003027fff", "expected_response": "0094000000050003027fa7"}
+{"valid": false, "error": "Not same as expected.", "context": "15.42", "request": "012d00000006000300030001:", "response": "012d000000050003027fff", "expected_response": "012d000000050003027faa"}
+{"valid": true, "context": "57.61", "request": "046200000006000300030001:", "response": "0462000000050003027fff", "expected_response": "0462000000050003027fff"}
+{"valid": true, "context": "68.05", "request": "052d00000006000300030001:", "response": "052d000000050003027fff", "expected_response": "052d000000050003027fff"}
+{"valid": true, "context": "21.75", "request": "01a800000006000300030001:", "response": "01a8000000050003027fff", "expected_response": "01a8000000050003027fff"}
+{"valid": true, "context": "31.16", "request": "025f00000006000300030001:", "response": "025f000000050003027fff", "expected_response": "025f000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "12.07", "request": "00ec00000006000300030001:", "response": "00ec000000050003027fff", "expected_response": "00ec000000050003027fb0"}
+{"valid": false, "error": "Not same as expected.", "context": "10.89", "request": "00d500000006000300030001:", "response": "00d5000000050003027fff", "expected_response": "00d5000000050003027faa"}
+{"valid": false, "error": "Not same as expected.", "context": "56.33", "request": "044900000006000300030001:", "response": "0449000000050003027fff", "expected_response": "0449000000050003027f56"}
+{"valid": true, "context": "16.91", "request": "014a00000006000300030001:", "response": "014a000000050003027fff", "expected_response": "014a000000050003027fff"}
+{"valid": true, "context": "55.10", "request": "043100000006000300030001:", "response": "0431000000050003027fff", "expected_response": "0431000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "66.46", "request": "050e00000006000300030001:", "response": "050e000000050003027fff", "expected_response": "050e000000050003027fe5"}
+{"valid": true, "context": "64.71", "request": "04ec00000006000300030001:", "response": "04ec000000050003027fff", "expected_response": "04ec000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "14.90", "request": "012300000006000300030001:", "response": "0123000000050003027fff", "expected_response": "0123000000050003027ffb"}
+{"valid": true, "context": "48.78", "request": "03b600000006000300030001:", "response": "03b6000000050003027fff", "expected_response": "03b6000000050003027fff"}
+{"valid": true, "context": "32.85", "request": "028000000006000300030001:", "response": "0280000000050003027fff", "expected_response": "0280000000050003027fff"}
+{"valid": true, "context": "17.68", "request": "015900000006000300030001:", "response": "0159000000050003027fff", "expected_response": "0159000000050003027fff"}
+{"valid": true, "context": "1.59", "request": "002000000006000300030001:", "response": "0020000000050003027fff", "expected_response": "0020000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "7.45", "request": "009200000006000300030001:", "response": "0092000000050003027fff", "expected_response": "0092000000050003027faa"}
+{"valid": true, "context": "53.66", "request": "041500000006000300030001:", "response": "0415000000050003027fff", "expected_response": "0415000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "68.92", "request": "053e00000006000300030001:", "response": "053e000000050003027fff", "expected_response": "053e000000050003027f9c"}
+{"valid": true, "context": "39.53", "request": "030200000006000300030001:", "response": "0302000000050003027fff", "expected_response": "0302000000050003027fff"}
+{"valid": false, "error": "Not same as expected.", "context": "18.40", "request": "016700000006000300030001:", "response": "0167000000050003027fff", "expected_response": "0167000000050003027f80"}
+{"valid": false, "error": "Not same as expected.", "context": "72.36", "request": "058100000006000300030001:", "response": "0581000000050003027fff", "expected_response": "0581000000050003027fc2"}
